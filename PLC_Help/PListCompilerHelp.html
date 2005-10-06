@@ -39,25 +39,31 @@ License. The source code is currently hosted and developed on the
 <UL><LI><A HREF="#M25">Defines</A></UL>
 <UL><LI><A HREF="#M26">Includes</A></UL>
 <UL><LI><A HREF="#M27">Conditional macros</A></UL>
-<UL><LI><A HREF="#M28">Errors and warnings</A></UL>
-<UL><LI><A HREF="#M29">Pragmas</A></UL>
-<UL><UL><LI><A HREF="#M30">The 'output_filename' pragma</A></UL></UL>
-<UL><UL><LI><A HREF="#M31">The 'in_package_directory' pragma</A></UL></UL>
-<UL><UL><LI><A HREF="#M32">The 'localize_directory' pragma</A></UL></UL>
-<UL><UL><LI><A HREF="#M33">The 'output_eol' pragma</A></UL></UL>
-<UL><UL><LI><A HREF="#M34">The 'output_encoding' pragma</A></UL></UL>
-<UL><UL><LI><A HREF="#M35">The 'plist_version' pragma</A></UL></UL>
-<LI><A HREF="#M36">Substitutable variables</A>
-<UL><LI><A HREF="#M37">Predefined variables</A></UL>
-<UL><LI><A HREF="#M38">XCode environment variables</A></UL>
-<UL><LI><A HREF="#M39">Unsupported variables</A></UL>
-<LI><A HREF="#M40">Download</A>
-<LI><A HREF="#M41">Known problems</A>
-<LI><A HREF="#M42">Version history</A>
-<LI><A HREF="#M43">License and disclaimer</A>
+<UL><UL><LI><A HREF="#M28">Example 1</A></UL></UL>
+<UL><UL><LI><A HREF="#M29">Example 2</A></UL></UL>
+<UL><UL><LI><A HREF="#M30">Example 3</A></UL></UL>
+<UL><UL><LI><A HREF="#M31">Example 4</A></UL></UL>
+<UL><LI><A HREF="#M32">Errors and warnings</A></UL>
+<UL><LI><A HREF="#M33">Pragmas</A></UL>
+<UL><UL><LI><A HREF="#M34">The 'output_filename' pragma</A></UL></UL>
+<UL><UL><LI><A HREF="#M35">The 'in_package_directory' pragma</A></UL></UL>
+<UL><UL><LI><A HREF="#M36">The 'localize_directory' pragma</A></UL></UL>
+<UL><UL><LI><A HREF="#M37">The 'output_eol' pragma</A></UL></UL>
+<UL><UL><LI><A HREF="#M38">The 'output_encoding' pragma</A></UL></UL>
+<UL><UL><LI><A HREF="#M39">The 'plist_version' pragma</A></UL></UL>
+<LI><A HREF="#M40">Substitutable variables</A>
+<UL><LI><A HREF="#M41">Predefined variables</A></UL>
+<UL><LI><A HREF="#M42">XCode environment variables</A></UL>
+<UL><LI><A HREF="#M43">Unsupported variables</A></UL>
+<LI><A HREF="#M44">Download</A>
+<LI><A HREF="#M45">Known problems</A>
+<LI><A HREF="#M46">Version history</A>
+<LI><A HREF="#M47">License and disclaimer</A>
 </UL>
 <H2><A NAME="M1"></A>Introduction</H2><P><B>PList Compiler</B> is a property list compiler for XCode. It lets you build
-localized and non-localized plist files from plc and ploc source files. <P>It is modelled on the CodeWarrior property list language: the idea of
+localized and non-localized plist files from plc and ploc source files. 
+These are the property list files found in packages applications, bundles, 
+frameworks, plugins, etc.<P>It is modelled on the CodeWarrior property list language: the idea of
 preparing source files and compiling them during the build process was
 introduced in CodeWarrior Pro 8. The language used in these source files
 lets you have the compiler build the property list files for you
@@ -66,21 +72,22 @@ instead of having to manage manually hard-coded XML files. CodeWarrior Pro
 8 introduced a first draft of the plc language together with a dedicated 
 compiler written by Josef W. Wankerl. Unfortunately XCode does not offer 
 such a handy tool. Here comes <B>PList Compiler</B>!<P>It is a shell script, named <B>plcompile</B>, which is meant to be executed during a Shell Script
-Build Phase within an XCode project. It can also be run independently as a
-command line tool.<P><B>PList Compiler</B> uses the same syntax as the original CodeWarrior 
-compiler, supports most of its functionalities and adds many more to take 
-advantage of all the XCode settings.<P><B>PList Compiler</B> is written in fact in Tcl 
+Build Phase within an XCode project. It can also be run directly as a
+command line tool if you need to work only with plc files independently 
+from the rest of your project.<P><B>PList Compiler</B> uses the same syntax as the original CodeWarrior 
+compiler it supports most of its functionalities and adds many more to take 
+advantage of all the XCode settings.<P><B>PList Compiler</B> is written in fact in <B>Tcl</B> 
 (the <A HREF="http://wiki.tcl.tk/"> Tool Command Language</A>): 
-the executable script is a <I>bash</I> script which magically redirects the
+the executable script is a <I>bash</I> script called <B>plcompile</B> which magically redirects the
 instructions to <I>tclsh</I> which is the Tcl shell. Tcl is installed by
 default on OSX since version 10.3 (aka Panther) so <I>tclsh</I> is
-normally present on every MacOSX system starting from this version, so 
+normally present on every MacOSX system starting from this version, and 
 there should be nothing special to do for this script to run there. For
 version 10.2 systems (aka Jaguar), you will have to install Tcl on your
-machine: you can for instance get Daniel Steffen's Tcl Batteries Included distribution 
+machine: you can, for instance, get Daniel Steffen's Tcl Batteries Included distribution 
 <A HREF="http://www.maths.mq.edu.au/~steffen/tcltk/"> from there.</A><P><B>PList Compiler</B> comes with the same BSD license as Tcl itself. 
 See the file <I>License_terms</I> included in this distribution or the 
-<A HREF="http://www.opensource.org/licenses/bsd-license"> Open Source Initiative (OSI) site</A>.<P><H2><A NAME="M2"></A>Usage</H2><P>The syntax of the plcompile shell script is:
+<A HREF="http://www.opensource.org/licenses/bsd-license"> Open Source Initiative (OSI) site</A>.<P><H2><A NAME="M2"></A>Usage</H2><P>The syntax of the <B>plcompile</B> shell script is:
 <PRE>
     plcompile options plcFile
     plcompile -help
@@ -93,39 +100,46 @@ Traditionnally these files have a <I>.plc</I> extension but this is not
 required at all. Most of the time you will not have to worry about the 
 options. <B>PList Compiler</B> comes with reasonable defaults for the 
 optional values, corresponding to a normal usage of these files in a 
-project. The available options are explained below.<P><H3><A NAME="M3"></A>Default behavior</H3><P><H3><A NAME="M4"></A>Command line options</H3><P>The complete syntax of the compiler is:
+project. The available options are explained below.<P><H3><A NAME="M3"></A>Default behavior</H3>
+By default, <B>plcompile</B> will suppose that the input files are encoded in 
+the Unicode utf-8 form and have Mac line endings (<I>cr</I>). The same encoding and 
+type of line endings are used to write the output files. The destination 
+folder is by default the Contents folder found at the first level of the 
+built product (bundled application, bundle, framework, plugin, etc.) as 
+set in your XCode project if you run the script from XCode; otherwise it 
+is the same folder as the plc file being processed.<P><H3><A NAME="M4"></A>Command line options</H3><P>The complete syntax of the compiler is:
 <PRE>
     plcompile [-input_encoding <enc>] [-output_encoding <enc>] [-input_eol <eol>] 
                             [-output_eol <eol>] [-dest folder] [-plist <version>] plcFile
 </PRE><P>The options have the following meaning:
 <UL>
-	<LI> the -input_encoding option lets you specify in which encoding the 
-source file should be read;
-	<LI> the -output_encoding option  lets you specify in which encoding the 
-output files should be written (usually utf-8);
-	<LI> the -input_eol option lets you specify the type of line endings used in the
-source file (cr for Mac, lf for Unix and crlf for Windows);
-	<LI> the -output_eol option lets you specify the type of line endings used in
-the source files;
-	<LI> the -dest option lets you specify a destination folder relatively to which
+	<LI> the <I>-input_encoding</I> option lets you specify in which encoding the 
+source file should be read (by default utf-8);
+	<LI> the <I>-output_encoding</I> option  lets you specify in which encoding the 
+output files should be written (by default utf-8);
+	<LI> the <I>-input_eol</I> option lets you specify the type of line endings used in the
+source file (<I>cr</I> for Mac, <I>lf</I> for Unix and <I>crlf</I> for Windows);
+	<LI> the <I>-output_eol</I> option lets you specify the type of line endings used in
+the output files;
+	<LI> the <I>-dest</I> option lets you specify a destination folder relatively to which
 the output files will be produced. The usual default location is the 
-Contents folder inside the application bundle when you are building a packaged 
+<I>Contents</I> folder inside the application bundle when you are building a packaged 
 application. See also below various pragmas which can additionnally specify 
 different subfolders inside the destination folder.
-	<LI> the -plist option lets you specify the version of the plist XML format (0.9 
+	<LI> the <I>-plist</I> option lets you specify the version of the plist XML format (0.9 
 or 1.0). The default value is 1.0.
 </UL><P><H2><A NAME="M5"></A>Howto</H2><P><H3><A NAME="M6"></A>Using PList Compiler in an XCode project</H3><P>The idea is to generate the various plist files and localized strings
 files during a <I>Shell Script Build Phase</I> within your XCode project. 
 XCode lets you define <I>Shell Script Build Phases</I>: they are shell
-scripts which can be executed at any stage of the building process. <P>So, in order to use <B>PList Compiler</B>, you would normally create, in
+scripts which can be executed at any stage of the building process. <P>So, in order to use <B>PList Compiler</B> from XCode, you would normally create, in
 all the targets for which you want plist files to be generated, a build phase
 which could take place at the end of the build process. To create a 
 <I>Shell Script Build Phase</I>, select the target you want in the <I>Groups
 and Files</I> panel of your main project window and select the <I>Shell
 Script Build Phase</I> command in the <I>New Build Phase</I> submenu of
 the <I>Project</I> menu. If you open the disclosure triangle located in 
-fornt of your target's name, you will see your shell phase (in XCode 2.1, 
-it is called <I>Run Script</I>). Select it and click on the Info button 
+front of the target's name, you will see your new shell phase (in XCode 2.1, 
+it is called <I>Run Script</I>). Select it and click on the <I>Info</I> button 
 in the toolbar (or select <I>Get Info</I> in the <I>File</I> menu).<P>XCode displays a window in which you can enter shell commands to execute. 
 If your plc file is named MyApp.plc, you should just have to enter a 
 command like
@@ -133,20 +147,20 @@ command like
     plcompile /path/to/MyApp.plc
 </PRE>
 The only point is to make sure that the shell (Bash shell) can find the 
-<B>plcompile</B> script. This depends on where you have put this sscript on your 
-machine. If it is in one of the oflders of your shell <TT>PATH</TT> variable there 
-should be no problem. Otherwise you can specify the complete path of the 
-script, like for instance:
+<B>plcompile</B> script. This depends on where you have put this script on your 
+machine. If it is in one of the folders of your shell <TT>PATH</TT> 
+variable, there should be no problem. Otherwise you can specify the
+complete path of the script, like for instance:
 <PRE>
-        /Users/bernardo/Devel/Tools/plcompile /path/to/MyApp.plc
+        /Users/bernardo/Devel/Tools/plcompile   /path/to/MyApp.plc
 </PRE>
 or alternatively change the directory to this directory and execute the 
 script there, like this:
 <PRE>
         cd /Users/bernardo/Devel/Tools
-        ./plcompile /path/to/MyApp.plc
+        ./plcompile  /path/to/MyApp.plc
 </PRE>
-supposing that <B>plcompile</B> resides in /Users/bernardo/Devel/Tools.<P><H3><A NAME="M7"></A>Using PList Compiler in Terminal</H3><P>The <I>plcompile</I> script can be used directly from the command line (in
+supposing, in the previous example, that <B>plcompile</B> resides in <I>/Users/bernardo/Devel/Tools</I>.<P><H3><A NAME="M7"></A>Using PList Compiler in Terminal</H3><P>The <I>plcompile</I> script can be used directly from the command line (in
 a Terminal window). There is only one caveat with this approach: only the
 environment variables defined in the current shell window are available.
 This means that you must make sure, if ever your plc file makes use of
@@ -159,34 +173,34 @@ specify a destination folder using the <I>-dest</I> command line option.<P>For i
     /Developer/Tools/plcompile -dest ~/Devel/Tests myfile.plc
 </PRE><P><H3><A NAME="M8"></A>Troubleshooting</H3><P>Make sure that the plcompile script has been saved with Unix line endings
 (lf) rather than Mac line endings (cr). Some editors tend to change them 
-in your back.<P>Make sure there is not an already existing Info.plist file in your source 
+in your back and the shell expects Unix line endings.<P>Make sure there is not an already existing <I>Info.plist</I> file in your source 
 files added to your built product during the <I>Copy Bundle Resources</I> 
-phase. <P>Also make sure, in the target settings, that no file has been declared in 
-the <I>Info.plist File</I> setting (in the Packaging section of the 
-General settings).<P>If the script is not found by the shell, read the informations in the 
+phase in order to avoid conflicts or files being overwritten.<P>Also make sure, in the target settings, that no file has been declared in 
+the <I>Info.plist File</I> setting (look in the <I>Packaging</I> section of the 
+<I>General</I> settings).<P>If the script is not found by the shell, read the informations in the 
 section above about executing shell phases in XCode.<P><H2><A NAME="M9"></A>Anatomy of 'plc' files</H2><P>The .plc source files are regular text files taken as input by the PList 
-Compiler in order to produce one or several output files. They contains 
+Compiler in order to produce one or several output files. They contain
 three types of commands:
 <UL>
 	<LI> preprocessor macros, simlar to those found in C or C++ source files
 	<LI> specific commands understood and interpreted by the compiler
-	<LI> lines starting with a double slash (//) are comments: they are ignored by 
-the processor
-</UL><P><H3><A NAME="M10"></A>The plc commands</H3><P>Most of these commands correspond to an XML entity in the output Info.plist
-file. An Info.plist file is an XML document. The format of the plist files
+	<LI> lines starting with a double slash (//): they are comments and are ignored by 
+the compiler
+</UL><P><H3><A NAME="M10"></A>The plc commands</H3><P>Most of these commands correspond to an XML entity in the output <I>Info.plist</I>
+file. An <I>Info.plist</I> file is an XML document. The format of the plist files
 is specified by Apple in a DTD which can be found in 
 <I>/System/Library/DTDs/PropertyList.dtd</I>.
 For a detailed description of property lists files, see for instance
-<A HREF="http://developer.apple.com/documentation/CoreFoundation/Conceptual/CFPropertyLists/index.html"> Introduction to Property Lists</A><P>All the commands must be kept on a separate line (not necessarily at the 
+<A HREF="http://developer.apple.com/documentation/CoreFoundation/Conceptual/CFPropertyLists/index.html"> Introduction to Property Lists</A><P>All the commands must be kept on a separate line (but not necessarily at the 
 beginning of the line).<P><H4><A NAME="M11"></A>The 'plist' command</H4><P>The first command found in a .plc file designed to generate a .plist file
 is always the <I>plist</I> command. Its argument is a block enclosed
 inside a pair of curly braces. A minimal property list file,
 describing a completely empty property list, would look like this:
 <PRE>
     plist {}
-</PRE><P>The <I>plist</I> command corresponds to the <TT>&lt;</TT>plist<TT>&gt;</TT> XML tag.<P><H4><A NAME="M12"></A>The 'dictionary' command</H4><P>Directly inside the <I>plist</I> block, there is usually a <I>dictionary</I> 
+</PRE><P>The <I>plist</I> command corresponds to the &lt;plist&gt; XML tag.<P><H4><A NAME="M12"></A>The 'dictionary' command</H4><P>Directly inside the <I>plist</I> block, there is usually a <I>dictionary</I> 
 command. This is not required by the DTD but all property lists in use are
-structured like this. Like with <I>plist</I> command, the argument of a
+structured like this. Like with the <I>plist</I> command, the argument of a
 <I>dictionary</I> command is a block enclosed inside a pair of curly
 braces. So, a minimal valid plc source file would be:
 <PRE>
@@ -194,18 +208,18 @@ braces. So, a minimal valid plc source file would be:
     {
         dictionary {}
     }
-</PRE><P>The <I>plist</I> command corresponds to the <TT>&lt;</TT>dict<TT>&gt;</TT> XML tag.<P>The dictionary is made up of key/value pairs. The key names must be unique within a single
-dictionary. The value of a key can have any of the following types: array, boolean,
-data, date, dictionary, number, or string.<P><H4><A NAME="M13"></A>The 'key' command</H4><P>The key/value pairs are expressed by instructions with the following format
+</PRE><P>The <I>dictionary</I> command corresponds to the &lt;dict&gt; XML tag.<P>The dictionary is made up of key/value pairs. The key names must be unique within a single
+dictionary. The value of a key can have any of the following types: <I>array, boolean,
+data, date, dictionary, number,</I> or <I>string</I>.<P><H4><A NAME="M13"></A>The 'key' command</H4><P>The key/value pairs are expressed by instructions with the following format
 <PRE>
     key "name_of_the_key" value "type_of_value" "the_value"
-</PRE><P>In this instruction the <I>key</I> and  <I>value</I> keywords correspond
-to the <TT>&lt;</TT>key<TT>&gt;</TT> and <TT>&lt;</TT>value<TT>&gt;</TT>  XML tags.<P>For instance, here is a valid key statement to put in a dictionary block:
+</PRE><P>In this instruction, the <I>key</I> and  <I>value</I> keywords correspond
+to the &lt;key&gt; and &lt;value&gt;  XML tags respectively.<P>For instance, here is a valid key statement in a dictionary block:
 <PRE>
     key "Victor Hugo" value string "Writer"
 </PRE><P><H4><A NAME="M14"></A>The 'array' command</H4><P>The <I>array</I> command is used to describe an ordered list of property list elements.
-These elements can be of any of the types already mentioned (array, boolean,
-data, date, dictionary, number, or string).<P>The original specification of the plc syntax in CodeWarrior stipulated that
+These elements can be of any of the abovementioned types <I>(array, boolean,
+data, date, dictionary, number, string).</I><P>The original specification of the plc syntax in CodeWarrior stipulated that
 the argument of an <I>array</I> command is a block enclosed inside a pair
 of square brackets. With <B>PList Compiler</B>, you can also use curly braces
 instead of square brackets.<P>Here is an example of an array containing a dictionary and a boolean value:
@@ -221,25 +235,27 @@ instead of square brackets.<P>Here is an example of an array containing a dictio
 </PRE><P><H4><A NAME="M15"></A>The 'string' command</H4><P>The <I>string</I> command lets you specify a string value. Strings are enclosed
 between double quotes in order to distinguish them from a substitutable
 variable (see below), but this is not required. If there is no risk of
-ambiguity, you can suppress the double quotes, but it still is good
+ambiguity, you can suppress the double quotes. Still it is good
 programming practice to write them.<P>The value of a string can be made up of several pieces, mixing quoted strings or 
 variables. For instance:
 <PRE>
     string "copyright (c) " __YEAR__ ", all rights reserved" 
-</PRE><P>where __YEAR__ is one of the predefined variables set by the compiler.
-The <I>string</I> command corresponds to the <TT>&lt;</TT>string<TT>&gt;</TT> XML tag.<P><H4><A NAME="M16"></A>The 'number' command</H4><P>The <I>number</I> command lets you specify numeric values. There is no 
+</PRE><P>where <TT>__YEAR__</TT> is one of the predefined variables set by the 
+compiler. This string will be expanded to something like 
+<I>copyright (c) 2005, all rights reserved</I>.
+The <I>string</I> command corresponds to the &lt;string&gt; XML tag.<P><H4><A NAME="M16"></A>The 'number' command</H4><P>The <I>number</I> command lets you specify numeric values. There is no 
 XML tag named <I>number</I> in a plist file, but rather two entities named 
-<TT>&lt;</TT>real<TT>&gt;</TT> and <TT>&lt;</TT>integer<TT>&gt;</TT> corresponding 
+&lt;real&gt; and &lt;integer&gt; corresponding 
 respectively to integer or floating point values. The <I>number</I> 
 command corresponds to both of them: the compiler automatically decides to 
 which type the value belongs. For instance, the following declarations will 
-result in an <TT>&lt;</TT>integer<TT>&gt;</TT> tag:
+result in an &lt;integer&gt; tag:
 <PRE>
     number 0
     number 1
     number -1
 </PRE>
-while the following ones will yield <TT>&lt;</TT>real<TT>&gt;</TT> tags:
+while the following ones will yield &lt;real&gt; tags:
 <PRE>
     number 0.0
     number 3.14
@@ -248,7 +264,7 @@ while the following ones will yield <TT>&lt;</TT>real<TT>&gt;</TT> tags:
     number -.1
     number 6.09e23
 </PRE><P><H4><A NAME="M17"></A>The 'date' command</H4><P>The <I>date</I> command lets you specify a date value. The plist format 
-specification (in PropertyList.dtd) suggests that 
+specification (in <I>/System/Library/DTDs/PropertyList.dtd</I>) suggests that 
 <BLOCKQUOTE><P><I> the 
 contents of a date value should conform to a subset of ISO 8601:
 in particular, YYYY '-' MM '-' DD 'T' HH ':' MM ':' SS 'Z'. 
@@ -259,8 +275,8 @@ Smaller units may be omitted with a loss of precision.
     date "2005-09-15T18:06:03Z"
     date __DATE__
 </PRE>
-where __DATE__ is one of the predefined variables set by the compiler.
-The <I>date</I> command corresponds to the <TT>&lt;</TT>date<TT>&gt;</TT> XML tag.<P><H4><A NAME="M18"></A>The 'data' command</H4><P>The <I>data</I> command is used to store raw binary data. The value of a
+where <TT>__DATE__</TT> is one of the predefined variables set by the compiler.
+The <I>date</I> command corresponds to the &lt;date&gt; XML tag.<P><H4><A NAME="M18"></A>The 'data' command</H4><P>The <I>data</I> command is used to store raw binary data. The value of a
 data type is expressed in the plc file in hexadecimal format, possibly with
 space characters, like for instance:
 <PRE>
@@ -269,7 +285,8 @@ space characters, like for instance:
     data "64 65"  "66 67"
 </PRE>
 In the output file, the same data is represented in Base64 encoding as 
-mentioned in the DTD specifying the plist format (/System/Library/DTDs/PropertyList.dtd).<P>The <I>data</I> command corresponds to the <TT>&lt;</TT>data<TT>&gt;</TT> XML tag.<P><B>Note:</B> the CodeWarrior plist compiler also defined a <I>data file</I> command followed by the name of a file containing raw data. This is not
+recommended in the DTD specifying the plist format 
+(see <I>/System/Library/DTDs/PropertyList.dtd</I>).<P>The <I>data</I> command corresponds to the &lt;data&gt; XML tag.<P><B>Note:</B> the CodeWarrior plist compiler also defined a <I>data file</I> command followed by the name of a file containing raw data. This is not
 implemented by <B>PList Compiler</B> as of version 0.1.<P><H4><A NAME="M19"></A>The 'boolean' command</H4><P>The <I>boolean</I> command lets you specify a boolean value using any of
 the usual keywords: true/false, yes/no, and 1/0. Casing does not matter, so
 TRUE, true or True are all acceptable values. The value can be enclosed in
@@ -281,7 +298,8 @@ double quotes but this is not required.<P>For example:
     key "kUse_Dynamic_No_Pic" value boolean "false"
     key "kZero_Link" value string __ZERO_LINK__
 </PRE><P>The last example is correct because XCode defines a ZERO_LINK variable 
-whose value can be either "YES" or "NO" (see below).<P>The <I>boolean</I> command corresponds to the <TT>&lt;</TT>boolean<TT>&gt;</TT> XML tag.<P><H3><A NAME="M20"></A>Localized files</H3><P><H4><A NAME="M21"></A>The 'localize' command</H4><P>The <I>localize</I> command is used to create localized strings files. It is a 
+whose value can be either "YES" or "NO" (see below).<P>The <I>boolean</I> command corresponds to the &lt;boolean&gt; XML tag.<P><H3><A NAME="M20"></A>Localized files</H3><P>The localized files contain lists of keyed strings localized for a particular 
+language.<P><H4><A NAME="M21"></A>The 'localize' command</H4><P>The <I>localize</I> command is used to create localized strings files. It is a 
 top level command like the <I>plist</I> command. There are two possible 
 syntaxes to invoke this command:
 <PRE>
@@ -290,22 +308,23 @@ syntaxes to invoke this command:
 </PRE><P>The first form is used to localize string values present in the main property list
 dictionary of the <I>plist</I> command. The resulting file is named by 
 default
-<I>InfoPlist.strings</I> instead of Info.plist, and is located inside the 
+<I>InfoPlist.strings</I> instead of <I>Info.plist</I>, and is located inside the 
 localized folder corresponding to the specified language instead of the 
 <I>Contents</I> folder. For instance:
 <PRE>
     /Contents/Resources/Spanish.lproj/InfoPlist.strings
-</PRE><P>The second form of the localize command specifies the name of the generated
-file rather than relying on the default name. This allows to create as many
-separate strings files as necessary. These files will also be created in
+</PRE><P>The second form of the <I>localize</I> command specifies the name of the generated
+file rather than relying on the default name. This allows to create several
+separate strings files. These files will also be created in
 the folder corresponding to the specified language.<P>The argument of the <I>localize</I> command is a block enclosed in a pair of 
-curly braces. Only two commands can be used inside a localize block: key 
-and comment. The key command defines key/value statements of string type. <P>For instance:
+curly braces. Only two commands can be used inside a localize block: <I>key</I> 
+and <I>comment</I>. The <I>key</I> command defines key/value statements of type <I>string</I>. 
+For instance:
 <PRE>
     localize "French"
     {
         key "CFBundleGetInfoString" value string "MyApp, (c) 2005, tous droits réservés"
-        key "CFBundleHelpBookName" value string "Aide Rezilla"
+        key "CFBundleHelpBookName" value string "Aide PList Compiler"
     }
     
     localize "Spanish" as "Dialogs.strings"
@@ -320,10 +339,13 @@ and the scond one
 <I>MyApp.app/Contents/Resources/Spanish.lproj/Dialogs.strings</I><P>It is current practice to put the <I>localize</I> blocks in separate files and 
 use a <I>.ploc</I> extension in their name to distinguish them from the <I>.plc</I> 
 files. The <I>.ploc</I> files are usually invoked from the main .plc file with an 
-<TT>#include</TT> preprocessor command.<P><H4><A NAME="M22"></A>The 'comment' command</H4><P>The <I>comment</I> command lets you insert comments inside the localized
+<TT>#include</TT> preprocessor command. For instance:
+<PRE>
+    #include "DialogStrings_Spanish.ploc"
+</PRE><P><H4><A NAME="M22"></A>The 'comment' command</H4><P>The <I>comment</I> command lets you insert comments inside the localized
 strings files. There can be as many commands of this type in a <I>localize</I> block as necessary. The value of the command is a string or
 concatenation of strings and expandable variables: once concatenated and
-substituted, it is inserted inside a C/C++ like comment of the form 
+substituted, it is inserted inside a C-like comment of the form 
 <TT>/* */</TT> in the output file.
 For instance, the following instruction might be found in some <I>.ploc</I> file:
 <PRE>
@@ -331,14 +353,16 @@ For instance, the following instruction might be found in some <I>.ploc</I> file
     {
         comment "Generated from " __FILE__ " at " __TIME__
     }
-</PRE><P>The <TT>__FILE__</TT> and the <TT>__TIME__</TT> symbols are predefined variables: <TT>__FILE__</TT> 
+</PRE><P>The <TT>__FILE__</TT> and the <TT>__TIME__</TT> symbols used in this example are predefined variables: <TT>__FILE__</TT> 
 always contains the name of the file being currently processed by the 
 compiler and <TT>__TIME__</TT> the time at the moment the compiler processes the 
 file. If the instruction above was stored in a file named 
-<I>dialogStrings_EN.ploc</I>, the comment generated in the resulting <I>Dialogs.strings</I> file (inside in the /Contents/Resources/English.lproj 
+<I>dialogStrings_EN.ploc</I>, the comment generated in the resulting <I>Dialogs.strings</I> file (in the /Contents/Resources/English.lproj 
 folder inside the bundle) would look like this:
-/* Generated from dialogStrings_EN.ploc at 23:54:25 */<P><B>Caveat:</B> the <I>comment</I> command can't be used in a <I>plist</I> block.<P><H2><A NAME="M23"></A>Location of the output files</H2><P>By default the <I>plist</I> command causes <B>PList Compiler</B> to
-create a file named Info.plist inside the destination directory. In the
+<PRE>
+    /* Generated from dialogStrings_EN.ploc at 23:54:25 */
+</PRE><P><B>Caveat:</B> the <I>comment</I> command can't be used in a <I>plist</I> block.<P><H2><A NAME="M23"></A>Location of the output files</H2><P>By default, the <I>plist</I> command causes <B>PList Compiler</B> to
+create a file named <I>Info.plist</I> inside the destination directory. In the
 case of a packaged application, the default destination directory is the
 <I>Contents</I> folder inside the bundle. More generally, the path of this
 destination folder is built by <B>PList Compiler</B> using the values of
@@ -349,30 +373,27 @@ be (unless you have non standard settings):
 <PRE>
     $SRCROOT/build/Release/MyApp.app/Contents 
 </PRE>
-where SRCROOT is, as usual the folder containing your project file.<P>By default, the <I>localize</I> command causes <B>PList Compiler</B> to
+where <TT>SRCROOT</TT> is, as usual the folder containing your project file.<P>By default, the <I>localize</I> command causes <B>PList Compiler</B> to
 create localized files. The default location for these files depends on the
 language used for the localization. In the case of a packaged application,
-the default destination is inside one of the /Contents/Resources/&lt;language&gt;.lproj
-subfolders of the bundle. For instance /Contents/Resources/English.lproj or
-/Contents/Resources/French.lproj.<P>There are two ways of modifying the destination folders:
+the default destination is inside one of the <I>/Contents/Resources/&lt;language&gt;.lproj</I>
+subfolders of the bundle. For instance <I>/Contents/Resources/English.lproj</I> or
+<I>/Contents/Resources/French.lproj</I>.<P>There are two ways of modifying the destination folders:
 <UL>
-	<LI> from the command line, using the -dest option
-	<LI> using one of the in_package_directory or localize_directory pragmas (see below)
+	<LI> from the command line, using the <I>-dest</I> option
+	<LI> using one of the <I>in_package_directory</I> or <I>localize_directory</I> pragmas (see below)
 </UL><P>The output file name (usually Info.plist) can be modified using the
-<I>output_filename</I> pragma. See the <I>Pragmas</I> section below.<P><H2><A NAME="M24"></A>Preprocessor directives</H2><P>This is the other type of instruction. They are called preprocessor directives 
-by analogie with the C/C++ language.
+<I>output_filename</I> pragma. See the <I>Pragmas</I> section below.<P><H2><A NAME="M24"></A>Preprocessor directives</H2><P>This is the other type of instruction found in plc source files. They are called preprocessor directives 
+by analogy with the C/C++ language.
 They are also sometimes refered to as preprocessor macros. The 
 preprocessor term is not quite accurate here 
 because there are not two phases like with the ordinary C compilers (a 
-preprocessing phase and a compiling phase). <B>PList Compiler</B> pases 
+preprocessing phase and a compiling phase): <B>PList Compiler</B> parses 
 the file once, line by line.<P>The following macros are supported by <B>PList Compiler</B>:
 <P><TABLE BORDER=0 CELLPADDING=1>
-<TR><TD>#define</TD><TD>#if</TD></TR>
-<TR><TD>#include</TD><TD>#ifdef</TD></TR>
-<TR><TD>#pragma</TD><TD>#ifndef</TD></TR>
-<TR><TD>#message</TD><TD>#elif</TD></TR>
-<TR><TD>#warning</TD><TD>#else</TD></TR>
-<TR><TD>#error</TD><TD>#endif</TD></TR>
+<TR><TD>#define </TD><TD>#message</TD><TD>#if    </TD><TD>#elif </TD></TR>
+<TR><TD>#include</TD><TD>#warning</TD><TD>#ifdef </TD><TD>#else </TD></TR>
+<TR><TD>#pragma </TD><TD>#error  </TD><TD>#ifndef</TD><TD>#endif</TD></TR>
 </TABLE></P><P>Preprocessor directives all occur on their own line. They are characterized
 by the fact that the first non-whitespace character on the line is a #. 
 There may be whitespace characters between the # mark and the name of the 
@@ -384,7 +405,7 @@ format is:
 </PRE><P>The compiler adds the macro <I>macro_name</I> to its macro table: if 
 there is already a macro with this name, it emits an error. When <I>macro_name</I>
 appears in a plc source file as the value of a string type not 
-enclosed between double quotes, it will be replaced with
+enclosed between double quotes, it is automatically replaced by
 <I>macro_text</I>.<P>For instance, if a macro <I>kVersionNumber</I> is defined like this:
 <PRE>
     #define kVersionNumber "1.2.3"
@@ -409,16 +430,112 @@ an absolute or a relative path. A relative path is resolved relatively to the fo
 containing the plc source file itself. The following are all valid 
 examples:
 <PRE>
-    #include /Users/bernardo/Devel/MyApp/Rsrc/MyApp.plc
-    #include MyApp.plc
+    #include /Users/bernardo/Devel/MyApp/Rsrc/OtherFile.plc
+    #include OtherFile.plc
     #include LocFiles/MyStrings_EN.ploc
     #include ../Rsrc/MyStrings_EN.ploc
 </PRE><P><B>Note:</B> the CodeWarrior property list compiler also accepts filenames 
 enclosed in angle brackets to designate files located in the system access 
-paths. This is not currently supported by <B>PList Compiler</B> as of version 0.1.<P><H3><A NAME="M27"></A>Conditional macros</H3><P><H3><A NAME="M28"></A>Errors and warnings</H3><P>The <I>#error</I> directive raises an error and stops the execution of the
+paths. This is not currently supported by <B>PList Compiler</B> as of version 0.1.<P><H3><A NAME="M27"></A>Conditional macros</H3><P><B>PList Compiler</B> supports the following six conditional directives:
+<I><I>#if</I>, <I>#ifdef</I>, <I>#ifndef</I>, <I>#elif</I>, <I>#else</I>, <I>#endif</I></I> which let you build
+conditional blocks of instructions depending on the value of a test
+expression or on the existence or non-existence of a particular variable.<P>The <I>#ifdef</I> directive tests for the definition of a compiler macro, while
+the <I>#ifndef</I> directive tests for the non-definition of this macro. Their
+behavior is the opposite of one another. In the case of <I>#ifdef</I> for
+instance, if the macro has been previously defined, the property list code
+immediately following the <I>#ifdef</I> directive is processed until an <I>#else</I> or
+<I>#endif</I> directive is encountered, but on the contrary, if the macro has not been defined,
+the property list code immediately following the <I>#ifdef</I> directive is not
+processed. In that case, if there is an <I>#else</I> directive, instead the code
+following this <I>#else</I> is processed until the matching <I>#endif</I> directive is
+found.<P>Similarly, if the expression in an <I>#if</I> directive evaluates to 1, the
+instructions immediately following the <I>#if</I> directive are executed until an
+<I>#else</I>, <I>#elif</I>, or <I>#endif</I> directive is encountered. If the expression
+evaluates to 0, the property list code immediately following the <I>#if</I>
+directive is not processed.<P>Each <I>#if</I>, <I>#ifdef</I>, <I>#ifndef</I> directive must be matched by an <I>#endif</I> directive.<P>The <I>#elif</I> directive allows for multiple successive <I>#if</I> tests during the
+preprocessing stage. An <I>#elif</I> test is evaluated only if all the preceding
+tests have failed.<P>Here are a few examples of conditional constructs.<P><H4><A NAME="M28"></A>Example 1</H4>
+Note in this example that for testing equality you must use a double 
+equal sign (==). A single equal sign would provoke an error.
+<PRE>
+    #define kVersionFive 5
+    #define kVersionSeven 7
+    #define kCurrentVersion kVersionFive
+    
+    #if kCurrentVersion == kVersionSeven 
+        #warning "Current version is " kVersionSeven
+    #else
+        #warning "Current version is not " kVersionSeven    
+    #endif
+</PRE><P><H4><A NAME="M29"></A>Example 2</H4>
+This example demonstrates nested conditional blocks.
+<PRE>
+    #define kVersionFive 5
+    #define kVersionSix 6
+    #define kVersionSeven 7
+    #define kCurrentVersion kVersionSeven
+    
+    #if kCurrentVersion == kVersionSeven 
+        #warning "Current version is " kVersionSeven
+    #else
+        #if kCurrentVersion <= kVersionFive 
+            #warning "Current version <= " kVersionFive
+        #else
+            #warning "Current version > " kVersionFive
+        #endif
+        #warning "Done comparison with kVersionFive"
+    #endif
+</PRE><P><H4><A NAME="M30"></A>Example 3</H4>
+Here is an example using <I>#ifdef</I> and <I>#ifndef</I> directives:
+<PRE>
+    #undef kUndefinedMacro
+    #ifdef kUndefinedMacro
+    #    define kWillNeverBeDefinedMacro
+    #endif
+    
+    #ifndef kWillNeverBeDefinedMacro
+    #    define kHasNotBeenDefined "No, it has not been defined"
+    #else
+    #    define kHasBeenDefined "Yes, it has been defined"
+    #endif
+</PRE><P><H4><A NAME="M31"></A>Example 4</H4>
+Here is an example using the <I>#elif</I> directive:
+<PRE>
+    #define kVersionFive 5
+    #define kVersionSix 6
+    #define kVersionSeven 7
+    #define kVersionEight 8
+    #define kCurrentVersion kVersionSix
+    #if kCurrentVersion <= kVersionFive 
+    #warning "Current version is <= " kVersionFive
+    #elif kCurrentVersion <= kVersionEight 
+        #if kCurrentVersion == kVersionSix
+            #warning "Current version is " kVersionSix
+        #elif kCurrentVersion == kVersionSeven 
+            #if kCurrentVersion < 0
+                #warning "Current version is negative!"
+            #elif kCurrentVersion > 10
+                #warning "Current version is > 10"
+            #else
+                #warning "Current version is between 1 and 10"
+            #endif
+        #else
+            #warning "Current version is " kVersionEight
+        #endif
+    #else
+    #warning "Current version is > " kVersionEight
+    #endif
+</PRE><P><H3><A NAME="M32"></A>Errors and warnings</H3><P>The <I>#error</I> directive raises an error and stops the execution of the
 compiler. This is generally used in combination with <I>#if</I> directives
 to test for situations that should never occur.<P>The <I>#warning</I> directive emits a message in the console.
-The <I>#message</I> directive is just a synonym for <I>#warning</I>.<P><H3><A NAME="M29"></A>Pragmas</H3><P>Pragmas are directives used to modify the internal state of the compiler. 
+The <I>#message</I> directive is just a synonym for <I>#warning</I>.<P>Here are a few examples:
+<PRE>
+    #warning "Fix the version number before shipping"
+    #message "PList Compiler is great!!!"
+    #if __PLIST__ < 1.0
+       #error "The property list version is too old"
+    #endif
+</PRE><P><H3><A NAME="M33"></A>Pragmas</H3><P>Pragmas are directives used to modify the internal state of the compiler. 
 They let you modify some internal settings during the execution of the plc 
 file. They are most useful to modify locally a global setting: the new 
 value set by a pragma holds until another pragma modifies it again. 
@@ -433,19 +550,19 @@ localize_directory,
 output_eol,
 output_encoding,
 plist_version.</I><P>Any other pragma encountered will be simply ignored by <B>PList Compiler</B>. In particular the <I>once</I>, <I>notonce</I>, and <I>mark</I>
-pragmas which exist in the CodeWarrior compiler are not supported, as of
+pragmas, defined by the CodeWarrior compiler, are not supported, as of
 version 0.1.<P><B>Caution:</B> a pragma cannot be used inside a <I>plist</I> or a 
 <I>localize</I> block. It must be invoked outside these environments. This
 is because the internal settings they affect can't be modified once a file
 has been opened for output. The compiler will emit an error if such a 
-situation occurs.<P><H4><A NAME="M30"></A>The 'output_filename' pragma</H4>
+situation occurs.<P><H4><A NAME="M34"></A>The 'output_filename' pragma</H4>
 The <I>output_filename</I> pragma lets you override the default name 
 of the current output file. Its value is a string which is the new name. 
 For instance:
 <PRE>
     #pragma output_filename "OtherName.plist"
-</PRE><P>The new name given with this pragma is used only once and immediately 
-forgotten so that the compiler returns to the default naming convention. 
+</PRE><P>The new name given with this pragma is used only once and then
+forgotten, so that the compiler immediately returns to the default naming convention. 
 Note that this does not affect the filename defined in a  'localize as' 
 command. More precisely, if the compiler reads the following inxtructions:
 <PRE>
@@ -456,10 +573,10 @@ command. More precisely, if the compiler reads the following inxtructions:
 </PRE>
 the pragma will have no effect and the output file will still be named 
 <I>Error.strings</I>. On the other hand, the pragma will remain in effect 
-until it can be applied. <P><H4><A NAME="M31"></A>The 'in_package_directory' pragma</H4>
+until it can be applied. <P><H4><A NAME="M35"></A>The 'in_package_directory' pragma</H4>
 The <I>in_package_directory</I> pragma lets you specify where to place the
 property list file inside the destination folder. It is a string which
-specifies a directory relative to the destination folder. For instance, if
+specifies a directory <I>relative</I> to the destination folder. For instance, if
 you write:
 <PRE>
     #pragma in_package_directory "Infos"
@@ -468,18 +585,18 @@ the <I>Info.plist</I> file will be written in an <I>Infos</I> subfolder
 of the destination folder rather than in the destination folder directly.
 If the subfolder does not exist, it is created. By default, this will be
 <I>MyApp.app/Contents/Infos</I> (unless another destination folder has 
-been specified).<P>Another valid value for this pragma could be:
+been otherwise specified).<P>Another valid value for this pragma could be:
 <PRE>
-	#pragma in_package_directory "../Infos/Properties"
+    #pragma in_package_directory "../Infos/Properties"
 </PRE>
 which would write the output file in <I>MyApp.app/Infos/Properties</I>,
 i-e with the <I>Infos</I> directory at the same level as the 
-<I>Contents</I> directory.<P><H4><A NAME="M32"></A>The 'localize_directory' pragma</H4>
+<I>Contents</I> directory.<P><H4><A NAME="M36"></A>The 'localize_directory' pragma</H4>
 While the previous pragma affected the final location of the <I>Info.plist</I>
 files (produced by the <I>plist</I> command), the <I>localize_directory</I>
-pragma lets you specify where to place the localized string files produced
+pragma lets you specify where to place the localized strings files produced
 by the <I>localize</I> command. It is a string which specifies a directory
-relative to the destination folder. By default, it is the <I>Resources</I>
+<I>relative</I> to the destination folder. By default, it is the <I>Resources</I>
 folder inside the destination folder which itself is, by default, the
 <I>Contents</I> subfolder of the bundle. For instance:
 <PRE>
@@ -488,7 +605,7 @@ folder inside the destination folder which itself is, by default, the
 will cause the localized strings files to be written in some 
 <I>MyApp.app/Contents/Local/Strings/&lt;language&gt;.lproj</I> folder 
 (depending on the chosen language) instead of 
-<I>MyApp.app/Contents/Resources/&lt;language&gt;.lproj</I>.<P><H4><A NAME="M33"></A>The 'output_eol' pragma</H4>
+<I>MyApp.app/Contents/Resources/&lt;language&gt;.lproj</I>.<P><H4><A NAME="M37"></A>The 'output_eol' pragma</H4>
 The <I>output_eol</I> pragma lets you specify another type of line endings
 for the output files. The possible values are <I>cr</I> for Mac, 
 <I>lf</I> for Unix and <I>crlf</I> for Windows. This pragma is useful to
@@ -496,45 +613,36 @@ override a setting made with the <I>-output_eol</I> option on the command
 line of the <B>plcompile</B> shell script.
 <PRE>
     #pragma output_eol lf
-</PRE><P><H4><A NAME="M34"></A>The 'output_encoding' pragma</H4>
+</PRE><P><H4><A NAME="M38"></A>The 'output_encoding' pragma</H4>
 The <I>output_eol</I> pragma lets you specify another encoding
 for the output files. The possible values are listed when you execute the 
 command:
 <PRE>
     plcompile -help
-</PRE><P>You would normally be interested only in the utf-8 and utf-16 encodings 
-which are the only encodings recognized for the property list files. <B>PList 
+</PRE><P>You would normally be interested only in the utf-8 and utf-16 encoding forms 
+which are the only encodings recognized for property list files. <B>PList 
 Compiler</B> is able though to handle all the other encodings.<P>This pragma is useful to override a setting made with the 
 <I>-output_encoding</I> option on the command line of the <B>plcompile</B>
 shell script. For instance:
 <PRE>
     #pragma output_encoding utf-16
-</PRE><P><H4><A NAME="M35"></A>The 'plist_version' pragma</H4>
+</PRE><P><H4><A NAME="M39"></A>The 'plist_version' pragma</H4>
 The <I>plist_version</I> pragma lets you specify another version of the 
-property list format. Possible values currently are 0.9 and 1.0. This is 
+property list format. The possible values currently are 0.9 and 1.0. This is 
 the value written in the <I>version</I> attribute of the &lt;plist&gt; tag in the 
 <I>.plist</I> files. For instance:
 <PRE>
     #pragma plist_version 0_9
 </PRE>
 yields
-<PRE>
-    <plist version="0_9">
-</PRE>
-This is the same value stored in the <TT>__PLIST__</TT> predefined variable
-(see below).<P><H2><A NAME="M36"></A>Substitutable variables</H2><P>Substitutable variables are variables whose value is inserted when the 
-script is run. These variables can be defined with a #define preprocessor 
+&lt;plist version="0_9"&gt;<P>This is the same value stored in the <TT>__PLIST__</TT> predefined variable
+(see below).<P><H2><A NAME="M40"></A>Substitutable variables</H2><P>Substitutable variables are variables whose value is inserted when the 
+script is run. These variables can be defined with a <I>#define</I> preprocessor 
 macro or in the shell environment. There are also some useful predefined 
-variables.<P>To invoke variables defined in the shell environment (in particular all 
-the variables abvailable in an XCode project), you must surround them with 
-double underscores. For instance (see the XCode documentation for a 
-complete list):
-__BUILD_ROOT__,
-__CACHE_ROOT__,
-__DEBUGGING_SYMBOLS__,
-__EXECUTABLE_PATH__,
-__WARNING_LDFLAGS__,
-__ZERO_LINK__, etc.<P>Variables defined with a <I>#define</I> macro can be invoked directly 
+variables set by the plc compiler itself.<P>To invoke a variable defined in the shell environment, you must surround it with 
+double underscores. This concerns in particular all 
+the variables available in an XCode project, but not only: ordinary shell 
+environment variables, such as TERM or LOGNAME are also accessible.<P>Variables defined with a <I>#define</I> macro can be invoked directly 
 (without the double underscores). For 
 instance, if you define
 <PRE>
@@ -547,7 +655,7 @@ you can then have a key in the <I>plist</I> dictionary declared like this
 is the following: an option set by a <I>#define</I> directive or modified
 by a <I>#pragma</I> directive in the plc source file overrides any option
 set on the command line which, in turn, overrides an option set by a shell
-environment variable.<P><H3><A NAME="M37"></A>Predefined variables</H3><P>A few predefined variables are set each time the <B>plcompile</B> script is 
+environment variable.<P><H3><A NAME="M41"></A>Predefined variables</H3><P>A few predefined variables are set each time the <B>plcompile</B> script is 
 run. <P>The five following variables existed in the CodeWarrior property list
 compiler. They are still available with <B>PList Compiler</B> in order to
 ensure some compatibility with already existing plc files (and because they
@@ -564,17 +672,17 @@ type of the built product. It corresponds to the MACOS_TYPE XCode variable.</DL>
 This variable contains the name of the built product. It is equivalent to 
 the concatenation of the PRODUCT_NAME and
 WRAPPER_EXTENSION XCode variables.</DL><P><DT><B>__DATE__</B><DL><DT>
-This is the complete date at the moment where the script is executed. it is
+This is the complete date at the moment where the script is executed. It is
 returned in the format specified by the ISO 8601 standard:
 YY-MM-DDTHH:MM:SSZ. For instance <I>"2005-10-04T17:12:23Z"</I>.</DL>
-</DL><P><B>PList Compiler</B> introduces other useful predefined variables: 
+</DL><P>Furthermore <B>PList Compiler</B> introduces other useful predefined variables: 
 <DL><P><DT><B>__YEAR__</B><DL><DT>
 The current year (four digits)</DL><P><DT><B>__MONTH__</B><DL><DT>
 The current month number (01 - 12)</DL><P><DT><B>__MONTHNAME__</B><DL><DT>
 The full month name (January, etc.)</DL><P><DT><B>__DAY__</B><DL><DT>
 The current day of month (01 - 31)</DL><P><DT><B>__DAYNAME__</B><DL><DT>
 The full day name (Monday, etc.)</DL><P><DT><B>__SHORTDATE__</B><DL><DT>
-The current date ass YYYY-MM-DD.</DL><P><DT><B>__TIME__</B><DL><DT>
+The current date as YYYY-MM-DD.</DL><P><DT><B>__TIME__</B><DL><DT>
 The current time as HH:MM::SS.</DL><P><DT><B>__HOURS__</B><DL><DT>
 The hours part of the TIME string.</DL><P><DT><B>__MINUTES__</B><DL><DT>
 The minutes part of the TIME string.</DL><P><DT><B>__SECONDS__</B><DL><DT>
@@ -592,11 +700,12 @@ The seconds part of the TIME string.</DL>
     __HOURS__     = 15
     __MINUTES__   = 54
     __SECONDS__   = 36
-</PRE><P><H3><A NAME="M38"></A>XCode environment variables</H3><P>All the environment variables set by an XCode project are accessible with 
-<B>PList Compiler</B>. The syntax is the same as for the predefined variables: 
+</PRE><P><H3><A NAME="M42"></A>XCode environment variables</H3><P>All the environment variables set by an XCode project are accessible with 
+<B>PList Compiler</B>. See the XCode documentation for a 
+complete list. The syntax is the same as for the predefined variables: 
 the name of the environment variable must be surrounded by double 
-underscores. For instance, if you wan to invoke the value of the 
-INFOPLIST_PATH variable in an XCode project, you would write it as __INFOPLIST_PATH__
+underscores. For instance, if you want to invoke the value of the 
+INFOPLIST_PATH variable defined in an XCode project, you would write it as <TT>__INFOPLIST_PATH__</TT>
 in the plc file. For instance
 <PRE>
     key "InfoPlistPath" value string __INFOPLIST_PATH__
@@ -604,7 +713,7 @@ in the plc file. For instance
 to be read-only variables) while the others can be set in the info window
 or a particular target. The name of a variable corresponding to a
 particular setting is always indicated by XCode between parentheses in the
-help text displayed when you select this setting in a Target Info window.<P><H3><A NAME="M39"></A>Unsupported variables</H3><P>A few predefined variables available in the CodeWarrior property list 
+help text displayed when you select this setting in a Target Info window.<P><H3><A NAME="M43"></A>Unsupported variables</H3><P>A few predefined variables available in the CodeWarrior property list 
 compiler are not supported by <B>PList Compiler</B>. This is mainly because they 
 are specific to the CodeWarrior IDE and have no meaning with XCode. Here 
 is the list of these variables:
@@ -612,11 +721,40 @@ is the list of these variables:
     __APPLEMACHLINKER__, __MACH__, __MERGELINKER__, 
     __MWMACHLINKER__, __MWPEFLINKER__
 </PRE><P>The <TT>__LINE__</TT> variable is not supported either, as well as the 
-<TT>__IDE_TARGET__()</TT> and <TT>__STRING__()</TT> pseudo-macros.<P><H2><A NAME="M40"></A>Download</H2><P><H2><A NAME="M41"></A>Known problems</H2><P><H2><A NAME="M42"></A>Version history</H2><P><UL>
+<TT>__IDE_TARGET__()</TT> and <TT>__STRING__()</TT> pseudo-macros.<P><H2><A NAME="M44"></A>Download</H2>
+<B>PList Compiler</B> is an Open Source Project. Its source code is 
+freely available and can 
+be found on the SourceForge site at the following address:
+<P> <A HREF="http://sourceforge.net/projects/plistcompiler">http://sourceforge.net/projects/plistcompiler</A><P><P> PList Compiler releases are available at
+<P> <A HREF="http://sourceforge.net/project/showfiles.php?group_id=149940">http://sourceforge.net/project/showfiles.php?group_id=149940</A> 
+<P> or on my web 
+page at 
+<P> <A HREF="http://webperso.easyconnect.fr/bdesgraupes/plistcompiler.html">http://webperso.easyconnect.fr/bdesgraupes/plistcompiler.html</A><P><P> The code is under CVS control. You can retrieve the latest stage of 
+development using any CVS client. See instructions at:
+<P> <A HREF="http://sourceforge.net/cvs/?group_id=149940">http://sourceforge.net/cvs/?group_id=149940</A><P><P> You can browse the cvs repository online at
+<P> <A HREF="http://cvs.sourceforge.net/cgi-bin/viewcvs.cgi/plistcompiler">http://cvs.sourceforge.net/cgi-bin/viewcvs.cgi/plistcompiler</A> <P><P> You can also download a nightly tarball from
+<P> <A HREF="http://cvs.sourceforge.net/cvstarballs/plistcompiler-cvsroot.tar.bz2">http://cvs.sourceforge.net/cvstarballs/plistcompiler-cvsroot.tar.bz2</A><P><H2><A NAME="M45"></A>Known problems</H2>
+<P> Please e-mail any problem or bug you encounter:
+<P> <A HREF="mailto:bdesgraupes@users.sourceforge.net">bdesgraupes@users.sourceforge.net</A>
+<P> Visit my Web page for updates and other recent builds:
+<P> <A HREF="http://webperso.easyconnect.fr/bdesgraupes/plistcompiler.html">http://webperso.easyconnect.fr/bdesgraupes/plistcompiler.html</A>
+<P> Visit the PList Compiler project area on the SourceForge site:
+<P> <A HREF="http://sourceforge.net/projects/plistcompiler">http://sourceforge.net/projects/plistcompiler</A><P>There is also a mailing list, <B>plistcompiler-users</B>, for discussing any
+topics related the usage of PList Compiler and its future development. New 
+versions will be announced on this list
+too. You can subscribe or unsubscribe from the following address:
+<P> <A HREF="http://lists.sourceforge.net/mailman/listinfo/plistcompiler-users">http://lists.sourceforge.net/mailman/listinfo/plistcompiler-users</A>
+To post to this list, send mail to
+<A HREF="mailto:plistcompiler-users@lists.sourceforge.net">plistcompiler-users@lists.sourceforge.net</A><P><H2><A NAME="M46"></A>Version history</H2><P><UL>
 	<LI> 2004-05-07 - 0.1b1 - First public beta release. Basic implementation.
-</UL><P><H2><A NAME="M43"></A>License and disclaimer</H2><P>PList Compiler is distributed under the same BSD License as
-the Tcl language itself: see the file License_terms in the distribution or 
+</UL><P><H2><A NAME="M47"></A>License and disclaimer</H2><P><B>PList Compiler</B> is distributed under the same BSD License as
+the Tcl language itself: see the file <I>License_terms</I> in the distribution or 
 the <A HREF="http://www.opensource.org/licenses/bsd-license"> Open Source Initiative site.</A><P><HR>
-<P> PListCompiler help last updated 2005-10-06 10:52:36<P>
+<P> Last updated 2005-10-06 14:52:13
+<!--  logo SF -->
+<!--  ------- -->
+<HR>
+<P> <I>PList Compiler is hosted by</I> 
+<A HREF="http://sourceforge.net"> <P><IMG SRC="http://sourceforge.net/sflogo.php?group_id=149940&amp;type=4 " ALT="SourceForge.net Logo" ALIGN=bottom></P></A><P>
 </BODY>
 </HTML>
