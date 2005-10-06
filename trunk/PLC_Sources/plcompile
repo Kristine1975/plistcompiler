@@ -102,6 +102,12 @@ set plc(execdone-1) 0
 # always executable.
 set plc(doexec-0) 1
 
+# Base64 encoding
+set plc(base64) [list \
+  A B C D E F G H I J K L M N O P Q R S T U V W X Y Z \
+  a b c d e f g h i j k l m n o p q r s t u v w x y z \
+  0 1 2 3 4 5 6 7 8 9 + / ]
+set plc(wraplen) 60
 
 # Main proc
 proc plc::execute {args} {
@@ -526,12 +532,18 @@ proc plc::parseData {args} {
 	plc::writeTag data
 	set data ""
 	foreach a $args {
-		append data [plc::substitute $a]
+		append data $a
 	} 
 	regsub -all " " $data "" data
+	# Do some checking
+	if {![string is xdigit $data]} {
+		error "Illegal hex data: $data"
+	} 
+	if {[expr {[string length $data] % 2}]} {
+		error "Expected even number of hex digit but got $data"
+	} 
 	# Need to convert to Base64 here. Todo...
-# 	plc::writeOut [plc::base64 $args]
-	plc::writeOut $data
+	plc::writeOut [plc::encodeBase64 $data]
 	plc::writeTag data close
 }
 
@@ -539,6 +551,9 @@ proc plc::parseNumber {args} {
 	set value ""
 	foreach a $args {
 		append value [plc::substitute $a]
+	} 
+	if {![string is double $value]} {
+		error "Not a number: $value"
 	} 
 	if {[regexp {\.} $value]} {
 		set num real
@@ -705,6 +720,48 @@ proc plc::writePreamble {} {
 proc plc::indent {} {
 	global plc
 	return [string repeat \t $plc(contextlevel)]
+}
+
+proc plc::encodeBase64 {hexstring} {
+	global plc
+
+	set result {}
+	set state 0
+	set length 0
+	# Convert the hex string to binary
+	set string [binary format H* $hexstring]
+	# Process the input bytes 3-by-3
+	binary scan $string c* X
+	foreach {x y z} $X {
+		# Wrap if necessary
+		if {$plc(wraplen) && $length >= $plc(wraplen)} {
+			append result "\r"
+			set length 0
+		}
+		
+		append result [lindex $plc(base64) [expr {($x >>2) & 0x3F}]] 
+		if {$y != {}} {
+			append result [lindex $plc(base64) [expr {(($x << 4) & 0x30) | (($y >> 4) & 0xF)}]] 
+			if {$z != {}} {
+				append result \
+				  [lindex $plc(base64) [expr {(($y << 2) & 0x3C) | (($z >> 6) & 0x3)}]]
+				append result [lindex $plc(base64) [expr {($z & 0x3F)}]]
+			} else {
+				set state 2
+				break
+			}
+		} else {
+			set state 1
+			break
+		}
+		incr length 4
+	}
+	if {$state == 1} {
+		append result [lindex $plc(base64) [expr {(($x << 4) & 0x30)}]]== 
+	} elseif {$state == 2} {
+		append result [lindex $plc(base64) [expr {(($y << 2) & 0x3C)}]]=  
+	}
+	return $result
 }
 
 # Usage proc
