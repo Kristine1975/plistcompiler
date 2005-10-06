@@ -1,0 +1,111 @@
+// ===========================================================================
+// Example2.plc
+//                       Created: 2005-10-05 12:26:37
+//             Last modification: 2005-10-05 12:32:29
+// Author: Bernard Desgraupes
+// e-mail: <bdesgraupes@easyconnect.fr>
+// www: <http://webperso.easyconnect.fr/bdesgraupes/>
+// © Copyright: Bernard Desgraupes 2005
+// All rights reserved.
+// $Date$
+// $Revision$
+// ===========================================================================
+
+
+#include "Example.h"
+
+// Version number
+#if kCurrentStage == kAlphaStage
+	#define PLCOMPILER_VERSION  kMajorVersion "."  kMinorVersion "a" kSubMinorVersion
+#elif kCurrentStage == kBetaStage
+	#define PLCOMPILER_VERSION  kMajorVersion "."  kMinorVersion "b" kSubMinorVersion
+#else
+	#define PLCOMPILER_VERSION  kMajorVersion "."  kMinorVersion 
+#endif
+
+
+// Short version string
+#define kBundleShortInfoString __OUTPUT_FILENAME__  " "  PLCOMPILER_VERSION
+
+
+// Check the value of an XCode variable
+#if __DEBUGGING_SYMBOLS__
+// 	#define kBundleLongInfo_EN kBundleShortInfoString ", built " __DATE__ " at " __TIME__ " with debugging symbols"
+	#define kBundleLongInfo_FR kBundleShortInfoString ", compilé le " __DATE__ " à " __TIME__  " avec les symboles de débogage"
+#else
+	#define kBundleLongInfo_EN kBundleShortInfoString ", built " __DATE__ " at " __TIME__  " without debugging symbols"
+	#define kBundleLongInfo_FR kBundleShortInfoString ", compilé le " __DATE__ " à " __TIME__  " sans les symboles de débogage"
+#endif
+
+
+// This forces the localized files to be stored in another folder
+#pragma localize_directory "Local/Strings/"
+
+
+plist
+{
+	dictionary
+	{
+		key "CFBundleIdentifier" value string kBundleIdentifier
+		
+		key "CFBundleName" value string __OUTPUT_FILENAME__
+		key "CFBundleShortVersionString" value string kBundleShortInfoString
+// 		key "CFBundleGetInfoString"  // See localized files
+	
+		key "CFBundlePackageType" value string __OUTPUT_TYPE__
+		key "CFBundleSignature" value string __OUTPUT_CREATOR__
+		key "CFBundleExecutable" value string __OUTPUT_FILENAME__
+		key "CFBundleVersion" value string PLCOMPILER_VERSION
+		key "CFBundleIconFile" value string "PListCompiler.icns"
+		
+		key "CFBundleHelpBookFolder" value string "PListCompilerHelp"
+// 		key "CFBundleHelpBookName"  // See localized files
+	
+		key "CFBundleDevelopmentRegion" value string "English"
+		key "CFBundleInfoDictionaryVersion" value string "6.0"
+		key "LSRequiresCarbon" value boolean true
+		key "CFBundleDocumentTypes" value array 
+		[
+			dictionary
+			{
+				key "CFBundleTypeName" value string "PListCompiler Resource File"
+				key "CFBundleTypeIconFile" value string "PListCompilerDocs.icns"
+				key "CFBundleTypeRole" value string "Viewer"
+				key "CFBundleTypeOSTypes" value array
+				[
+					string 'PLCP'
+				]
+				key "CFBundleTypeExtensions" value array
+				[
+					string "plc"
+					string "ploc"
+					string "*"
+				]
+			}
+		]
+	}
+}
+
+// To be localized for English
+localize "English"
+{
+	comment "Localized versions of Info.plist keys"
+	key "CFBundleGetInfoString" value string kBundleLongInfo_EN
+	key "CFBundleHelpBookName" value string "PListCompiler Help"
+}
+
+// To be localized for French
+localize "French"
+{
+	comment "Version localisée des clés Info.plist"
+	key "CFBundleGetInfoString" value string kBundleLongInfo_FR
+	key "CFBundleHelpBookName" value string "Aide PListCompiler"
+}
+
+// To create localized strings lists
+#include "Ploc_files/PListCompiler_EN.ploc"
+#include "Ploc_files/PListCompiler_FR.ploc"
+
+#include "Ploc_files/PListCompilerErrors_EN.ploc"
+#include "Ploc_files/PListCompilerErrors_FR.ploc"
+

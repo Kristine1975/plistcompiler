@@ -1,0 +1,60 @@
+// ===========================================================================
+// Test_pragmas.plc
+//                       Created: 2005-10-03 06:28:51
+//             Last modification: 2005-10-04 06:29:05
+// Author: Bernard Desgraupes
+// e-mail: <bdesgraupes@easyconnect.fr>
+// www: <http://webperso.easyconnect.fr/bdesgraupes/>
+// © Copyright: Bernard Desgraupes 2005
+// All rights reserved.
+// $Date$
+// $Revision$
+// ===========================================================================
+
+// Bundle identifier string
+#define kBundleIdentifier "net.sourceforge.plistcompiler"
+
+
+// This forces the Info.plist file to be stored in another folder
+#pragma in_package_directory "Infos"
+
+// This forces the Info.plist file to be utf-16 encoded
+#pragma output_encoding utf-16
+
+// This sets the plist DTD version to 0.9 instead of 1.0
+#pragma plist_version 0_9
+
+plist
+{
+	dictionary
+	{
+		key "CFBundleIdentifier" value string kBundleIdentifier
+		
+		key "CFBundleName" value string __OUTPUT_FILENAME__
+		key "CFBundlePackageType" value string __OUTPUT_TYPE__
+		key "CFBundleSignature" value string __OUTPUT_CREATOR__
+	}
+}
+
+
+
+// This forces the localized files to be stored in another folder
+#pragma localize_directory "Local/Strings/"
+
+// This resets utf-8 encoding
+#pragma output_encoding utf-8
+
+localize "English" as "Errors.strings"
+{
+	comment "Localized version of error strings"
+	key "1000" value string "Unknown error"
+	key "1001" value string "Fatal error"
+}
+
+localize "French" as "Errors.strings"
+{
+	comment "Version localisée des messages d'erreur"
+	key "1000" value string "Erreur inconnue"
+	key "1001" value string "Erreur fatale"
+}
+

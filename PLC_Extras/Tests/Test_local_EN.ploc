@@ -1,0 +1,24 @@
+// ===========================================================================
+// Test_localize.plc
+//                       Created: 2005-10-03 06:28:51
+//             Last modification: 2005-10-04 14:45:18
+// Author: Bernard Desgraupes
+// e-mail: <bdesgraupes@easyconnect.fr>
+// www: <http://webperso.easyconnect.fr/bdesgraupes/>
+// © Copyright: Bernard Desgraupes 2005
+// All rights reserved.
+// $Date$
+// $Revision$
+// ===========================================================================
+
+localize "English" as "LocalProps.strings"
+{
+	comment kEnglishComment
+	comment "Generated from " __FILE__
+	key "InfoString" value string "PLCompiler, the list compiler"
+	key "HelpBookName" value string "PLCompiler Help"
+}
+
+#include "Test_local_sub.ploc"
+
+

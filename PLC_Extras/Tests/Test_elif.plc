@@ -1,0 +1,41 @@
+// ===========================================================================
+// Test_elif.plc
+//                       Created: 2005-10-03 06:28:51
+//             Last modification: 2005-10-05 09:17:13
+// Author: Bernard Desgraupes
+// e-mail: <bdesgraupes@easyconnect.fr>
+// www: <http://webperso.easyconnect.fr/bdesgraupes/>
+// © Copyright: Bernard Desgraupes 2005
+// All rights reserved.
+// $Date$
+// $Revision$
+// ===========================================================================
+
+
+#define kVersionFive 5
+#define kVersionSix 6
+#define kVersionSeven 7
+#define kVersionEight 8
+
+#define kCurrentVersion 9
+
+
+#if kCurrentVersion <= kVersionFive 
+
+#warning "Current version is <= 5"
+
+#elif kCurrentVersion <= kVersionEight 
+
+#if kCurrentVersion == kVersionSix
+#warning "Current version is 6"
+#elif kCurrentVersion == kVersionSeven 
+#warning "Current version is 7"
+#else
+#warning "Current version is 8"
+#endif
+
+#else
+
+#warning "Current version is > 8"
+
+#endif

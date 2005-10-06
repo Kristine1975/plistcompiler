@@ -1,0 +1,30 @@
+// ===========================================================================
+// Test_undef.plc
+//                       Created: 2005-10-03 06:28:51
+//             Last modification: 2005-10-04 18:58:30
+// Author: Bernard Desgraupes
+// e-mail: <bdesgraupes@easyconnect.fr>
+// www: <http://webperso.easyconnect.fr/bdesgraupes/>
+// © Copyright: Bernard Desgraupes 2005
+// All rights reserved.
+// $Date$
+// $Revision$
+// ===========================================================================
+
+
+#ifndef kNewlyDefinedMacro
+#warning "It's undefined so let's define it"
+#define kNewlyDefinedMacro "newly defined"
+#endif
+
+#ifdef kNewlyDefinedMacro
+#warning "kNewlyDefinedMacro is " kNewlyDefinedMacro
+#endif
+
+
+#undef kNewlyDefinedMacro
+
+#ifdef kNewlyDefinedMacro
+#warning "kNewlyDefinedMacro has now been undefined"
+#endif
+
