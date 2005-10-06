@@ -6,7 +6,7 @@ exec tclsh "$0" "$@"
 # ===========================================================================
 # File: "PlistComp.tcl"
 #                        Created: 2005-10-01 21:46:19
-#              Last modification: 2005-10-06 10:31:13
+#              Last modification: 2005-10-06 15:09:24
 # Author: Bernard Desgraupes
 # e-mail: <bdesgraupes@easyconnect.fr>
 # www: <http://webperso.easyconnect.fr/bdesgraupes/>
@@ -76,9 +76,7 @@ set plc_def(PLIST) "1.0"
 set plc(output_filename) ""
 if {[info exists plc_def(BUILT_PRODUCTS_DIR)] && [info exists plc_def(CONTENTS_FOLDER_PATH)]} {
 	set plc(output_folder) [file join $plc_def(BUILT_PRODUCTS_DIR) $plc_def(CONTENTS_FOLDER_PATH)]
-} else {
-	set plc(output_folder) [file dir [info script]]
-}
+} 
 set plc(in_package_directory) ""
 set plc(localize_directory) "Resources"
 
@@ -96,27 +94,13 @@ set plc(eols) [list "cr" "lf" "crlf"]
 # 		if elif [elif..] else endif
 # Level 0 means outside of any conditional block.
 set plc(iflevel) 0
-# This tells if some section of a conditional block at a certain level has 
-# already been executed. If yes, no other section can be made executable.
+# plc(execdone-XX) tells if some previous section of a conditional block at
+# level XX has already been executed. If yes, no other section can be made
+# executable.
 set plc(execdone-1) 0
-# This tells if execution is active at a particular level
+# plc(doexec-XX) tells if execution is active at a level XX. Level 0 is 
+# always executable.
 set plc(doexec-0) 1
-
-
-# 	
-# #################
-# #               #
-# #   Debugging   #
-# #               #
-# #################
-# # # # # # # # # # # # # # # # # # # # # # # # # # # 
-
-source "/Volumes/im2/Devel/Current/PListCompiler/PLC_Extras/Tests/Fake_env.tcl"
-set plc(output_folder) [file join [file dir [info script]] Output]
-# set plc(debugfile) "/Volumes/im2/Devel/Current/PListCompiler/PLC_Extras/Tests/Test_localize.plc"
-# set plc_def(FILE) $plc(debugfile)
-# plc::processFile $plc(debugfile)
-# # # # # # # # # # # # # # # # # # # # # # # # # # # 
 
 
 # Main proc
@@ -144,7 +128,13 @@ proc plc::execute {args} {
 		error "Can't find '$srcfile'. No such file or directory."
 	} 
 	set plc(input_file) $srcfile
-	
+	# Define a default output folder in case nothing was inherited 
+	# from the XCode settings (for instance, if the script is used directly 
+	# from Terminal). This can be overridden by a -dest option below.
+	if {![info exists plc(output_folder)]} {
+		set plc(output_folder) [file dir $srcfile]
+	} 
+
 	# Parse the options
 	incr len -1
 	set failed 0
@@ -736,17 +726,8 @@ proc plc::usage { {showEncodings 0} } {
 }
 
 
-
-
-##########################
-#                        #
-#   Remove this return   #
-#                        #
-##########################
-return
-
-# # Execute the command line
-# # ------------------------
+# # Execute the command line now
+# # ----------------------------
 
 if {[catch {eval plc::execute $argv} err]} {
 	puts $err
