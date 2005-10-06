@@ -1,0 +1,71 @@
+// ===========================================================================
+// Test_boolean_vars.plc
+//                       Created: 2005-10-03 06:28:51
+//             Last modification: 2005-10-06 17:51:21
+// Author: Bernard Desgraupes
+// e-mail: <bdesgraupes@easyconnect.fr>
+// www: <http://webperso.easyconnect.fr/bdesgraupes/>
+// © Copyright: Bernard Desgraupes 2005
+// All rights reserved.
+// $Date$
+// $Revision$
+// ===========================================================================
+
+
+// Try to evaluate all the settings found in the XCode environment
+
+plist { 
+	dictionary {
+		key "kDataVar1" value data "00 01 02 03"
+		key "kDataVar2" value data "00010203"
+		key "kDataVar3" value data "0001" "0203"
+		key "kDataVar4" value data "0001" "0203" "040506"
+		key "kDataVar5" value data "00010203040506"
+		key "kDataVar6" value data "abcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890"
+		key "kDataVar7" value data "0123456789fedcba0123456789fedcba0123456789fedcba0123456789fedcba0123456789fedcba0123456789fedcba0123456789fedcba0123456789fedcba0123456789fedcba0123456789fedcba0123456789fedcba"
+		key "kDataVar8" value data 0123456 789fedcba
+		key "kDataVar9" value data 0123 456789fe dcba
+		key "kDataVar10" value data 01 23 45 67 89 fe dc ba
+	}
+}
+
+
+
+// Expected result
+// ---------------
+
+// <key>kDataVar1</key>
+// <data>AAECAw==</data>
+
+// <key>kDataVar2</key>
+// <data>AAECAw==</data>
+
+// <key>kDataVar3</key>
+// <data>AAECAw==</data>
+
+// <key>kDataVar4</key>
+// <data>AAECAwQFBg==</data>
+
+// <key>kDataVar5</key>
+// <data>AAECAwQFBg==</data>
+
+// <key>kDataVar6</key>
+// <data>
+// q83vEjRWeJCrze8SNFZ4kKvN7xI0VniQq83vEjRWeJCrze8SNFZ4kKvN7xI0
+// VniQq83vEjRWeJCrze8SNFZ4kKvN7xI0VniQq83vEjRWeJCrze8SNFZ4kA==
+// </data>
+
+// <key>kDataVar7</key>
+// <data>
+// ASNFZ4n+3LoBI0Vnif7cugEjRWeJ/ty6ASNFZ4n+3LoBI0Vnif7cugEjRWeJ
+// /ty6ASNFZ4n+3LoBI0Vnif7cugEjRWeJ/ty6ASNFZ4n+3LoBI0Vnif7cug==
+// </data>
+
+// <key>kDataVar8</key>
+// <data>ASNFZ4n+3Lo=</data>
+
+// <key>kDataVar9</key>
+// <data>ASNFZ4n+3Lo=</data>
+
+// <key>kDataVar10</key>
+// <data>ASNFZ4n+3Lo=</data>
