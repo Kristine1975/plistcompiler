@@ -1,0 +1,58 @@
+// ===========================================================================
+// Test_simple.plc
+//                       Created: 2005-10-03 06:28:51
+//             Last modification: 2005-10-04 06:29:05
+// Author: Bernard Desgraupes
+// e-mail: <bdesgraupes@easyconnect.fr>
+// www: <http://webperso.easyconnect.fr/bdesgraupes/>
+// © Copyright: Bernard Desgraupes 2005
+// All rights reserved.
+// $Date$
+// $Revision$
+// ===========================================================================
+
+plist
+{
+	dictionary
+	{		
+		key "TestString1" value string  "PLC is Great!!!"
+		key "TestString1" value string  "debug_" __OUTPUT_FILENAME__
+		
+		key "TestNumber1" value number 1
+		key "TestNumber2" value number 1.0
+		key "TestNumber3" value number -1
+		key "TestNumber4" value number -1.0
+		key "TestNumber5" value number -.1
+		key "TestNumber6" value number 2.0e-4
+		
+		key "TestDate" value date "2002-12-18T12:00:00Z"
+		
+		key "TestData1" value data "00 01 02 03"
+		key "TestData2" value data "00010203"
+		key "TestData3" value data "0001" "0203"
+		
+		key "TestBoolean1" value boolean true
+		key "TestBoolean2" value boolean false
+		
+		key "CFBundleDocumentTypes" value array 
+		[
+			dictionary
+			{
+				key "CFBundleTypeName" value string "PLC Resource File"
+				key "CFBundleTypeIconFile" value string "PLCDocs.icns"
+				key "CFBundleTypeRole" value string "Viewer"
+				key "CFBundleTypeOSTypes" value array
+				[
+					string 'RSRC'
+					string '****'
+				]
+				key "CFBundleTypeExtensions" value array
+				[
+					string "rsrc"
+					string "*"
+				]
+			}
+		]
+	}
+}
+

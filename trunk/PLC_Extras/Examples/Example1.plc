@@ -1,0 +1,71 @@
+// ===========================================================================
+// Example1.plc
+//                       Created: 2005-10-05 12:26:37
+//             Last modification: 2005-10-05 12:32:34
+// Author: Bernard Desgraupes
+// e-mail: <bdesgraupes@easyconnect.fr>
+// www: <http://webperso.easyconnect.fr/bdesgraupes/>
+// © Copyright: Bernard Desgraupes 2005
+// All rights reserved.
+// $Date$
+// $Revision$
+// ===========================================================================
+
+
+// Bundle identifier string
+#define kBundleIdentifier "net.sourceforge.plistcompiler"
+
+// Version number
+#define PLCOMPILER_VERSION "0.1b1"
+
+// Short version string
+#define kBundleShortInfoString __OUTPUT_FILENAME__  " "  PLCOMPILER_VERSION
+
+// String to display in the Finder's Get Info window
+#define kBundleLongInfo kBundleShortInfoString ", Copyright (c) " __YEAR__ " by Bernard Desgraupes. All rights reserved."
+
+
+plist
+{
+	dictionary
+	{
+		key "CFBundleIdentifier" value string kBundleIdentifier
+		
+		key "CFBundleName" value string __OUTPUT_FILENAME__
+		key "CFBundleShortVersionString" value string kBundleShortInfoString
+		key "CFBundleGetInfoString" kBundleLongInfo
+	
+		key "CFBundlePackageType" value string __OUTPUT_TYPE__
+		key "CFBundleSignature" value string __OUTPUT_CREATOR__
+		key "CFBundleExecutable" value string __OUTPUT_FILENAME__
+		key "CFBundleVersion" value string PLCOMPILER_VERSION
+		key "CFBundleIconFile" value string "PListCompiler.icns"
+		
+		key "CFBundleHelpBookFolder" value string "PListCompilerHelp"
+		key "CFBundleHelpBookName" value string "PListCompiler Help"
+	
+		key "CFBundleDevelopmentRegion" value string "English"
+		key "CFBundleInfoDictionaryVersion" value string "6.0"
+		key "LSRequiresCarbon" value boolean true
+		key "CFBundleDocumentTypes" value array 
+		[
+			dictionary
+			{
+				key "CFBundleTypeName" value string "PListCompiler Resource File"
+				key "CFBundleTypeIconFile" value string "PListCompilerDocs.icns"
+				key "CFBundleTypeRole" value string "Viewer"
+				key "CFBundleTypeOSTypes" value array
+				[
+					string 'PLCP'
+				]
+				key "CFBundleTypeExtensions" value array
+				[
+					string "plc"
+					string "ploc"
+					string "*"
+				]
+			}
+		]
+	}
+}
+

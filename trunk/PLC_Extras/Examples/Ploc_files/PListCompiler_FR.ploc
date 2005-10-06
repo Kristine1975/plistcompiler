@@ -1,0 +1,22 @@
+// ===========================================================================
+// File: "PListCompiler_FR.ploc"
+//                        Created: 2005-10-05 13:10:24
+//              Last modification: 2005-10-05 13:10:24
+// Author: Bernard Desgraupes
+// e-mail: <bdesgraupes@easyconnect.fr>
+// www: <http://webperso.easyconnect.fr/bdesgraupes/>
+// (c) Copyright: Bernard Desgraupes 2005
+// All rights reserved.
+// $Date$
+// $Revision$
+// ===========================================================================
+
+
+localize "French" as "Localizable.strings" 
+{
+	key "CantCreateNewRezFile" value string "Impossible de créer le nouveau fichier de ressources (erreur ‘%d’)."
+	key "HexStringWrongSize" value string "Cette chaîne hexadécimale devrait comporter ‘%c’ octets."
+	key "HowManyItems" value string "Nombre d’éléments"
+}
+
+

@@ -1,0 +1,969 @@
+!! !! ===========================================================================
+!! !! PListCompilerHelp.aida
+!! !!                       Created: 2005-10-03 16:27:26
+!! !!             Last modification: 2005-10-06 10:52:28
+!! !! Author: Bernard Desgraupes
+!! !! e-mail: <bdesgraupes@easyconnect.fr>
+!! !! www: <http://webperso.easyconnect.fr/bdesgraupes/>
+!! !! © Copyright: Bernard Desgraupes 2003-2005
+!! !! All rights reserved.
+!! !! $Date$
+!! !! $Revision$
+!! !! ===========================================================================
+
+:Title:       PListCompilerHelp
+:DestFolder:  ../../PLC_Help
+:Author:      Bernard DESGRAUPES <bdesgraupes@easyconnect.fr>
+:Homepage:    <http://webperso.easyconnect.fr/bdesgraupes/>
+:Created:     2005-10-03 16:27:26
+:Modified:    2005-10-06 10:52:28
+:Keywords:    property list, xcode, compiler
+:Source:      PlcAidaMacros.tcl
+
+
+((/
+((b PList Compiler b)) is a property list compiler for XCode. 
+It is developed as an ((i Open Source i)) project coming with a BSD
+License. The source code is currently hosted and developed on the 
+((lk http://sourceforge.net/projects/plistcompiler ))SourceForge site. lk))
+((nl This file documents version ((s [plc::getVersion] s)) of PList Compiler.
+/))
+
+((toc
+
+((s1 Introduction
+
+
+((b PList Compiler b)) is a property list compiler for XCode. It lets you build
+localized and non-localized plist files from plc and ploc source files. 
+!! !! The plc syntax allows for a great flexibility and lets you generate the 
+
+It is modelled on the CodeWarrior property list language: the idea of
+preparing source files and compiling them during the build process was
+introduced in CodeWarrior Pro 8. The language used in these source files
+lets you have the compiler build the property list files for you
+automatically, substituting the right values during the building process,
+instead of having to manage manually hard-coded XML files. CodeWarrior Pro 
+8 introduced a first draft of the plc language together with a dedicated 
+compiler written by Josef W. Wankerl. Unfortunately XCode does not offer 
+such a handy tool. Here comes ((b PList Compiler b))!
+
+It is a shell script, named ((b plcompile b)), which is meant to be executed during a Shell Script
+Build Phase within an XCode project. It can also be run independently as a
+command line tool.
+
+((b PList Compiler b)) uses the same syntax as the original CodeWarrior 
+compiler, supports most of its functionalities and adds many more to take 
+advantage of all the XCode settings.
+
+((b PList Compiler b)) is written in fact in Tcl 
+(the ((lk http://wiki.tcl.tk/ )) Tool Command Language lk))): 
+the executable script is a ((i bash i)) script which magically redirects the
+instructions to ((i tclsh i)) which is the Tcl shell. Tcl is installed by
+default on OSX since version 10.3 (aka Panther) so ((i tclsh i)) is
+normally present on every MacOSX system starting from this version, so 
+there should be nothing special to do for this script to run there. For
+version 10.2 systems (aka Jaguar), you will have to install Tcl on your
+machine: you can for instance get Daniel Steffen's Tcl Batteries Included distribution 
+((lk http://www.maths.mq.edu.au/~steffen/tcltk/ )) from there. lk))
+
+((b PList Compiler b)) comes with the same BSD license as Tcl itself. 
+See the file ((i License_terms i)) included in this distribution or the 
+((lk http://www.opensource.org/licenses/bsd-license )) Open Source Initiative (OSI) site lk)).
+
+
+((s1 Usage
+
+The syntax of the plcompile shell script is:
+((|
+    plcompile options plcFile
+    plcompile -help
+|))
+
+The second form
+((|
+    plcompile -help
+|))
+prints the usage together with some default values in the Terminal window.
+
+The first form executes the compilation of the plc source file ((i plcFile i)). 
+Traditionnally these files have a ((i .plc i)) extension but this is not 
+required at all. Most of the time you will not have to worry about the 
+options. ((b PList Compiler b)) comes with reasonable defaults for the 
+optional values, corresponding to a normal usage of these files in a 
+project. The available options are explained below.
+
+((s2 Default behavior
+
+
+((s2 Command line options
+
+The complete syntax of the compiler is:
+((|
+    plcompile [-input_encoding <enc>] [-output_encoding <enc>] [-input_eol <eol>] 
+                            [-output_eol <eol>] [-dest folder] [-plist <version>] plcFile
+|))
+
+The options have the following meaning:
+((lu
+((li the -input_encoding option lets you specify in which encoding the 
+source file should be read;
+((li the -output_encoding option  lets you specify in which encoding the 
+output files should be written (usually utf-8);
+((li the -input_eol option lets you specify the type of line endings used in the
+source file (cr for Mac, lf for Unix and crlf for Windows);
+((li the -output_eol option lets you specify the type of line endings used in
+the source files;
+((li the -dest option lets you specify a destination folder relatively to which
+the output files will be produced. The usual default location is the 
+Contents folder inside the application bundle when you are building a packaged 
+application. See also below various pragmas which can additionnally specify 
+different subfolders inside the destination folder.
+((li the -plist option lets you specify the version of the plist XML format (0.9 
+or 1.0). The default value is 1.0.
+lu))
+
+((s1 Howto
+
+((s2 Using PList Compiler in an XCode project
+
+The idea is to generate the various plist files and localized strings
+files during a ((i Shell Script Build Phase i)) within your XCode project. 
+XCode lets you define ((i Shell Script Build Phases i)): they are shell
+scripts which can be executed at any stage of the building process. 
+
+So, in order to use ((b PList Compiler b)), you would normally create, in
+all the targets for which you want plist files to be generated, a build phase
+which could take place at the end of the build process. To create a 
+((i Shell Script Build Phase i)), select the target you want in the ((i Groups
+and Files i)) panel of your main project window and select the ((i Shell
+Script Build Phase i)) command in the ((i New Build Phase i)) submenu of
+the ((i Project i)) menu. If you open the disclosure triangle located in 
+fornt of your target's name, you will see your shell phase (in XCode 2.1, 
+it is called ((i Run Script i))). Select it and click on the Info button 
+in the toolbar (or select ((i Get Info i)) in the ((i File i)) menu).
+
+XCode displays a window in which you can enter shell commands to execute. 
+If your plc file is named MyApp.plc, you should just have to enter a 
+command like
+((|
+    plcompile /path/to/MyApp.plc
+|))
+The only point is to make sure that the shell (Bash shell) can find the 
+((b plcompile b)) script. This depends on where you have put this sscript on your 
+machine. If it is in one of the oflders of your shell ((v PATH v)) variable there 
+should be no problem. Otherwise you can specify the complete path of the 
+script, like for instance:
+((|
+        /Users/bernardo/Devel/Tools/plcompile /path/to/MyApp.plc
+|))
+or alternatively change the directory to this directory and execute the 
+script there, like this:
+((|
+        cd /Users/bernardo/Devel/Tools
+        ./plcompile /path/to/MyApp.plc
+|))
+supposing that ((b plcompile b)) resides in /Users/bernardo/Devel/Tools.
+
+
+((s2 Using PList Compiler in Terminal
+
+The ((i plcompile i)) script can be used directly from the command line (in
+a Terminal window). There is only one caveat with this approach: only the
+environment variables defined in the current shell window are available.
+This means that you must make sure, if ever your plc file makes use of
+environment variables defined by XCode, that they are available in the
+shell. You could have to define them manually. If your plc file does not
+need any of the values set by XCode, then you should normally be able to
+compile your plc files directly. You will probably want, in that case, to
+specify a destination folder using the ((i -dest i)) command line option.
+
+For instance:
+((|
+    /Developer/Tools/plcompile -dest ~/Devel/Tests myfile.plc
+|))
+
+
+((s2 Troubleshooting
+
+Make sure that the plcompile script has been saved with Unix line endings
+(lf) rather than Mac line endings (cr). Some editors tend to change them 
+in your back.
+
+Make sure there is not an already existing Info.plist file in your source 
+files added to your built product during the ((i Copy Bundle Resources i)) 
+phase. 
+
+Also make sure, in the target settings, that no file has been declared in 
+the ((i Info.plist File i)) setting (in the Packaging section of the 
+General settings).
+
+If the script is not found by the shell, read the informations in the 
+section above about executing shell phases in XCode.
+
+
+((s1 Anatomy of 'plc' files
+
+The .plc source files are regular text files taken as input by the PList 
+Compiler in order to produce one or several output files. They contains 
+three types of commands:
+((lu
+((li preprocessor macros, simlar to those found in C or C++ source files
+((li specific commands understood and interpreted by the compiler
+((li lines starting with a double slash (//) are comments: they are ignored by 
+the processor
+lu))
+
+
+((s2 The plc commands
+
+
+Most of these commands correspond to an XML entity in the output Info.plist
+file. An Info.plist file is an XML document. The format of the plist files
+is specified by Apple in a DTD which can be found in 
+((i /System/Library/DTDs/PropertyList.dtd i)).
+For a detailed description of property lists files, see for instance
+((lk http://developer.apple.com/documentation/CoreFoundation/Conceptual/CFPropertyLists/index.html )) Introduction to Property Lists lk))
+
+All the commands must be kept on a separate line (not necessarily at the 
+beginning of the line).
+
+((s3 The 'plist' command
+
+The first command found in a .plc file designed to generate a .plist file
+is always the ((i plist i)) command. Its argument is a block enclosed
+inside a pair of curly braces. A minimal property list file,
+describing a completely empty property list, would look like this:
+((|
+    plist {}
+|))
+
+The ((i plist i)) command corresponds to the ((v < v))plist((v > v)) XML tag.
+
+
+((s3 The 'dictionary' command
+
+Directly inside the ((i plist i)) block, there is usually a ((i dictionary i)) 
+command. This is not required by the DTD but all property lists in use are
+structured like this. Like with ((i plist i)) command, the argument of a
+((i dictionary i)) command is a block enclosed inside a pair of curly
+braces. So, a minimal valid plc source file would be:
+((|
+    plist
+    {
+        dictionary {}
+    }
+|))
+
+The ((i plist i)) command corresponds to the ((v < v))dict((v > v)) XML tag.
+
+The dictionary is made up of key/value pairs. The key names must be unique within a single
+dictionary. The value of a key can have any of the following types: array, boolean,
+data, date, dictionary, number, or string.
+
+
+((s3 The 'key' command
+
+The key/value pairs are expressed by instructions with the following format
+((|
+    key "name_of_the_key" value "type_of_value" "the_value"
+|))
+
+In this instruction the ((i key i)) and  ((i value i)) keywords correspond
+to the ((v < v))key((v > v)) and ((v < v))value((v > v))  XML tags.
+
+For instance, here is a valid key statement to put in a dictionary block:
+((|
+    key "Victor Hugo" value string "Writer"
+|))
+
+
+((s3 The 'array' command
+
+The ((i array i)) command is used to describe an ordered list of property list elements.
+These elements can be of any of the types already mentioned (array, boolean,
+data, date, dictionary, number, or string).
+
+The original specification of the plc syntax in CodeWarrior stipulated that
+the argument of an ((i array i)) command is a block enclosed inside a pair
+of square brackets. With ((b PList Compiler b)), you can also use curly braces
+instead of square brackets.
+
+Here is an example of an array containing a dictionary and a boolean value:
+((|
+    array
+    {
+        boolean true
+        dictionary {
+            key "Victor Hugo" value string "Writer"
+            key "Ludwig van Beethoven" value string "Composer"
+        }
+    }
+|))
+
+
+((s3 The 'string' command
+
+The ((i string i)) command lets you specify a string value. Strings are enclosed
+between double quotes in order to distinguish them from a substitutable
+variable (see below), but this is not required. If there is no risk of
+ambiguity, you can suppress the double quotes, but it still is good
+programming practice to write them.
+
+The value of a string can be made up of several pieces, mixing quoted strings or 
+variables. For instance:
+((|
+    string "copyright (c) " __YEAR__ ", all rights reserved" 
+|))
+
+where __YEAR__ is one of the predefined variables set by the compiler.
+The ((i string i)) command corresponds to the ((v < v))string((v > v)) XML tag.
+
+
+
+((s3 The 'number' command
+
+The ((i number i)) command lets you specify numeric values. There is no 
+XML tag named ((i number i)) in a plist file, but rather two entities named 
+((v < v))real((v > v)) and ((v < v))integer((v > v)) corresponding 
+respectively to integer or floating point values. The ((i number i)) 
+command corresponds to both of them: the compiler automatically decides to 
+which type the value belongs. For instance, the following declarations will 
+result in an ((v < v))integer((v > v)) tag:
+((|
+    number 0
+    number 1
+    number -1
+|))
+while the following ones will yield ((v < v))real((v > v)) tags:
+((|
+    number 0.0
+    number 3.14
+    number -2.718
+    number .1
+    number -.1
+    number 6.09e23
+|))
+
+
+((s3 The 'date' command
+
+The ((i date i)) command lets you specify a date value. The plist format 
+specification (in PropertyList.dtd) suggests that 
+((q the 
+contents of a date value should conform to a subset of ISO 8601:
+in particular, YYYY '-' MM '-' DD 'T' HH ':' MM ':' SS 'Z'. 
+Smaller units may be omitted with a loss of precision.
+q))
+
+For instance:
+((|
+    date "2005-09-15 18:06:03"
+    date "2005-09-15T18:06:03Z"
+    date __DATE__
+|))
+where __DATE__ is one of the predefined variables set by the compiler.
+The ((i date i)) command corresponds to the ((v < v))date((v > v)) XML tag.
+
+
+((s3 The 'data' command
+
+The ((i data i)) command is used to store raw binary data. The value of a
+data type is expressed in the plc file in hexadecimal format, possibly with
+space characters, like for instance:
+((|
+    data "64656667"
+    data "64 65 66 67"
+    data "64 65"  "66 67"
+|))
+In the output file, the same data is represented in Base64 encoding as 
+mentioned in the DTD specifying the plist format (/System/Library/DTDs/PropertyList.dtd).
+
+The ((i data i)) command corresponds to the ((v < v))data((v > v)) XML tag.
+
+((b Note: b)) the CodeWarrior plist compiler also defined a ((i data file
+i)) command followed by the name of a file containing raw data. This is not
+implemented by ((b PList Compiler b)) as of version 0.1.
+
+
+((s3 The 'boolean' command
+
+The ((i boolean i)) command lets you specify a boolean value using any of
+the usual keywords: true/false, yes/no, and 1/0. Casing does not matter, so
+TRUE, true or True are all acceptable values. The value can be enclosed in
+double quotes but this is not required.
+
+For example:
+((|
+    key "kGcc_Precompile_Prefix_Header" value boolean 1
+    key "kGcc_Symbols_Private_Extern" value boolean 0
+    key "kGenerate_Profiling_Code" value boolean Yes
+    key "kUse_Dynamic_No_Pic" value boolean "false"
+    key "kZero_Link" value string __ZERO_LINK__
+|))
+
+The last example is correct because XCode defines a ZERO_LINK variable 
+whose value can be either "YES" or "NO" (see below).
+
+The ((i boolean i)) command corresponds to the ((v < v))boolean((v > v)) XML tag.
+
+
+((s2 Localized files
+
+
+((s3 The 'localize' command
+
+The ((i localize i)) command is used to create localized strings files. It is a 
+top level command like the ((i plist i)) command. There are two possible 
+syntaxes to invoke this command:
+((|
+    localize "language"
+    localize "language" as "localized_file_name"
+|))
+
+The first form is used to localize string values present in the main property list
+dictionary of the ((i plist i)) command. The resulting file is named by 
+default
+((i InfoPlist.strings i)) instead of Info.plist, and is located inside the 
+localized folder corresponding to the specified language instead of the 
+((i Contents i)) folder. For instance:
+((|
+    /Contents/Resources/Spanish.lproj/InfoPlist.strings
+|))
+
+The second form of the localize command specifies the name of the generated
+file rather than relying on the default name. This allows to create as many
+separate strings files as necessary. These files will also be created in
+the folder corresponding to the specified language.
+
+The argument of the ((i localize i)) command is a block enclosed in a pair of 
+curly braces. Only two commands can be used inside a localize block: key 
+and comment. The key command defines key/value statements of string type. 
+
+For instance:
+((|
+    localize "French"
+    {
+        key "CFBundleGetInfoString" value string "MyApp, (c) 2005, tous droits réservés"
+        key "CFBundleHelpBookName" value string "Aide PList Compiler"
+    }
+    
+    localize "Spanish" as "Dialogs.strings"
+    {
+        key "Number of Recent Items:" value string "Número de ítems recientes:"
+        key "General Preference Pane" value string "Panel de preferencias General"
+    }
+|))
+The first instruction generates 
+((i MyApp.app/Contents/Resources/French.lproj/InfoPlist.strings i))
+and the scond one
+((i MyApp.app/Contents/Resources/Spanish.lproj/Dialogs.strings i))
+
+It is current practice to put the ((i localize i)) blocks in separate files and 
+use a ((i .ploc i)) extension in their name to distinguish them from the ((i .plc i)) 
+files. The ((i .ploc i)) files are usually invoked from the main .plc file with an 
+((v #include v)) preprocessor command.
+
+
+((s3 The 'comment' command
+
+The ((i comment i)) command lets you insert comments inside the localized
+strings files. There can be as many commands of this type in a ((i localize
+i)) block as necessary. The value of the command is a string or
+concatenation of strings and expandable variables: once concatenated and
+substituted, it is inserted inside a C/C++ like comment of the form 
+((v /* */ v)) in the output file.
+For instance, the following instruction might be found in some ((i .ploc
+i)) file:
+((|
+    localize "English" as "Dialogs.strings"
+    {
+        comment "Generated from " __FILE__ " at " __TIME__
+    }
+|))
+
+The ((v __FILE__ v)) and the ((v __TIME__ v)) symbols are predefined variables: ((v __FILE__ v)) 
+always contains the name of the file being currently processed by the 
+compiler and ((v __TIME__ v)) the time at the moment the compiler processes the 
+file. If the instruction above was stored in a file named 
+((i dialogStrings_EN.ploc i)), the comment generated in the resulting ((i 
+Dialogs.strings i)) file (inside in the /Contents/Resources/English.lproj 
+folder inside the bundle) would look like this:
+/* Generated from dialogStrings_EN.ploc at 23:54:25 */
+
+((b Caveat: b)) the ((i comment i)) command can't be used in a ((i plist i)) block.
+
+
+((s1 Location of the output files
+
+By default the ((i plist i)) command causes ((b PList Compiler b)) to
+create a file named Info.plist inside the destination directory. In the
+case of a packaged application, the default destination directory is the
+((i Contents i)) folder inside the bundle. More generally, the path of this
+destination folder is built by ((b PList Compiler b)) using the values of
+the ((v BUILT_PRODUCTS_DIR v)) and ((v CONTENTS_FOLDER_PATH v)) XCode
+variables. 
+
+For instance, with XCode 2.1, if your target is in the ((i Release i))
+configuration and your application is MyApp, the destination folder would
+be (unless you have non standard settings):
+((|
+    $SRCROOT/build/Release/MyApp.app/Contents 
+|))
+where SRCROOT is, as usual the folder containing your project file.
+
+By default, the ((i localize i)) command causes ((b PList Compiler b)) to
+create localized files. The default location for these files depends on the
+language used for the localization. In the case of a packaged application,
+the default destination is inside one of the /Contents/Resources/<language>.lproj
+subfolders of the bundle. For instance /Contents/Resources/English.lproj or
+/Contents/Resources/French.lproj.
+
+There are two ways of modifying the destination folders:
+((lu
+((li from the command line, using the -dest option
+((li using one of the in_package_directory or localize_directory pragmas (see below)
+lu))
+
+The output file name (usually Info.plist) can be modified using the
+((i output_filename i)) pragma. See the ((i Pragmas i)) section below.
+
+
+((s1 Preprocessor directives
+
+This is the other type of instruction. They are called preprocessor directives 
+by analogie with the C/C++ language.
+They are also sometimes refered to as preprocessor macros. The 
+preprocessor term is not quite accurate here 
+because there are not two phases like with the ordinary C compilers (a 
+preprocessing phase and a compiling phase). ((b PList Compiler b)) pases 
+the file once, line by line.
+
+The following macros are supported by ((b PList Compiler b)):
+((t0
+((tr #define	#if
+((tr #include	#ifdef
+((tr #pragma	#ifndef
+((tr #message	#elif
+((tr #warning	#else
+((tr #error	#endif
+t))
+
+Preprocessor directives all occur on their own line. They are characterized
+by the fact that the first non-whitespace character on the line is a #. 
+There may be whitespace characters between the # mark and the name of the 
+directive too.
+
+((s2 Defines
+The ((i #define i)) directive lets you define a macro in the property list compiler.  The
+format is:
+((|
+    #define macro_name macro_text
+|))
+
+The compiler adds the macro ((i macro_name i)) to its macro table: if 
+there is already a macro with this name, it emits an error. When ((i macro_name i))
+appears in a plc source file as the value of a string type not 
+enclosed between double quotes, it will be replaced with
+((i macro_text i)).
+
+For instance, if a macro ((i kVersionNumber i)) is defined like this:
+((|
+    #define kVersionNumber "1.2.3"
+|))
+then, when the compiler encounters the following instruction:
+((|
+    key "CFBundleShortVersionString" value string "kVersionNumber: " kVersionNumber
+|))
+it expands it to ((i kVersionNumber: 1.2.3 i))
+
+The ((i #undef i)) directive tells the compiler to remove an already 
+existing macro from its macro table. The syntax is:
+((|
+    #undef macro_name
+|))
+If ((i macro_name i)) does not exist, the directive is just ignored.
+
+
+((s2 Includes
+The ((i #include i)) directive tells the plist compiler to find another 
+plc source
+file and start processing it. The format of this directive is:
+((|
+    #include "filename"
+|))
+
+The ((i filename i)) value designates a file to include: it can be either 
+an absolute or a relative path. A relative path is resolved relatively to the folder 
+containing the plc source file itself. The following are all valid 
+examples:
+((|
+    #include /Users/bernardo/Devel/MyApp/Rsrc/MyApp.plc
+    #include MyApp.plc
+    #include LocFiles/MyStrings_EN.ploc
+    #include ../Rsrc/MyStrings_EN.ploc
+|))
+
+((b Note: b)) the CodeWarrior property list compiler also accepts filenames 
+enclosed in angle brackets to designate files located in the system access 
+paths. This is not currently supported by ((b PList Compiler b)) as of version 0.1.
+
+
+
+((s2 Conditional macros
+
+
+((s2 Errors and warnings
+
+The ((i #error i)) directive raises an error and stops the execution of the
+compiler. This is generally used in combination with ((i #if i)) directives
+to test for situations that should never occur.
+
+The ((i #warning i)) directive emits a message in the console.
+The ((i #message i)) directive is just a synonym for ((i #warning i)).
+
+
+((s2 Pragmas
+
+Pragmas are directives used to modify the internal state of the compiler. 
+They let you modify some internal settings during the execution of the plc 
+file. They are most useful to modify locally a global setting: the new 
+value set by a pragma holds until another pragma modifies it again. 
+A pragma is declared with the ((i #pragma i)) directive. The syntax is:
+((|
+    #pragma pragma_name [pragma_value]
+|))
+
+The supported pragmas are explained below. The ((i pragma_name i)) argument
+can be one of the following keywords:
+((i output_filename,
+in_package_directory,
+localize_directory,
+output_eol,
+output_encoding,
+plist_version. i))
+
+Any other pragma encountered will be simply ignored by ((b PList Compiler
+b)). In particular the ((i once i)), ((i notonce i)), and ((i mark i))
+pragmas which exist in the CodeWarrior compiler are not supported, as of
+version 0.1.
+
+((b Caution: b)) a pragma cannot be used inside a ((i plist i)) or a 
+((i localize i)) block. It must be invoked outside these environments. This
+is because the internal settings they affect can't be modified once a file
+has been opened for output. The compiler will emit an error if such a 
+situation occurs.
+
+
+((s3 The 'output_filename' pragma
+The ((i output_filename i)) pragma lets you override the default name 
+of the current output file. Its value is a string which is the new name. 
+For instance:
+((|
+    #pragma output_filename "OtherName.plist"
+|))
+
+The new name given with this pragma is used only once and immediately 
+forgotten so that the compiler returns to the default naming convention. 
+Note that this does not affect the filename defined in a  'localize as' 
+command. More precisely, if the compiler reads the following inxtructions:
+((|
+    #pragma output_filename "OtherName.txt"
+    localize "Spanish" as "Error.strings"
+    {
+    }
+|))
+the pragma will have no effect and the output file will still be named 
+((i Error.strings i)). On the other hand, the pragma will remain in effect 
+until it can be applied. 
+
+
+((s3 The 'in_package_directory' pragma
+The ((i in_package_directory i)) pragma lets you specify where to place the
+property list file inside the destination folder. It is a string which
+specifies a directory relative to the destination folder. For instance, if
+you write:
+((|
+    #pragma in_package_directory "Infos"
+|))
+the ((i Info.plist i)) file will be written in an ((i Infos i)) subfolder
+of the destination folder rather than in the destination folder directly.
+If the subfolder does not exist, it is created. By default, this will be
+((i MyApp.app/Contents/Infos i)) (unless another destination folder has 
+been specified).
+
+Another valid value for this pragma could be:
+((|
+	#pragma in_package_directory "../Infos/Properties"
+|))
+which would write the output file in ((i MyApp.app/Infos/Properties i)),
+i-e with the ((i Infos i)) directory at the same level as the 
+((i Contents i)) directory.
+
+
+((s3 The 'localize_directory' pragma
+While the previous pragma affected the final location of the ((i Info.plist i))
+files (produced by the ((i plist i)) command), the ((i localize_directory i))
+pragma lets you specify where to place the localized string files produced
+by the ((i localize i)) command. It is a string which specifies a directory
+relative to the destination folder. By default, it is the ((i Resources i))
+folder inside the destination folder which itself is, by default, the
+((i Contents i)) subfolder of the bundle. For instance:
+((|
+    #pragma localize_directory "Local/Strings/"
+|))
+will cause the localized strings files to be written in some 
+((i MyApp.app/Contents/Local/Strings/<language>.lproj i)) folder 
+(depending on the chosen language) instead of 
+((i MyApp.app/Contents/Resources/<language>.lproj i)).
+
+
+((s3 The 'output_eol' pragma
+The ((i output_eol i)) pragma lets you specify another type of line endings
+for the output files. The possible values are ((i cr i)) for Mac, 
+((i lf i)) for Unix and ((i crlf i)) for Windows. This pragma is useful to
+override a setting made with the ((i -output_eol i)) option on the command
+line of the ((b plcompile b)) shell script.
+((|
+    #pragma output_eol lf
+|))
+
+
+((s3 The 'output_encoding' pragma
+The ((i output_eol i)) pragma lets you specify another encoding
+for the output files. The possible values are listed when you execute the 
+command:
+((|
+    plcompile -help
+|))
+
+You would normally be interested only in the utf-8 and utf-16 encodings 
+which are the only encodings recognized for the property list files. ((b PList 
+Compiler b)) is able though to handle all the other encodings.
+
+This pragma is useful to override a setting made with the 
+((i -output_encoding i)) option on the command line of the ((b plcompile b))
+shell script. For instance:
+((|
+    #pragma output_encoding utf-16
+|))
+
+
+
+((s3 The 'plist_version' pragma
+The ((i plist_version i)) pragma lets you specify another version of the 
+property list format. Possible values currently are 0.9 and 1.0. This is 
+the value written in the ((i version i)) attribute of the <plist> tag in the 
+((i .plist i)) files. For instance:
+((|
+    #pragma plist_version 0_9
+|))
+yields
+<plist version="0_9">
+
+This is the same value stored in the ((v __PLIST__ v)) predefined variable
+(see below).
+
+((s1 Substitutable variables
+
+Substitutable variables are variables whose value is inserted when the 
+script is run. These variables can be defined with a #define preprocessor 
+macro or in the shell environment. There are also some useful predefined 
+variables.
+
+To invoke variables defined in the shell environment (in particular all 
+the variables abvailable in an XCode project), you must surround them with 
+double underscores. For instance (see the XCode documentation for a 
+complete list):
+__BUILD_ROOT__,
+__CACHE_ROOT__,
+__DEBUGGING_SYMBOLS__,
+__EXECUTABLE_PATH__,
+__WARNING_LDFLAGS__,
+__ZERO_LINK__, etc.
+
+
+Variables defined with a ((i #define i)) macro can be invoked directly 
+(without the double underscores). For 
+instance, if you define
+((|
+    #define kBundleShortVersion "1.2.3"
+|))
+you can then have a key in the ((i plist i)) dictionary declared like this
+((|
+    key "CFBundleVersion" value string kBundleShortVersion
+|))
+
+For variables which can be set at different levels, the order of precedence
+is the following: an option set by a ((i #define i)) directive or modified
+by a ((i #pragma i)) directive in the plc source file overrides any option
+set on the command line which, in turn, overrides an option set by a shell
+environment variable.
+
+
+((s2 Predefined variables
+
+A few predefined variables are set each time the ((b plcompile b)) script is 
+run. 
+
+The five following variables existed in the CodeWarrior property list
+compiler. They are still available with ((b PList Compiler b)) in order to
+ensure some compatibility with already existing plc files (and because they
+are very useful!):
+((ld
+((lt __FILE__
+This variable always contains the name of the file currently processed. If
+another file is included with an ((i #include i)) preprocessor macro, the
+value of the variable is changed accordingly so that it always designates
+the file being processed. 
+lt))
+((lt __OUTPUT_CREATOR__
+This variable contains the creator
+type of the built product. It corresponds to the MACOS_CREATOR XCode variable.
+lt))
+((lt __OUTPUT_TYPE__
+This variable contains the file
+type of the built product. It corresponds to the MACOS_TYPE XCode variable.
+lt))
+((lt __OUTPUT_FILENAME__
+This variable contains the name of the built product. It is equivalent to 
+the concatenation of the PRODUCT_NAME and
+WRAPPER_EXTENSION XCode variables.
+lt))
+((lt __DATE__
+This is the complete date at the moment where the script is executed. it is
+returned in the format specified by the ISO 8601 standard:
+YY-MM-DDTHH:MM:SSZ. For instance ((i "2005-10-04T17:12:23Z" i)).
+lt))
+ld))
+
+((b PList Compiler b)) introduces other useful predefined variables: 
+((ld
+((lt __YEAR__
+The current year (four digits)
+lt))
+((lt __MONTH__
+The current month number (01 - 12)
+lt))
+((lt __MONTHNAME__
+The full month name (January, etc.)
+lt))
+((lt __DAY__
+The current day of month (01 - 31)
+lt))
+((lt __DAYNAME__
+The full day name (Monday, etc.)
+lt))
+((lt __SHORTDATE__
+The current date ass YYYY-MM-DD.
+lt))
+((lt __TIME__
+The current time as HH:MM::SS.
+lt))
+((lt __HOURS__
+The hours part of the TIME string.
+lt))
+((lt __MINUTES__
+The minutes part of the TIME string.
+lt))
+((lt __SECONDS__
+The seconds part of the TIME string.
+lt))
+ld))
+
+For instance:
+((|
+    __DATE__      = 2005-10-04T15:54:36Z
+    __SHORTDATE__ = 2005-10-04
+    __YEAR__      = 2005
+    __MONTH__     = 10
+    __MONTHNAME__ = October
+    __DAY__       = 04
+    __DAYNAME__   = Tuesday
+    __TIME__      = 15:54:36
+    __HOURS__     = 15
+    __MINUTES__   = 54
+    __SECONDS__   = 36
+|))
+
+
+((s2 XCode environment variables
+
+All the environment variables set by an XCode project are accessible with 
+((b PList Compiler b)). The syntax is the same as for the predefined variables: 
+the name of the environment variable must be surrounded by double 
+underscores. For instance, if you wan to invoke the value of the 
+INFOPLIST_PATH variable in an XCode project, you would write it as __INFOPLIST_PATH__
+in the plc file. For instance
+((|
+    key "InfoPlistPath" value string __INFOPLIST_PATH__
+|))
+
+Some of these variables are set by XCode itself (they are generally meant
+to be read-only variables) while the others can be set in the info window
+or a particular target. The name of a variable corresponding to a
+particular setting is always indicated by XCode between parentheses in the
+help text displayed when you select this setting in a Target Info window.
+
+
+((s2 Unsupported variables
+
+A few predefined variables available in the CodeWarrior property list 
+compiler are not supported by ((b PList Compiler b)). This is mainly because they 
+are specific to the CodeWarrior IDE and have no meaning with XCode. Here 
+is the list of these variables:
+((|
+    __APPLEMACHLINKER__, __MACH__, __MERGELINKER__, 
+    __MWMACHLINKER__, __MWPEFLINKER__
+|))
+
+The ((v __LINE__ v)) variable is not supported either, as well as the 
+((v __IDE_TARGET__() v)) and ((v __STRING__() v)) pseudo-macros.
+
+
+
+((s1 Download
+((b PList Compiler b)) is an Open Source Project. Its source code is public and can 
+be found on the SourceForge site at the following address:
+((nl <http://sourceforge.net/projects/plistcompiler>
+
+((nl PList Compiler releases are available at
+((nl <http://sourceforge.net/project/showfiles.php?group_id=149940> 
+or on my web 
+page at 
+((nl <http://webperso.easyconnect.fr/bdesgraupes/plistcompiler.html>
+
+((nl The code is under CVS control. You can retrieve the latest stage of 
+development using any CVS client. See instructions at:
+((nl <http://sourceforge.net/cvs/?group_id=149940>
+
+((nl You can browse the cvs repository online at
+((nl <http://cvs.sourceforge.net/cgi-bin/viewcvs.cgi/plistcompiler> 
+
+((nl You can also download a nightly tarball from
+((nl <http://cvs.sourceforge.net/cvstarballs/plistcompiler-cvsroot.tar.bz2>
+
+
+
+
+((s1 Known problems
+
+
+((s1 Version history
+
+((lu
+((li 2004-05-07 - 0.1b1 - First public beta release. Basic implementation.
+lu))
+
+((s1 License and disclaimer
+
+PList Compiler is distributed under the same BSD License as
+the Tcl language itself: see the file License_terms in the distribution or 
+the ((lk http://www.opensource.org/licenses/bsd-license )) Open Source Initiative site. lk))
+
+
+
+
+((-
+((nl PListCompiler help last updated ((s [ISOTime::ISODateAndTimeRelaxed] s))
+

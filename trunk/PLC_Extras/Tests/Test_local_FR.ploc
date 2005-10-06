@@ -1,0 +1,21 @@
+// ===========================================================================
+// Test_localize.plc
+//                       Created: 2005-10-03 06:28:51
+//             Last modification: 2005-10-04 06:29:05
+// Author: Bernard Desgraupes
+// e-mail: <bdesgraupes@easyconnect.fr>
+// www: <http://webperso.easyconnect.fr/bdesgraupes/>
+// © Copyright: Bernard Desgraupes 2005
+// All rights reserved.
+// $Date$
+// $Revision$
+// ===========================================================================
+
+localize "French" as "LocalProps.strings"
+{
+	comment kFrenchComment
+	comment "Généré depuis le fichier " __FILE__
+	key "InfoString" value string "PLCompiler, le compilateur de listes"
+	key "HelpBookName" value string "Aide PLCompiler"
+}
+

@@ -1,0 +1,40 @@
+Changes Log for the PList Compiler project
+==========================================
+
+PList Compiler is a property list compiler for XCode, Apple's programming 
+environment.
+
+This is an Open Source project. The source code for this application can be 
+found on the SourceForge site at: <http://sourceforge.net/projects/plistcompiler>
+
+PList Compiler binary releases are available at
+<http://sourceforge.net/project/showfiles.php?group_id=149940> or on my web 
+page at <http://webperso.easyconnect.fr/bdesgraupes/plistcompiler.html>
+
+The code is under CVS control. You can retrieve the latest stage of 
+development using any CVS client. See instructions at:
+<http://sourceforge.net/cvs/?group_id=149940>
+
+You can also browse the cvs repository online at
+<http://cvs.sourceforge.net/cgi-bin/viewcvs.cgi/plistcompiler> 
+
+Download a nightly tarball from
+<http://cvs.sourceforge.net/cvstarballs/plistcompiler-cvsroot.tar.bz2>
+
+Please e-mail about any problems you might encounter: 
+<bdesgraupes@users.sourceforge.net> 
+
+You can subscribe to the plistcompiler-users mailing list at:
+<http://lists.sourceforge.net/mailman/listinfo/plistcompiler-users>
+
+
+This changes log is in reverse chronological order (from bottom to top).
+
+$Date$
+
+================================================================================
+= 0.1b1	                 	            last update: 
+================================================================================
+¥ First beta release.
+
+

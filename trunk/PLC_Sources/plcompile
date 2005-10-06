@@ -1,0 +1,757 @@
+# -*-Tcl-*-
+#!/bin/bash
+# the next line restarts using tclsh \
+exec tclsh "$0" "$@"
+
+# ===========================================================================
+# File: "PlistComp.tcl"
+#                        Created: 2005-10-01 21:46:19
+#              Last modification: 2005-10-06 10:31:13
+# Author: Bernard Desgraupes
+# e-mail: <bdesgraupes@easyconnect.fr>
+# www: <http://webperso.easyconnect.fr/bdesgraupes/>
+# (c) Copyright: Bernard Desgraupes 2005
+# All rights reserved.
+# $Date$
+# $Revision$
+# ===========================================================================
+
+namespace eval plc {}
+
+unset -nocomplain plc_def plc
+
+# Current version number
+set plc(version) "0.1b1"
+
+# Retrieving the values of the shell variables: the env array contains the
+# values for all the environment variables defined by XCode.
+array set plc_def [array get env]
+
+# Legacy: predefined variables of the CodeWarrior property list compiler 
+if {[info exists plc_def(MACOS_CREATOR)]} {
+	set plc_def(OUTPUT_CREATOR) $plc_def(MACOS_CREATOR)
+} else {
+	set plc_def(OUTPUT_CREATOR) ""
+}
+if {[info exists plc_def(MACOS_TYPE)]} {
+	set plc_def(OUTPUT_TYPE) $plc_def(MACOS_TYPE)
+}  else {
+	set plc_def(OUTPUT_TYPE) ""
+}
+if {[info exists plc_def(PRODUCT_NAME)]} {
+	set plc_def(OUTPUT_FILENAME) $plc_def(PRODUCT_NAME)
+	if {[info exists plc_def(WRAPPER_EXTENSION)]} {
+		append plc_def(OUTPUT_FILENAME) ".$plc_def(WRAPPER_EXTENSION)"
+	}  
+}  else {
+	set plc_def(OUTPUT_FILENAME) ""
+}
+	
+
+# Predefined variables
+# --------------------
+# Enclose them between double underscores to invoke 
+# them in the plc file. For instance __DATE__ or __YEAR__
+set plc_def(DATE) [clock format [clock seconds] -format "%Y-%m-%dT%H:%M:%SZ"]
+set plc_def(SHORTDATE) [clock format [clock seconds] -format "%Y-%m-%d"]
+set plc_def(YEAR) [clock format [clock seconds] -format "%Y"]
+set plc_def(MONTH) [clock format [clock seconds] -format "%m"]
+set plc_def(MONTHNAME) [clock format [clock seconds] -format "%B"]
+set plc_def(DAY) [clock format [clock seconds] -format "%d"]
+set plc_def(DAYNAME) [clock format [clock seconds] -format "%A"]
+set plc_def(TIME) [clock format [clock seconds] -format "%H:%M:%S"]
+set plc_def(HOURS) [clock format [clock seconds] -format "%H"]
+set plc_def(MINUTES) [clock format [clock seconds] -format "%M"]
+set plc_def(SECONDS) [clock format [clock seconds] -format "%S"]
+
+
+# Initializations
+# ---------------
+set plc(context) ""
+set plc(contextlevel) 0
+set plc(parsing) 0
+set plc(localizing) 0
+
+set plc_def(PLIST) "1.0"
+set plc(output_filename) ""
+if {[info exists plc_def(BUILT_PRODUCTS_DIR)] && [info exists plc_def(CONTENTS_FOLDER_PATH)]} {
+	set plc(output_folder) [file join $plc_def(BUILT_PRODUCTS_DIR) $plc_def(CONTENTS_FOLDER_PATH)]
+} else {
+	set plc(output_folder) [file dir [info script]]
+}
+set plc(in_package_directory) ""
+set plc(localize_directory) "Resources"
+
+set plc(input_encoding) "utf-8"
+set plc(output_encoding) "utf-8"
+set plc(input_eol) "cr"
+set plc(output_eol) "cr"
+set plc(eols) [list "cr" "lf" "crlf"]
+
+# Nesting level of a conditional block (anything between an if and the 
+# corresponding endif).
+# 		if endif
+# 		if else endif
+# 		if elif [elif..] endif
+# 		if elif [elif..] else endif
+# Level 0 means outside of any conditional block.
+set plc(iflevel) 0
+# This tells if some section of a conditional block at a certain level has 
+# already been executed. If yes, no other section can be made executable.
+set plc(execdone-1) 0
+# This tells if execution is active at a particular level
+set plc(doexec-0) 1
+
+
+# 	
+# #################
+# #               #
+# #   Debugging   #
+# #               #
+# #################
+# # # # # # # # # # # # # # # # # # # # # # # # # # # 
+
+source "/Volumes/im2/Devel/Current/PListCompiler/PLC_Extras/Tests/Fake_env.tcl"
+set plc(output_folder) [file join [file dir [info script]] Output]
+# set plc(debugfile) "/Volumes/im2/Devel/Current/PListCompiler/PLC_Extras/Tests/Test_localize.plc"
+# set plc_def(FILE) $plc(debugfile)
+# plc::processFile $plc(debugfile)
+# # # # # # # # # # # # # # # # # # # # # # # # # # # 
+
+
+# Main proc
+proc plc::execute {args} {
+	global plc plc_def
+	set len [llength $args]
+	if {$len == 0 || $len > 9} {
+		puts "Error: wrong number of arguments"
+		plc::usage
+		return
+	} 
+	# Handle -h option
+	if {$len == 1 && [regexp -- "-h" $args]} {
+		plc::usage 1
+		return
+	} 
+	# Retrieve the last argument
+	set srcfile [file normalize [lindex $args end]]
+	if {$srcfile eq ""} {
+		puts "Error: no file specified"
+		plc::usage
+		return
+	} 
+	if {![file exists $srcfile]} {
+		error "Can't find '$srcfile'. No such file or directory."
+	} 
+	set plc(input_file) $srcfile
+	
+	# Parse the options
+	incr len -1
+	set failed 0
+	for {set i 0} {$i < $len} {incr i} {
+		set elem [lindex $args $i]
+		switch -- $elem {
+			"-input_encoding" 
+			- "-output_encoding" {
+				incr i
+				if {$i <= $len} {
+					set value [lindex $args $i]
+					if {$value eq "utf-16"} {
+						set value "unicode"
+					} 
+					if {[lsearch [encoding names] $value] == -1} {
+						puts "Error: wrong value '$value' for encoding option.\nShould be one of [join [lsort [concat [encoding names] "utf-16"]] ", "]"
+						return
+					} 
+					set plc($elem) $value
+				} else {
+					set failed 1
+				}
+			}
+			"-input_eol"
+			- "-output_eol" {
+				incr i
+				if {$i <= $len} {
+					set value [lindex $args $i]
+					if {[lsearch $plc(eols) $value] == -1} {
+						puts "Error: wrong value '$value' for eol option. Should be one of [join $plc(eols) ", "]."
+						return
+					} 
+					set plc($elem) $value
+				} else {
+					set failed 1
+				}
+			}
+			"-dest" {
+				incr i
+				if {$i < $len} {
+					set plc(output_folder) [file normalize [lindex $args $i]]
+				} else {
+					set failed 1
+				}
+			}
+			"-plist" {
+				incr i
+				if {$i < $len} {
+					set plc_def(PLIST) [lindex $args $i]
+				} else {
+					set failed 1
+				}
+			}
+		}
+		
+		if {$failed} {
+			puts "Error: missing value for option '$elem'\n"
+			plc::usage
+			return
+		} 
+	} 
+	
+	# Now call the compiler
+	plc::processFile $srcfile
+}
+
+proc plc::normalize {txt} {
+	regsub  -line -all {^//.*$} $txt {} txt
+	regsub -line -all {^\s+#} $txt "#" txt
+	regsub -all {\s+value\s+(dictionary|array|boolean|number|date|data|string)} $txt "\r\\1" txt
+	regsub -line -all {^\s*(plist|dictionary|array)\s*(\{)?} $txt "\\1\r\\2" txt
+	regsub -line -all {^\s*array\s*} $txt "array\r\\1" txt
+	regsub -line -all {^\s+\[} $txt "\[" txt
+	regsub -line -all {^\s*(dictionary|array|key|boolean|number|date|data|string|comment)} $txt {\1} txt
+	regsub -all {({|\[)\s*(}|\])} $txt "\\1\r\\2" txt
+	regsub -line -all {^\s*(\}|\])} $txt {\1} txt
+	regsub -line -all "^\[\r\n\]" $txt "" txt
+	return $txt	
+}
+
+proc plc::processFile {file} {
+	global plc
+	# The existence of the file has been checked by the caller
+	set fid [open $file]
+	fconfigure $fid -encoding $plc(input_encoding) -translation $plc(input_eol)
+	set txt [read $fid]
+	close $fid
+	plc::parseContents $txt
+}
+
+proc plc::parseContents {txt} {
+	global plc
+	set txt [split [plc::normalize $txt] "\r\n"]
+	set len [llength $txt]
+	for {set index 0} {$index < $len} {incr index} {
+		set line [lindex $txt $index]
+		if {[string length $line] == 0} {
+			continue
+		} 
+		# Look at the first character of the line
+		set first [string range $line 0 0]
+		
+		switch -- $first {
+			"#" {
+				# This is a preprocessor macro. The [plc::parseMacro] proc 
+				# returns the number of lines it has parsed
+				plc::parseMacro $line
+			}
+			"{" - "\[" {
+				# nothing
+			}
+			"}" - "\]" {
+				if {[set plc(doexec-$plc(iflevel))]} {
+					plc::contextEnd $first
+				}
+			}
+			default {
+				if {[set plc(doexec-$plc(iflevel))]} {
+					if {[regexp {^(\w+)\s*(.*)$} $line -> cmd arg]} {
+						switch -- $cmd {
+							"plist"
+							- "dictionary"
+							- "array"
+							- "string"
+							- "boolean"
+							- "date"
+							- "data"
+							- "number" 
+							- "key" 
+							- "comment" 
+							- "localize" {
+								if {[info exists arg]} {
+									eval plc::parse[string totitle $cmd] $arg
+								} else {
+									plc::parse[string totitle $cmd]
+								}
+							}
+							default {
+								error "Unknown command '$cmd'"
+							}
+						}
+					} 
+				} 
+			}
+		}
+	}
+}
+
+proc plc::parseMacro {line} {
+	global plc plc_def
+	if {[regexp {#[ \t]*(\w+)[ \t]*([^\r\n]*)$} $line -> macro definition]} {
+		if {[set plc(doexec-$plc(iflevel))]} {
+			switch -- $macro {
+				"if" {
+					incr plc(iflevel)
+					set value ""
+					foreach a $definition {
+						append value [plc::substitute $a]
+					} 
+					set condition [eval expr {[string tolower $value]}]
+					set plc(execdone-$plc(iflevel)) $condition
+					set plc(doexec-$plc(iflevel)) $condition
+				}
+				"ifdef" {
+					incr plc(iflevel)
+					set var $definition
+					regexp "^__(.+)__$" $var -> var
+					set condition [info exists plc_def($var)]
+					set plc(execdone-$plc(iflevel)) $condition
+					set plc(doexec-$plc(iflevel)) $condition
+				}
+				"ifndef" {
+					incr plc(iflevel)
+					set var $definition
+					regexp "^__(.+)__$" $var -> var
+					set condition [expr ![info exists plc_def($var)]]
+					set plc(execdone-$plc(iflevel)) $condition
+					set plc(doexec-$plc(iflevel)) $condition
+				}
+				"elif" {
+					set plc(doexec-$plc(iflevel)) 0
+				}
+				"else" {
+					set plc(doexec-$plc(iflevel)) 0
+				}			
+				"endif" {
+					set plc(execdone-$plc(iflevel)) 0
+					set plc(doexec-$plc(iflevel)) 0
+					incr plc(iflevel) -1
+				}
+				"include" {
+					set saveFile $plc(input_file)
+					if {[file exists $definition]} {
+						set plc(input_file) $definition
+					} else {
+						set plc(input_file) [file normalize [eval file join [file dir $saveFile] $definition]]
+					}
+					plc::processFile $plc(input_file)
+					set plc(input_file) $saveFile
+				}
+				"define" {
+					if {[regexp {(\w+)[ \t]*([^\r\n]*)$} $definition -> value arg]} {
+						if {[info exists plc_def($value)]} {
+							error "Macro '$value' already defined" ""
+						} else {
+							set plc_def($value) ""
+							foreach a $arg {
+								append plc_def($value) [plc::substitute $a]
+							} 
+						}
+					} 
+				}
+				"undef" {
+					if {[regexp {\w+} $definition value]} {
+						unset -nocomplain plc_def($value)
+					} 
+				}
+				"error" {
+					set value ""
+					foreach a $definition {
+						append value [plc::substitute $a]
+					} 
+					puts stdout "#error: $value"
+					error "processing interrupted by #error macro"
+				}
+				"warning" - "message" {
+					set value ""
+					foreach a $definition {
+						append value [plc::substitute $a]
+					} 
+					puts stdout "#warning: $value"
+				}
+				"pragma" {
+					if {[regexp {(\w+)[ \t]+([^\r\n]*)$} $definition -> name arg]} {
+						set value ""
+						foreach a $arg {
+							append value [plc::substitute $a]
+						} 
+						plc::parsePragma $name $value
+					}
+				}
+			}
+		} else {
+			switch -- $macro {
+				"if" - "ifdef" - "ifndef" {
+					incr plc(iflevel)
+					set plc(execdone-$plc(iflevel)) 0
+					set plc(doexec-$plc(iflevel)) 0
+				}
+				"elif" {
+					# Check if execution is on at the preceding level
+					if { $plc(iflevel) \
+					  && [set plc(doexec-[expr {$plc(iflevel) - 1}])] \
+					  && !$plc(execdone-$plc(iflevel)) } {
+						# Evaluate the condition
+						set value ""
+						foreach a $definition {
+							append value [plc::substitute $a]
+						} 
+						set condition [eval expr {[string tolower $value]}]
+						set plc(execdone-$plc(iflevel)) $condition
+						set plc(doexec-$plc(iflevel)) $condition
+					} 
+				}
+				"else" {
+					if { $plc(iflevel) \
+					  && [set plc(doexec-[expr {$plc(iflevel) - 1}])] \
+					  && !$plc(execdone-$plc(iflevel)) } {
+						set plc(execdone-$plc(iflevel)) 1
+						set plc(doexec-$plc(iflevel)) 1
+					} 
+				}
+				"endif" {
+					set plc(execdone-$plc(iflevel)) 0
+					set plc(doexec-$plc(iflevel)) 0
+					incr plc(iflevel) -1
+				}
+			}
+		} 
+	} 
+}
+
+proc plc::parsePragma {name value} {
+	global plc plc_def
+	# Pragmas are not allowed inside a 'plist' or 'localize' block
+	if {$plc(parsing)} {
+		error "illegal '#$name' pragma in plist block"
+	}
+	switch -- $name {
+		"output_encoding" {
+			if {$value eq "utf-16"} {
+				set value "unicode"
+			} 
+			set plc(output_encoding) $value
+		}
+		"plist_version" {
+			set plc_def(PLIST) $value
+		}
+		"output_filename" 
+		- "in_package_directory" 
+		- "localize_directory" 
+		- "output_eol" {
+				set plc($name) $value
+		}
+		"once" - "notonce" - "mark" {
+			# Not supported
+		}
+		default {
+			# Ignore other pragmas
+		}
+	}
+}
+
+proc plc::parsePlist {args} {
+	global plc plc_def
+	plc::checkContext plist
+	set outfolder [file normalize [file join $plc(output_folder) $plc(in_package_directory)]]
+	if {![file exists $outfolder]} {
+		file mkdir $outfolder
+	} 
+	# See if a custom name has been declared by an output_filename pragma
+	if {[info exists plc(output_filename)] && $plc(output_filename) ne ""} {
+		set outname $plc(output_filename)
+		unset -nocomplain plc(output_filename)
+	} else {
+		set outname "Info.plist"
+	}
+	set outfile [file join $outfolder $outname]
+	set plc(outid) [open $outfile w+]
+	fconfigure $plc(outid) -encoding $plc(output_encoding) -translation $plc(output_eol)
+	plc::writePreamble
+	plc::writeTag "plist version=\"$plc_def(PLIST)\"" 
+	plc::contextStart "plist"
+}
+
+proc plc::parseDictionary {args} {
+	plc::writeTag "dict"
+	plc::contextStart "dict"
+}
+
+proc plc::parseArray {args} {
+	plc::writeTag "array"
+	plc::contextStart "array"
+}
+
+proc plc::parseString {args} {
+	global plc
+	set value ""
+	foreach a $args {
+		append value [plc::substitute $a]
+	} 
+	if {$plc(localizing)} {
+		plc::writeOut "\"$value\";\r"
+	} else {
+		plc::writeTag string
+		plc::writeOut $value
+		plc::writeTag string close
+	}
+}
+
+proc plc::parseBoolean {args} {
+	# Accept any casing (true, TRUE, True etc)
+	set args [string tolower $args]
+	# Accept other boolean values (yes/no, 1/0)
+	if {$args eq "yes" || $args == 1} {
+		set args "true"
+	} elseif {$args eq "no" || $args == 0} {
+		set args "false"
+	} 
+	# Reject other values
+	if {$args ne "true" && $args ne "false"} {
+		error "Illegal '$args' value for boolean keyword"
+	} else {
+		plc::writeTag $args empty
+	}	
+}
+
+proc plc::parseDate {args} {
+	plc::writeTag date
+	set value ""
+	foreach a $args {
+		append value [plc::substitute $a]
+	} 
+	plc::writeOut $value
+	plc::writeTag date close
+}
+
+proc plc::parseData {args} {
+	plc::writeTag data
+	set data ""
+	foreach a $args {
+		append data [plc::substitute $a]
+	} 
+	regsub -all " " $data "" data
+	# Need to convert to Base64 here. Todo...
+# 	plc::writeOut [plc::base64 $args]
+	plc::writeOut $data
+	plc::writeTag data close
+}
+
+proc plc::parseNumber {args} {
+	set value ""
+	foreach a $args {
+		append value [plc::substitute $a]
+	} 
+	if {[regexp {\.} $value]} {
+		set num real
+	} else {
+		set num integer
+	}
+	# There should be some checking of the value format here
+	# todo...
+	plc::writeTag $num
+	plc::writeOut $value
+	plc::writeTag $num close
+}
+
+proc plc::parseKey {args} {
+	global plc
+	set value ""
+	foreach a $args {
+		append value [plc::substitute $a]
+	} 
+	if {$plc(localizing)} {
+		plc::writeOut "\"$value\" = "
+	} else {
+		plc::writeTag "key"
+		plc::writeOut $value
+		plc::writeTag "key" close
+	}
+}
+
+proc plc::parseComment {args} {
+	global plc
+	set context [lrange $plc(context) 0 0]
+	if {$context eq "localize"} {
+		set value ""
+		foreach a $args {
+			append value [plc::substitute $a]
+		} 
+		set txt "/* $value */\r"
+		plc::writeOut $txt
+	} else {
+		error "Illegal 'comment' keyword in $context block"
+	}
+}
+
+proc plc::parseLocalize {args} {
+	global plc plc_def
+	plc::checkContext localize
+	set plc(localizing) 1
+	set lang [lindex $args 0]
+	if {$lang ne ""} {
+		set outfolder [file join $plc(output_folder) $plc(localize_directory) $lang.lproj]
+	} else {
+		error "No language specified with 'localize' keyword"
+	}
+	if {![file exists $outfolder]} {
+		file mkdir $outfolder
+	} 
+	# Look for more arguments ('localize as "language"')
+	set outname ""
+	if {[lindex $args 1] eq "as"} {
+		set outname [lindex $args 2]
+	} 
+	if {$outname eq ""} {
+		if {[info exists plc(output_filename)] && $plc(output_filename) ne ""} {
+			set outname $plc(output_filename)
+			unset -nocomplain plc(output_filename)
+		} else {
+			set outname "InfoPlist.strings"
+		}
+	} 	
+	set outfile [file join $outfolder $outname]
+	set plc(outid) [open $outfile w+]
+	fconfigure $plc(outid) -encoding $plc(output_encoding) -translation $plc(output_eol)
+	plc::contextStart "localize"
+}
+
+proc plc::substitute {args} {
+	global plc plc_def
+	set result ""
+	foreach item $args {
+		set var $item
+		regexp "^__(.+)__$" $var -> var
+		if {$var eq "FILE"} {
+			append result [file tail $plc(input_file)]
+		} elseif {[info exists plc_def($var)]} {
+			append result $plc_def($var)
+		} else {
+			append result $item
+		}
+	} 
+	return $result
+}
+
+proc plc::contextStart {what} {
+	global plc
+	lappend plc(context) $what
+	incr plc(contextlevel)
+}
+
+proc plc::contextEnd {what} {
+	global plc
+	set curr [lrange $plc(context) end end]
+	set plc(context) [lreplace $plc(context) end end]
+	incr plc(contextlevel) -1
+	if {$curr ne "localize"} {
+		plc::writeTag $curr close 1
+	} 
+	if {$curr eq "plist" || $curr eq "localize"} {
+		close $plc(outid)
+		set plc(parsing) 0
+		set plc(localizing) 0
+	} 
+}
+
+proc plc::checkContext {what} {
+	global plc
+	set context [lrange $plc(context) 0 0]
+	if {$plc(parsing) || $context ne ""} {
+		error "Illegal '$what' keyword in context $context"
+	} else {
+		set plc(parsing) 1
+	}
+}
+
+proc plc::writeOut {txt} {
+	global plc
+	puts -nonewline $plc(outid) $txt
+}
+
+# The 'which' argument can be "open", "close" or "empty".
+proc plc::writeTag {tag {which "open"} {indent 0}} {
+	global plc
+	switch -- $which {
+		"open" {
+			if {[string match "plist*" $tag] || $tag eq "dict" || $tag eq "array"} {
+				puts $plc(outid) "[plc::indent]<$tag>"				
+			} else {
+				puts -nonewline $plc(outid) "[plc::indent]<$tag>"
+			}	
+		}
+		"close" {
+			if {$indent} {
+				puts $plc(outid) "[plc::indent]</$tag>"
+			} else {
+				puts $plc(outid) "</$tag>"
+			}
+		}
+		"empty" {
+			puts $plc(outid) "[plc::indent]<${tag}/>"
+		}
+	}
+}
+
+proc plc::writePreamble {} {
+	global plc 
+	set enc [string toupper $plc(output_encoding)]
+	if {$enc eq "UNICODE"} {
+		set enc "UTF-16"
+	} 
+	set preamble "<?xml version=\"1.0\" encoding=\"$enc\"?>\r"
+	append preamble "<!DOCTYPE plist SYSTEM \"file://localhost/System/Library/DTDs/PropertyList.dtd\">"
+	puts $plc(outid) $preamble
+}
+
+proc plc::indent {} {
+	global plc
+	return [string repeat \t $plc(contextlevel)]
+}
+
+# Usage proc
+proc plc::usage { {showEncodings 0} } {
+	global plc
+	set script [file tail [info script]]
+	puts "$script, version $plc(version)"
+	puts "Copyright (c) 2005, Bernard Desgraupes <bdesgraupes@users.sourceforge.net>"
+	puts "Usage:\n\t$script \[-input_encoding <enc>\] \[-output_encoding <enc>\] \[-input_eol <eol>\] \[-output_eol <eol>\] \[-dest folder\] \[-plist <version>\] plcFile"
+	puts "\t$script -help\n"
+	puts "Default for -input_encoding and -output_encoding is utf-8"
+	puts "Default for -dest is \$BUILT_PRODUCTS_DIR/\$CONTENTS_FOLDER_PATH"
+	puts "Possible values for -input_eol and -output_eol: [join $plc(eols) ", "]. Default is cr."
+	puts "Possible values for -plist: 0.9 and 1.0. Default is 1.0.\n"
+	if {$showEncodings} {
+		puts "Available encodings:"
+		puts [join [lsort [concat [encoding names] "utf-16"]] ", "]
+	} 
+}
+
+
+
+
+##########################
+#                        #
+#   Remove this return   #
+#                        #
+##########################
+return
+
+# # Execute the command line
+# # ------------------------
+
+if {[catch {eval plc::execute $argv} err]} {
+	puts $err
+	# Don't leave pending file refs
+	catch {close $plc(outid)}
+} 
+
+

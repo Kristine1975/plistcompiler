@@ -1,0 +1,36 @@
+// ===========================================================================
+// Test_boolean_vars.plc
+//                       Created: 2005-10-03 06:28:51
+//             Last modification: 2005-10-04 06:29:05
+// Author: Bernard Desgraupes
+// e-mail: <bdesgraupes@easyconnect.fr>
+// www: <http://webperso.easyconnect.fr/bdesgraupes/>
+// © Copyright: Bernard Desgraupes 2005
+// All rights reserved.
+// $Date$
+// $Revision$
+// ===========================================================================
+
+
+// Try to evaluate all the settings found in the XCode environment
+
+plist { 
+	dictionary {
+		key "kGcc_Precompile_Prefix_Header" value boolean 1
+		key "kGcc_Symbols_Private_Extern" value boolean 0
+		key "kGcc_Treat_Warnings_As_Errors" value boolean NO
+		key "kGcc_Warn_About_Return_Type" value boolean no
+		key "kGcc_Warn_Unused_Variable" value boolean No
+		key "kGenerate_Pkginfo_File" value boolean YES
+		key "kGenerate_Profiling_Code" value boolean Yes
+		key "kPrebinding" value boolean yes
+		key "kSet_Dir_Mode_Owner_Group" value boolean TRUE
+		key "kSet_File_Mode_Owner_Group" value boolean trUe
+		key "kStrip_Installed_Product" value boolean true
+		key "kUnstripped_Product" value boolean "true"
+		key "kUse_Dynamic_No_Pic" value boolean "false"
+		key "kVerbose_Pbxcp" value boolean "YES"
+		key "kZero_Link" value boolean "NO"
+	}
+}
+

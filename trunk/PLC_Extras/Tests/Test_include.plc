@@ -1,0 +1,21 @@
+// ===========================================================================
+// Test_include.plc
+//                       Created: 2005-10-03 06:28:51
+//             Last modification: 2005-10-04 06:29:05
+// Author: Bernard Desgraupes
+// e-mail: <bdesgraupes@easyconnect.fr>
+// www: <http://webperso.easyconnect.fr/bdesgraupes/>
+// © Copyright: Bernard Desgraupes 2005
+// All rights reserved.
+// $Date$
+// $Revision$
+// ===========================================================================
+
+
+#define kEnglishComment "This is a comment in english"
+#define kFrenchComment "Ceci est un commentaire en français"
+
+#include "Test_local_EN.ploc"
+
+#include "Test_local_FR.ploc"
+
