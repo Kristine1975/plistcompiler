@@ -83,12 +83,6 @@ The syntax of the ((b plcompile b)) shell script is:
     plcompile -help
 |))
 
-The second form
-((|
-    plcompile -help
-|))
-prints the usage together with some default values in the Terminal window.
-
 The first form executes the compilation of the plc source file ((i plcFile i)). 
 Traditionnally these files have a ((i .plc i)) extension but this is not 
 required at all. Most of the time you will not have to worry about the 
@@ -96,19 +90,27 @@ options. ((b PList Compiler b)) comes with reasonable defaults for the
 optional values, corresponding to a normal usage of these files in a 
 project. The available options are explained below.
 
+The second form
+((|
+	plcompile -help
+|))
+prints in the console window some help about the usage and the default
+values.
+
+
 ((s2 Default behavior
-By default, ((b plcompile b)) will suppose that the input files are encoded in 
-the Unicode utf-8 form and have Mac line endings (((i cr i))). The same encoding and 
-type of line endings are used to write the output files. The destination 
-folder is by default the Contents folder found at the first level of the 
-built product (bundled application, bundle, framework, plugin, etc.) as 
-set in your XCode project if you run the script from XCode; otherwise it 
-is the same folder as the plc file being processed.
+By default, ((b plcompile b)) will suppose that the input files are encoded
+in the Unicode utf-8 form and have Mac line endings (((i cr i))). The same
+encoding and type of line endings are used to write the output files. The
+destination folder is by default the ((i Contents i)) folder found at the first
+level of the built product (bundled application, bundle, framework, plugin,
+etc.) as set in your XCode project if you run the script from XCode;
+otherwise it is the same folder as the plc file being processed.
 
 
 ((s2 Command line options
 
-The complete syntax of the compiler is:
+The complete syntax to run the compiler is:
 ((|
     plcompile [-input_encoding <enc>] [-output_encoding <enc>] [-input_eol <eol>] 
                             [-output_eol <eol>] [-dest folder] [-plist <version>] plcFile
@@ -196,6 +198,9 @@ For instance:
 
 ((s2 Troubleshooting
 
+In case the instructions above do not work as expected, here are a few 
+indications to help solving the problem.
+ 
 Make sure that the plcompile script has been saved with Unix line endings
 (lf) rather than Mac line endings (cr). Some editors tend to change them 
 in your back and the shell expects Unix line endings.
@@ -204,12 +209,16 @@ Make sure there is not an already existing ((i Info.plist i)) file in your sourc
 files added to your built product during the ((i Copy Bundle Resources i)) 
 phase in order to avoid conflicts or files being overwritten.
 
-Also make sure, in the target settings, that no file has been declared in 
+Make sure, in the target settings, that no file has been declared in 
 the ((i Info.plist File i)) setting (look in the ((i Packaging i)) section of the 
 ((i General i)) settings).
 
+Make sure of course that Tcl is installed on your machine. It is part of 
+the Panther and Tiger installation.
+
 If the script is not found by the shell, read the informations in the 
-section above about executing shell phases in XCode.
+section above about executing shell phases in XCode and setting the access 
+paths correctly.
 
 
 ((s1 Anatomy of 'plc' files
@@ -390,13 +399,17 @@ space characters, like for instance:
 |))
 In the output file, the same data is represented in Base64 encoding as 
 recommended in the DTD specifying the plist format 
-(see ((i /System/Library/DTDs/PropertyList.dtd i))).
+(see ((i /System/Library/DTDs/PropertyList.dtd i))). All the 
+values above are equivalent and are represented like this in Base64 
+encoding:
+((nl <data>ZGVmZw==</data>
 
 The ((i data i)) command corresponds to the <data> XML tag.
 
 ((b Note: b)) the CodeWarrior plist compiler also defined a ((i data file
 i)) command followed by the name of a file containing raw data. This is not
 implemented by ((b PList Compiler b)) as of version 0.1.
+
 
 
 ((s3 The 'boolean' command
@@ -428,7 +441,7 @@ language.
 
 ((s3 The 'localize' command
 
-The ((i localize i)) command is used to create localized strings files. It is a 
+The ((i localize i)) command is used to create and generate localized strings files. It is a 
 top level command like the ((i plist i)) command. There are two possible 
 syntaxes to invoke this command:
 ((|
@@ -910,7 +923,9 @@ variables set by the plc compiler itself.
 To invoke a variable defined in the shell environment, you must surround it with 
 double underscores. This concerns in particular all 
 the variables available in an XCode project, but not only: ordinary shell 
-environment variables, such as TERM or LOGNAME are also accessible.
+environment variables, such as ((v USER v)), ((v DISPLAY v)), ((v SHELL v)), 
+etc. are also accessible as ((v __USER__ v)), ((v __DISPLAY__ v)), 
+((v __SHELL__ v)), respectively.
 
 Variables defined with a ((i #define i)) macro can be invoked directly 
 (without the double underscores). For 
@@ -1084,7 +1099,7 @@ development using any CVS client. See instructions at:
 ((nl <http://sourceforge.net/projects/plistcompiler>
 
 There is also a mailing list, ((b plistcompiler-users b)), for discussing any
-topics related the usage of PList Compiler and its future development. New 
+topics related to the usage of PList Compiler and its future development. New 
 versions will be announced on this list
 too. You can subscribe or unsubscribe from the following address:
 ((nl <http://lists.sourceforge.net/mailman/listinfo/plistcompiler-users>
