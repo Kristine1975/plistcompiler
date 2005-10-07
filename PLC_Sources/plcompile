@@ -6,7 +6,7 @@ exec tclsh "$0" "$@"
 # ===========================================================================
 # File: "PlistComp.tcl"
 #                        Created: 2005-10-01 21:46:19
-#              Last modification: 2005-10-07 13:00:48
+#              Last modification: 2005-10-07 16:43:43
 # Author: Bernard Desgraupes
 # e-mail: <bdesgraupes@easyconnect.fr>
 # www: <http://webperso.easyconnect.fr/bdesgraupes/>
@@ -113,14 +113,20 @@ set plc(wraplen) 60
 proc plc::execute {args} {
 	global plc plc_def
 	set len [llength $args]
-	if {$len == 0 || $len > 9} {
+	if {$len == 0 || $len > 13} {
 		puts "Error: wrong number of arguments"
 		plc::usage
 		return
 	} 
-	# Handle -h option
+	# Handle the -help option
 	if {$len == 1 && [regexp -- "-h" $args]} {
-		plc::usage 1
+		plc::usage 1 
+		return
+	} 
+	# Handle the -encodings option
+	if {$len == 1 && [regexp -- "-e" $args]} {
+		puts "Available encodings:"
+		puts [join [lsort [concat [encoding names] "utf-16"]] ", "]
 		return
 	} 
 	# Retrieve the last argument
@@ -145,10 +151,11 @@ proc plc::execute {args} {
 	incr len -1
 	set failed 0
 	for {set i 0} {$i < $len} {incr i} {
-		set elem [lindex $args $i]
+		# Ignore the leading hyphen
+		set elem [string range [lindex $args $i] 1 end]
 		switch -- $elem {
-			"-input_encoding" 
-			- "-output_encoding" {
+			"input_encoding" 
+			- "output_encoding" {
 				incr i
 				if {$i <= $len} {
 					set value [lindex $args $i]
@@ -164,8 +171,8 @@ proc plc::execute {args} {
 					set failed 1
 				}
 			}
-			"-input_eol"
-			- "-output_eol" {
+			"input_eol"
+			- "output_eol" {
 				incr i
 				if {$i <= $len} {
 					set value [lindex $args $i]
@@ -178,7 +185,7 @@ proc plc::execute {args} {
 					set failed 1
 				}
 			}
-			"-dest" {
+			"dest" {
 				incr i
 				if {$i < $len} {
 					set plc(output_folder) [file normalize [lindex $args $i]]
@@ -186,7 +193,7 @@ proc plc::execute {args} {
 					set failed 1
 				}
 			}
-			"-plist" {
+			"plist" {
 				incr i
 				if {$i < $len} {
 					set plc_def(PLIST) [lindex $args $i]
@@ -765,20 +772,20 @@ proc plc::encodeBase64 {hexstring} {
 }
 
 # Usage proc
-proc plc::usage { {showEncodings 0} } {
+proc plc::usage { {showAll 0} } {
 	global plc
 	set script [file tail [info script]]
-	puts "$script, version $plc(version)"
-	puts "Copyright (c) 2005, Bernard Desgraupes <bdesgraupes@users.sourceforge.net>"
+	if {$showAll} {
+		puts "$script, version $plc(version)"
+		puts "Copyright (c) 2005, Bernard Desgraupes <bdesgraupes@users.sourceforge.net>"
+	}
 	puts "Usage:\n\t$script \[-input_encoding <enc>\] \[-output_encoding <enc>\] \[-input_eol <eol>\] \[-output_eol <eol>\] \[-dest folder\] \[-plist <version>\] plcFile"
-	puts "\t$script -help\n"
-	puts "Default for -input_encoding and -output_encoding is utf-8"
-	puts "Default for -dest is \$BUILT_PRODUCTS_DIR/\$CONTENTS_FOLDER_PATH"
-	puts "Possible values for -input_eol and -output_eol: [join $plc(eols) ", "]. Default is cr."
-	puts "Possible values for -plist: 0.9 and 1.0. Default is 1.0.\n"
-	if {$showEncodings} {
-		puts "Available encodings:"
-		puts [join [lsort [concat [encoding names] "utf-16"]] ", "]
+	puts "\t$script (-help | -encodings)\n"
+	if {$showAll} {
+		puts "Default is macRoman for -input_encoding and utf-8 for -output_encoding"
+		puts "Default is \$BUILT_PRODUCTS_DIR/\$CONTENTS_FOLDER_PATH for -dest"
+		puts "Possible values for -input_eol and -output_eol: [join $plc(eols) ", "] (default is cr)"
+		puts "Possible values for -plist: 0.9 and 1.0 (default is 1.0)"
 	} 
 }
 
