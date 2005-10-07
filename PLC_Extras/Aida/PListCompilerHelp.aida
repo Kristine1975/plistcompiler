@@ -1,7 +1,7 @@
 !! !! ===========================================================================
 !! !! PListCompilerHelp.aida
 !! !!                       Created: 2005-10-03 16:27:26
-!! !!             Last modification: 2005-10-06 10:52:28
+!! !!             Last modification: 2005-10-07 20:02:09
 !! !! Author: Bernard Desgraupes
 !! !! e-mail: <bdesgraupes@easyconnect.fr>
 !! !! www: <http://webperso.easyconnect.fr/bdesgraupes/>
@@ -16,7 +16,7 @@
 :Author:      Bernard DESGRAUPES <bdesgraupes@easyconnect.fr>
 :Homepage:    <http://webperso.easyconnect.fr/bdesgraupes/>
 :Created:     2005-10-03 16:27:26
-:Modified:    2005-10-06 10:52:28
+:Modified:    2005-10-07 20:02:09
 :Keywords:    property list, xcode, compiler
 :Source:      PlcAidaMacros.tcl
 
@@ -80,7 +80,7 @@ See the file ((i License_terms i)) included in this distribution or the
 The syntax of the ((b plcompile b)) shell script is:
 ((|
     plcompile options plcFile
-    plcompile -help
+    plcompile (-help | -encoding)
 |))
 
 The first form executes the compilation of the plc source file ((i plcFile i)). 
@@ -90,22 +90,34 @@ options. ((b PList Compiler b)) comes with reasonable defaults for the
 optional values, corresponding to a normal usage of these files in a 
 project. The available options are explained below.
 
-The second form
+In the second form
 ((|
 	plcompile -help
+	plcompile -encoding
 |))
-prints in the console window some help about the usage and the default
-values.
+the script prints some help in the console window: with ((i -help i)), you
+get the usage string and a reminder of the defaults; with ((i -encoding
+i)), you get a list of the available encodings. Note that one can write 
+((i plcompile -h i)) or ((i plcompile -e i)) for short.
 
 
 ((s2 Default behavior
-By default, ((b plcompile b)) will suppose that the input files are encoded
-in the Unicode utf-8 form and have Mac line endings (((i cr i))). The same
-encoding and type of line endings are used to write the output files. The
-destination folder is by default the ((i Contents i)) folder found at the first
-level of the built product (bundled application, bundle, framework, plugin,
-etc.) as set in your XCode project if you run the script from XCode;
-otherwise it is the same folder as the plc file being processed.
+By default, ((b plcompile b)) assumes that the input files are encoded in
+MacRoman and have Mac line endings (((i cr i))). The same type of line
+endings is used to write the output files but the encoding, this time, is the
+Unicode utf-8 form. 
+
+The default destination folder depends on how you execute the compiler:
+((lu
+((li if you run the script from XCode as a Shell Script phase (this is the
+recommended way), the destination folder is the ((i Contents i)) folder
+found at the first level of the built product (bundled application, bundle,
+framework, plugin, etc.) as set in your XCode project ;
+((li otherwise it is the same folder as the plc file being processed.
+lu))
+ 
+These are default behaviors which can be modified with options on the 
+command line or pragmas in the source files.
 
 
 ((s2 Command line options
@@ -119,9 +131,9 @@ The complete syntax to run the compiler is:
 The options have the following meaning:
 ((lu
 ((li the ((i -input_encoding i)) option lets you specify in which encoding the 
-source file should be read (by default utf-8);
+source file should be read (by default ((i macRoman i)));
 ((li the ((i -output_encoding i)) option  lets you specify in which encoding the 
-output files should be written (by default utf-8);
+output files should be written (by default ((i utf-8 i)));
 ((li the ((i -input_eol i)) option lets you specify the type of line endings used in the
 source file (((i cr i)) for Mac, ((i lf i)) for Unix and ((i crlf i)) for Windows);
 ((li the ((i -output_eol i)) option lets you specify the type of line endings used in
@@ -216,6 +228,24 @@ the ((i Info.plist File i)) setting (look in the ((i Packaging i)) section of th
 Make sure of course that Tcl is installed on your machine. It is part of 
 the Panther and Tiger installation.
 
+If you are having trouble with the encodings, it is maybe because the text 
+editor you used to create the ((i .plc i)) source files saved your files in 
+utf-8. If your source file is utf-8 encoded, you will have to tell 
+((b plcompile b)) and specify the ((i -input_encoding i)) option, like this:
+((|
+    ./plcompile -input_encoding utf-8 /path/to/MyApp.plc
+|))
+Once again, the default is to read the source files in macRoman and to
+write the output files in utf-8.
+
+Make sure you used the proper casing to specify the encodings: it is ((i
+macRoman i)) and not ((i MacRoman i)), ((i utf-8 i)) and not ((i UTF-8 i)).
+If you have a doubt, execute the following command which returns the list
+of all the available encodings:
+((|
+    plcompile -encoding
+|))
+
 If the script is not found by the shell, read the informations in the 
 section above about executing shell phases in XCode and setting the access 
 paths correctly.
@@ -223,19 +253,27 @@ paths correctly.
 
 ((s1 Anatomy of 'plc' files
 
-The .plc source files are regular text files taken as input by the PList 
-Compiler in order to produce one or several output files. They contain
-three types of commands:
+The ((i .plc i)) source files are regular text files taken as input by
+((b PList Compiler b)) in order to produce one or several output files.
+They contain three types of commands:
 ((lu
-((li preprocessor macros, simlar to those found in C or C++ source files
-((li specific commands understood and interpreted by the compiler
-((li lines starting with a double slash (//): they are comments and are ignored by 
-the compiler
+((li preprocessor macros, simlar to those found in C or C++ source files;
+((li specific commands understood and interpreted by the compiler;
+((li comments ignored by the compiler.
 lu))
 
 
-((s2 The plc commands
+((s2 Comments
 
+((b PList Compiler b)) recognizes two kinds of comments: the C-like
+comments enclosed between /* and */ which can span multiple lines, and, on
+a single line, portions of text starting with a double slash (//) up to the
+end of the line. Be careful with the latter because, as of this version,
+the compiler is not clever enough to detect comment symbols included in a
+quoted string and which you would not like to be considered as a comment.
+
+
+((s2 The plc commands
 
 Most of these commands correspond to an XML entity in the output ((i Info.plist i))
 file. An ((i Info.plist i)) file is an XML document. The format of the plist files
@@ -249,7 +287,7 @@ beginning of the line).
 
 ((s3 The 'plist' command
 
-The first command found in a .plc file designed to generate a .plist file
+The first command found in a ((i .plc i)) file designed to generate a .plist file
 is always the ((i plist i)) command. Its argument is a block enclosed
 inside a pair of curly braces. A minimal property list file,
 describing a completely empty property list, would look like this:
@@ -283,7 +321,7 @@ data, date, dictionary, number, i)) or ((i string i)).
 
 ((s3 The 'key' command
 
-The key/value pairs are expressed by instructions with the following format
+The key/value pairs are declared by instructions in the following format
 ((|
     key "name_of_the_key" value "type_of_value" "the_value"
 |))
@@ -323,23 +361,33 @@ Here is an example of an array containing a dictionary and a boolean value:
 
 ((s3 The 'string' command
 
-The ((i string i)) command lets you specify a string value. Strings are enclosed
-between double quotes in order to distinguish them from a substitutable
-variable (see below), but this is not required. If there is no risk of
-ambiguity, you can suppress the double quotes. Still it is good
-programming practice to write them.
+The ((i string i)) command lets you specify a string value. Strings are
+enclosed in either single or double quotes in order to distinguish them
+from a substitutable variable (see below), but this is not required. If
+there is no risk of ambiguity, you can suppress the quotes. Still it
+is good programming practice to write them.
 
 The value of a string can be made up of several pieces, mixing quoted strings or 
 variables. For instance:
 ((|
     string "copyright (c) " __YEAR__ ", all rights reserved" 
 |))
-
 where ((v __YEAR__ v)) is one of the predefined variables set by the 
 compiler. This string will be expanded to something like 
 ((i copyright (c) 2005, all rights reserved i)).
 The ((i string i)) command corresponds to the <string> XML tag.
 
+((b Caveat: b)) PList Compiler accepts both single and double quotes to
+delimit a string value in order to provide a better compatibility with the
+CodeWarrior property list compiler which used the same convention. This
+makes it a little more difficult to obtain values enclosed in quotes in the
+output file. For instance, if you really want to get a string value like
+'RSRC' or "RSRC" (including the quotes), you will have to code it like
+this:
+((|
+	string "'" RSRC "'"
+	string "\"" RSRC "\""
+|))
 
 
 ((s3 The 'number' command
@@ -488,7 +536,7 @@ and the scond one
 
 It is current practice to put the ((i localize i)) blocks in separate files and 
 use a ((i .ploc i)) extension in their name to distinguish them from the ((i .plc i)) 
-files. The ((i .ploc i)) files are usually invoked from the main .plc file with an 
+files. The ((i .ploc i)) files are usually invoked from the main ((i .plc i)) file with an 
 ((v #include v)) preprocessor command. For instance:
 ((|
     #include "DialogStrings_Spanish.ploc"
@@ -897,7 +945,9 @@ shell script. For instance:
     #pragma output_encoding utf-16
 |))
 
-
+Note that there is no equivalent pragma concerning the input encoding
+because it does not make sense: the input file would have already been read
+when the pragma is encountered.
 
 ((s3 The 'plist_version' pragma
 The ((i plist_version i)) pragma lets you specify another version of the 

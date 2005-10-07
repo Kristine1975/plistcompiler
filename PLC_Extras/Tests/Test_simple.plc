@@ -43,7 +43,8 @@ plist
 				key "CFBundleTypeRole" value string "Viewer"
 				key "CFBundleTypeOSTypes" value array
 				[
-					string 'RSRC'
+					string "'" "RSRC" "'"
+					string "\"" "RZIL" "\""
 					string '****'
 				]
 				key "CFBundleTypeExtensions" value array
