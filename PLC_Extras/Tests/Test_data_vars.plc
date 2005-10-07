@@ -16,6 +16,7 @@
 
 plist { 
 	dictionary {
+		key "kDataVar0" value data "64656667"
 		key "kDataVar1" value data "00 01 02 03"
 		key "kDataVar2" value data "00010203"
 		key "kDataVar3" value data "0001" "0203"

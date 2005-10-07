@@ -17,25 +17,25 @@
 #define kVersionSeven 7
 #define kVersionEight 8
 
-#define kCurrentVersion 9
+#define kCurrentVersion 7
 
 
 #if kCurrentVersion <= kVersionFive 
 
-#warning "Current version is <= 5"
+	#warning "Current version is <= 5"
 
 #elif kCurrentVersion <= kVersionEight 
 
-#if kCurrentVersion == kVersionSix
-#warning "Current version is 6"
-#elif kCurrentVersion == kVersionSeven 
-#warning "Current version is 7"
-#else
-#warning "Current version is 8"
-#endif
+	#if kCurrentVersion == kVersionSix
+		#warning "Current version is 6"
+	#elif kCurrentVersion == kVersionSeven 
+		#warning "Current version is 7"
+	#else
+		#warning "Current version is 8"
+	#endif
 
 #else
 
-#warning "Current version is > 8"
+	#warning "Current version is > 8"
 
 #endif

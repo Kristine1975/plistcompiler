@@ -1,7 +1,7 @@
 // ===========================================================================
 // Test_ifdef.plc
 //                       Created: 2005-10-03 06:28:51
-//             Last modification: 2005-10-04 18:30:33
+//             Last modification: 2005-10-07 11:48:56
 // Author: Bernard Desgraupes
 // e-mail: <bdesgraupes@easyconnect.fr>
 // www: <http://webperso.easyconnect.fr/bdesgraupes/>
@@ -16,7 +16,7 @@
 #define kVersionSix 6
 #define kVersionSeven 7
 
-#define kCurrentVersion kVersionSeven
+#define kCurrentVersion kVersionSix
 
 
 
@@ -26,12 +26,14 @@
 
 #else
 
+#warning "Current version is not kVersionSeven"
+
 #if kCurrentVersion <= kVersionFive 
 #warning "Current version <= kVersionFive"
 #else
 #warning "Current version > kVersionFive"
 #endif
 
-#warning "Done comparison with kVersionFive"
-
 #endif
+
+#warning "Done comparison of kCurrentVersion = " kCurrentVersion
