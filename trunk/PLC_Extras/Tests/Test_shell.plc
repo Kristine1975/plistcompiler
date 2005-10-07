@@ -1,0 +1,26 @@
+// ===========================================================================
+// Test_simple.plc
+//                       Created: 2005-10-03 06:28:51
+//             Last modification: 2005-10-04 06:29:05
+// Author: Bernard Desgraupes
+// e-mail: <bdesgraupes@easyconnect.fr>
+// www: <http://webperso.easyconnect.fr/bdesgraupes/>
+// © Copyright: Bernard Desgraupes 2005
+// All rights reserved.
+// $Date$
+// $Revision$
+// ===========================================================================
+
+plist
+{
+	dictionary
+	{		
+		key "TestShell1" value string __USER__
+		key "TestShell2" value string __SHELL__
+		key "TestShell3" value string __DISPLAY__
+		key "TestShell4" value string __HOME__
+		key "TestShell5" value string __TERM__
+		
+	}
+}
+
