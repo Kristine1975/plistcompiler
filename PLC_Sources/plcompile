@@ -6,7 +6,7 @@ exec tclsh "$0" "$@"
 # ===========================================================================
 # File: "PlistComp.tcl"
 #                        Created: 2005-10-01 21:46:19
-#              Last modification: 2005-10-07 16:43:43
+#              Last modification: 2005-10-07 17:59:20
 # Author: Bernard Desgraupes
 # e-mail: <bdesgraupes@easyconnect.fr>
 # www: <http://webperso.easyconnect.fr/bdesgraupes/>
@@ -80,7 +80,7 @@ if {[info exists plc_def(BUILT_PRODUCTS_DIR)] && [info exists plc_def(CONTENTS_F
 set plc(in_package_directory) ""
 set plc(localize_directory) "Resources"
 
-set plc(input_encoding) "utf-8"
+set plc(input_encoding) "macRoman"
 set plc(output_encoding) "utf-8"
 set plc(input_eol) "cr"
 set plc(output_eol) "cr"
@@ -214,8 +214,14 @@ proc plc::execute {args} {
 	plc::processFile $srcfile
 }
 
+# Regexp to capture C-like comments (works with the (?w) directive or
+# -lineanchor option):
+#         /\*([^*]|\*+[^*/])*\*+/
 proc plc::normalize {txt} {
-	regsub  -line -all {^//.*$} $txt {} txt
+	# Strip comments
+	regsub  -line -all {//.*$} $txt {} txt
+	regsub -all -lineanchor {/\*([^*]|\*+[^*/])*\*+/} $txt {} txt
+	# Cut all the instructions and align them on the left margin
 	regsub -line -all {^\s+#} $txt "#" txt
 	regsub -all {\s+value\s+(dictionary|array|boolean|number|date|data|string)} $txt "\r\\1" txt
 	regsub -line -all {^\s*(plist|dictionary|array)\s*(\{)?} $txt "\\1\r\\2" txt
@@ -224,6 +230,7 @@ proc plc::normalize {txt} {
 	regsub -line -all {^\s*(dictionary|array|key|boolean|number|date|data|string|comment)} $txt {\1} txt
 	regsub -all {({|\[)\s*(}|\])} $txt "\\1\r\\2" txt
 	regsub -line -all {^\s*(\}|\])} $txt {\1} txt
+	# Remove empty lines
 	regsub -line -all "^\[\r\n\]" $txt "" txt
 	return $txt	
 }
@@ -497,6 +504,7 @@ proc plc::parseString {args} {
 	global plc
 	set value ""
 	foreach a $args {
+		regsub "^'(.*)'$" $a "\\1" a
 		append value [plc::substitute $a]
 	} 
 	if {$plc(localizing)} {
