@@ -6,7 +6,7 @@ exec tclsh "$0" "$@"
 # ===========================================================================
 # File: "PlistComp.tcl"
 #                        Created: 2005-10-01 21:46:19
-#              Last modification: 2005-10-06 15:09:24
+#              Last modification: 2005-10-07 13:00:48
 # Author: Bernard Desgraupes
 # e-mail: <bdesgraupes@easyconnect.fr>
 # www: <http://webperso.easyconnect.fr/bdesgraupes/>
@@ -131,7 +131,7 @@ proc plc::execute {args} {
 		return
 	} 
 	if {![file exists $srcfile]} {
-		error "Can't find '$srcfile'. No such file or directory."
+		error "can't find '$srcfile'. No such file or directory."
 	} 
 	set plc(input_file) $srcfile
 	# Define a default output folder in case nothing was inherited 
@@ -279,7 +279,7 @@ proc plc::parseContents {txt} {
 								}
 							}
 							default {
-								error "Unknown command '$cmd'"
+								error "unknown command '$cmd'"
 							}
 						}
 					} 
@@ -344,7 +344,7 @@ proc plc::parseMacro {line} {
 				"define" {
 					if {[regexp {(\w+)[ \t]*([^\r\n]*)$} $definition -> value arg]} {
 						if {[info exists plc_def($value)]} {
-							error "Macro '$value' already defined" ""
+							error "macro '$value' already defined"
 						} else {
 							set plc_def($value) ""
 							foreach a $arg {
@@ -540,7 +540,7 @@ proc plc::parseData {args} {
 		error "Illegal hex data: $data"
 	} 
 	if {[expr {[string length $data] % 2}]} {
-		error "Expected even number of hex digit but got $data"
+		error "expected even number of hex digit but got $data"
 	} 
 	# Need to convert to Base64 here. Todo...
 	plc::writeOut [plc::encodeBase64 $data]
@@ -553,7 +553,7 @@ proc plc::parseNumber {args} {
 		append value [plc::substitute $a]
 	} 
 	if {![string is double $value]} {
-		error "Not a number: $value"
+		error "not a number: $value"
 	} 
 	if {[regexp {\.} $value]} {
 		set num real
@@ -593,7 +593,7 @@ proc plc::parseComment {args} {
 		set txt "/* $value */\r"
 		plc::writeOut $txt
 	} else {
-		error "Illegal 'comment' keyword in $context block"
+		error "illegal 'comment' keyword in $context block"
 	}
 }
 
@@ -605,7 +605,7 @@ proc plc::parseLocalize {args} {
 	if {$lang ne ""} {
 		set outfolder [file join $plc(output_folder) $plc(localize_directory) $lang.lproj]
 	} else {
-		error "No language specified with 'localize' keyword"
+		error "no language specified with 'localize' keyword"
 	}
 	if {![file exists $outfolder]} {
 		file mkdir $outfolder
@@ -671,7 +671,7 @@ proc plc::checkContext {what} {
 	global plc
 	set context [lrange $plc(context) 0 0]
 	if {$plc(parsing) || $context ne ""} {
-		error "Illegal '$what' keyword in context $context"
+		error "illegal '$what' keyword in context $context"
 	} else {
 		set plc(parsing) 1
 	}
@@ -787,7 +787,7 @@ proc plc::usage { {showEncodings 0} } {
 # # ----------------------------
 
 if {[catch {eval plc::execute $argv} err]} {
-	puts $err
+	puts "Error: $err"
 	# Don't leave pending file refs
 	catch {close $plc(outid)}
 } 
