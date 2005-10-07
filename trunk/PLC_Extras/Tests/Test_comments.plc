@@ -1,0 +1,40 @@
+/* 
+ * ===========================================================================
+ * Test_comments.plc
+ *                       Created: 2005-10-03 06:28:51
+ *             Last modification: 2005-10-07 17:50:28
+ * Author: Bernard Desgraupes
+ * e-mail: <bdesgraupes@easyconnect.fr>
+ * www: <http://webperso.easyconnect.fr/bdesgraupes/>
+ * © Copyright: Bernard Desgraupes 2005
+ * All rights reserved.
+ * $Date$
+ * $Revision$
+ * ===========================================================================
+ */
+
+plist
+{
+	dictionary
+	{		
+		key "TestString0" value string  "Removing comments"
+		key "TestString1" value string  "PLC is Great!!!" /* this is a 
+		                                                   * free opinion */
+		key "TestString2" value string  "debug_" __OUTPUT_FILENAME__
+				
+		/* Here is a C comment ***/
+		key "TestDate" value date "2002-12-18T12:00:00Z" // this is a date 
+		                                                 // conforming to 
+		                                                 // the ISO 8601 standard
+		
+		key "TestData1" value data "00 01 02 03"
+		key "TestData2" value data "00010203"
+		key "TestData3" value data "0001" "0203"
+		
+		// Other type of comments
+		key "TestBoolean1" value boolean true
+		key "TestBoolean2" value boolean false
+		
+	}
+}
+
