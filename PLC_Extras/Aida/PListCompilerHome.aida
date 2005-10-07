@@ -1,0 +1,154 @@
+!! !! ===========================================================================
+!! !! File: "PListCompilerHome.aida"
+!! !!                        Created: 2005-10-06 17:56:07
+!! !!              Last modification: 2005-10-06 17:56:07
+!! !! Author: Bernard Desgraupes
+!! !! e-mail: <bdesgraupes@easyconnect.fr>
+!! !! www: <http://webperso.easyconnect.fr/bdesgraupes/>
+!! !! (c) Copyright: Bernard Desgraupes 2005
+!! !! All rights reserved.
+!! !! $Date$
+!! !! $Revision$
+!! !! ===========================================================================
+
+:Title:       plistcompiler
+:DestFolder:	../../PLC_Help
+:Author:      Bernard DESGRAUPES <bdesgraupes@easyconnect.fr>
+:Homepage:    <http://webperso.easyconnect.fr/bdesgraupes/>
+:Created:     2005-10-06 17:56:07
+:Modified:    2005-09-21 18:58:30
+:Keywords:    property list, xcode, compiler
+:Source:      PlcAidaMacros.tcl
+
+!! !! ((if $aida_params(target) eq "Html"
+!! !! !! !! Image
+!! !! ((im ../Images/plistcompiler_logo.gif
+!! !! PList Compiler logo im))
+!! !! if))
+
+((/
+Welcome to the Home Page of ((b PList Compiler b)), a property list compiler for XCode. 
+/))
+
+((toc
+((np
+
+((s1 Description
+
+((b PList Compiler b)) is a property list compiler for 
+((lk http://developer.apple.com/tools/xcode/index.html )) XCode, lk)) Apple's 
+development environment. It lets you build
+localized and non-localized plist files from ((i plc i)) and ((i ploc i)) source files. 
+It generates automatically the property list files found in packages applications, bundles, 
+frameworks, plugins, etc.
+
+((b PList Compiler b)) is both a free software and an Open Source project.
+
+It is modelled on the CodeWarrior property list language: the idea of
+preparing source files and compiling them during the build process was
+introduced in CW Pro 8. It lets you have the property list files be
+automatically generated for you by the PLC compiler, substituting the right
+values during the building process, instead of having to manage manually
+hard-coded XML files. The Pro 8 version of CodeWarrior introduced a first draft of the plc
+language together with a dedicated compiler written by Josef W. Wankerl.
+Unfortunately XCode (as of version 2.1) does not offer such a handy tool...
+(((i drumrolls i))) here comes ((b PList Compiler b))!
+
+
+!! !! ((s1 Screenshots
+
+((s1 Download
+All ((b PList Compiler b)) official releases, past and present, are available in the 
+((lk http://sourceforge.net/project/showfiles.php?group_id=149940 ))download section lk)) 
+of the project at SourceForge. The most recent version is ((b ((s [plc::getVersion] s)) b))
+which can also be downloaded 
+((lk ../Downloads/PListCompiler.hqx )) from this page. lk))
+
+
+((b Warning b)) PList Compiler is currently a project under development
+(aka work in progress): the ((s [plc::getVersion] s)) release is a beta
+release. It has been thoroughly tested but there is room left for
+improvements. Thank you for trying it and sending feedback.
+
+
+((s1 Help
+A help file with complete documentation about the PLC syntax and the usage 
+of the compiler in an XCode project is included in the distribution. You 
+can also 
+((lk http://webperso.easyconnect.fr/bdesgraupes/DocHTML/PListCompilerHelp.html )) read it online. lk)) 
+
+
+
+((s1 Requisites
+((b PList Compiler b)) is written in fact in ((b Tcl b)) 
+(the ((lk http://wiki.tcl.tk/ )) Tool Command Language lk))): 
+the executable script is a ((i bash i)) script called ((b plcompile b)) which magically redirects the
+instructions to ((i tclsh i)) which is the Tcl shell. Tcl is installed by
+default on OSX since version 10.3 (aka Panther) so ((i tclsh i)) is
+normally present on every MacOSX system starting from this version, and 
+there should be nothing special to do for this script to run there. For
+version 10.2 systems (aka Jaguar), you will have to install Tcl on your
+machine: you can, for instance, get Daniel Steffen's 
+((i Tcl Batteries Included i)) distribution 
+((lk http://www.maths.mq.edu.au/~steffen/tcltk/ )) from there. lk))
+
+
+((s1 Source Code
+((b PList Compiler b)) is an Open Source Project. It is distributed under the same BSD License as
+the Tcl language itself: see the file ((i License_terms i)) in the distribution or 
+the ((lk http://www.opensource.org/licenses/bsd-license )) Open Source Initiative site. lk))
+
+The source code is public and can be found on the SourceForge site at the
+following address: <http://sourceforge.net/projects/plistcompiler>
+
+Being written in ((b Tcl b)) (the Tool Command Language, see above), the code can easily be
+modified and adapted to your needs. ((b Tcl/Tk b)) is a very easy to use yet
+extremely powerful scripting language:
+((lk http://wiki.tcl.tk/ )) see here lk))
+for more about this language. No compiler is necessary. The code is
+directly executed by the Tcl interpreter.
+
+((nl This code is under CVS control. You can retrieve the latest stage of 
+development using any CVS client. See 
+((lk http://sourceforge.net/cvs/?group_id=149940 )) instructions here lk)).
+
+((nl You can also 
+((lk http://cvs.sourceforge.net/cgi-bin/viewcvs.cgi/plistcompiler )) browse the cvs repository lk))
+online and get 
+((lk http://cvs.sourceforge.net/cvstarballs/plistcompiler-cvsroot.tar.bz2 )) nightly tarballs lk)).
+
+
+((s1 Code contributions
+If you have made modifications in the code in order to improve it and are 
+willing to share them, I'll be glad to incorporate your contributions in the 
+next release. ((b PList Compiler b)) is meant as a collaborative project.
+
+
+((s1 Bug reports
+
+((nl Bugs can be officially reported via the 
+((lk http://sourceforge.net/tracker/?atid=568882&group_id=149940&func=browse )) Bug Tracker lk))
+of the project.
+You can also address 
+((lk http://sourceforge.net/tracker/?atid=568885&group_id=149940&func=browse )) feature requests there lk)).
+
+
+((s1 Mailing list
+For any questions, problems, suggestions etc. about ((b PList Compiler b)), you can use the
+((i PListCompiler Users Mailing List i)). 
+((lk http://lists.sourceforge.net/lists/listinfo/plistcompiler-users ))Click here lk)) to subscribe/unsubscribe.
+To post a message to the list, send email to <plistcompiler-users@lists.sourceforge.net>.
+To see the collection of prior postings to the list, visit the 
+((lk http://sourceforge.net/mailarchive/forum.php?forum=plistcompiler-users ))PListCompiler Users  Archives lk)).
+
+You can also e-mail me directly: <bdesgraupes@users.sourceforge.net>
+
+!! logo SF
+!! -------
+((-
+((nl Last updated ((s [ISOTime::ISODateAndTimeRelaxed] s))
+((-
+((nl ((i PList Compiler is hosted by i)) 
+((lk http://sourceforge.net )) ((im http://sourceforge.net/sflogo.php?group_id=149940&amp;type=4 
+SourceForge.net Logo im)) lk))
+
