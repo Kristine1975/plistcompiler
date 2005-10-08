@@ -1,7 +1,7 @@
 !! !! ===========================================================================
 !! !! File: "PListCompilerHome.aida"
 !! !!                        Created: 2005-10-06 17:56:07
-!! !!              Last modification: 2005-10-06 17:56:07
+!! !!              Last modification: 2005-10-08 10:22:23
 !! !! Author: Bernard Desgraupes
 !! !! e-mail: <bdesgraupes@easyconnect.fr>
 !! !! www: <http://webperso.easyconnect.fr/bdesgraupes/>
@@ -16,7 +16,7 @@
 :Author:      Bernard DESGRAUPES <bdesgraupes@easyconnect.fr>
 :Homepage:    <http://webperso.easyconnect.fr/bdesgraupes/>
 :Created:     2005-10-06 17:56:07
-:Modified:    2005-09-21 18:58:30
+:Modified:    2005-10-08 10:22:23
 :Keywords:    property list, xcode, compiler
 :Source:      PlcAidaMacros.tcl
 
@@ -39,10 +39,13 @@ Welcome to the Home Page of ((b PList Compiler b)), a property list compiler for
 ((lk http://developer.apple.com/tools/xcode/index.html )) XCode, lk)) Apple's 
 development environment. It lets you build
 localized and non-localized plist files from ((i plc i)) and ((i ploc i)) source files. 
-It generates automatically the property list files found in packages applications, bundles, 
-frameworks, plugins, etc.
 
-((b PList Compiler b)) is both a free software and an Open Source project.
+((i PList Compiler i)) is a script that you execute as a 
+((i Shell Script Build Phase i)) within your XCode project and which takes
+care of generating automatically the property list files for your packaged
+applications, bundles, frameworks, plugins, etc.
+
+((i PList Compiler i)) is both a free software and an Open Source project.
 
 It is modelled on the CodeWarrior property list language: the idea of
 preparing source files and compiling them during the build process was
@@ -55,8 +58,6 @@ Unfortunately XCode (as of version 2.1) does not offer such a handy tool...
 (((i drumrolls i))) here comes ((b PList Compiler b))!
 
 
-!! !! ((s1 Screenshots
-
 ((s1 Download
 All ((b PList Compiler b)) official releases, past and present, are available in the 
 ((lk http://sourceforge.net/project/showfiles.php?group_id=149940 ))download section lk)) 
@@ -65,18 +66,17 @@ which can also be downloaded
 ((lk ../Downloads/PListCompiler.hqx )) from this page. lk))
 
 
-((b Warning b)) PList Compiler is currently a project under development
-(aka work in progress): the ((s [plc::getVersion] s)) release is a beta
-release. It has been thoroughly tested but there is room left for
+((b Warning: b)) ((i PList Compiler i)) is currently a project under development: 
+the ((s [plc::getVersion] s)) release is a fully functional beta release.
+It has been thoroughly tested but there is certainly room left for
 improvements. Thank you for trying it and sending feedback.
 
 
 ((s1 Help
-A help file with complete documentation about the PLC syntax and the usage 
-of the compiler in an XCode project is included in the distribution. You 
-can also 
+A help file with complete documentation about the PLC syntax and
+instructions about the usage of the compiler in an XCode project is
+included in the distribution. You can also
 ((lk http://webperso.easyconnect.fr/bdesgraupes/DocHTML/PListCompilerHelp.html )) read it online. lk)) 
-
 
 
 ((s1 Requisites
@@ -127,11 +127,13 @@ next release. ((b PList Compiler b)) is meant as a collaborative project.
 ((s1 Bug reports
 
 ((nl Bugs can be officially reported via the 
-((lk http://sourceforge.net/tracker/?atid=568882&group_id=149940&func=browse )) Bug Tracker lk))
+((lk https://sourceforge.net/tracker/?group_id=149940&atid=776234 )) Bug Tracker lk))
 of the project.
-You can also address 
-((lk http://sourceforge.net/tracker/?atid=568885&group_id=149940&func=browse )) feature requests there lk)).
-
+You can also use the tracker to send 
+((lu
+((li ((lk https://sourceforge.net/tracker/?atid=776237&group_id=149940&func=browse )) feature requests lk)).
+((li ((lk https://sourceforge.net/tracker/?atid=776236&group_id=149940&func=browse )) patches lk))
+lu))
 
 ((s1 Mailing list
 For any questions, problems, suggestions etc. about ((b PList Compiler b)), you can use the
