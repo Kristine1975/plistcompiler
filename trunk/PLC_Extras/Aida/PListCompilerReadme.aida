@@ -1,0 +1,84 @@
+!! !! ===========================================================================
+!! !! File: "PListCompilerReadme.aida"
+!! !!                        Created: 2005-10-06 18:02:08
+!! !!              Last modification: 2005-10-08 07:04:38
+!! !! Author: Bernard Desgraupes
+!! !! e-mail: <bdesgraupes@easyconnect.fr>
+!! !! www: <http://webperso.easyconnect.fr/bdesgraupes/>
+!! !! (c) Copyright: Bernard Desgraupes 2005
+!! !! All rights reserved.
+!! !! $Date$
+!! !! $Revision$
+!! !! ===========================================================================
+
+:Title:       PListCompiler_Readme
+:DestFolder:	../../PLC_Help
+:Author:      Bernard DESGRAUPES <bdesgraupes@easyconnect.fr>
+:Homepage:    <http://webperso.easyconnect.fr/bdesgraupes/>
+:Created:     2005-10-06 18:02:08
+:Modified:    2005-10-08 07:04:38
+:Keywords:    property list, xcode, compiler
+:Source:      PlcAidaMacros.tcl
+
+((b PList Compiler b))
+
+((b PList Compiler b)) is a property list compiler for XCode, 
+Apple's development environment. It lets you build localized and
+non-localized plist files from ((i plc i)) and ((i ploc i)) source files.
+This is version ((s [plc::getVersion] s)).
+
+((i PList Compiler i)) is a script that you execute as a 
+((i Shell Script Build Phase i)) within your XCode project and which takes
+care of generating automatically the property list files for your packaged
+applications, bundles, frameworks, plugins, etc.
+
+!! !! This new version contains:
+!! !! ((lu
+!! !! ((li 
+!! !! lu))
+
+!! !! Previous versions already implemented the following features:
+!! !! ((lu
+!! !! ((li 
+!! !! lu))
+
+For the curious, ((b PList Compiler b)) is written in fact in ((b Tcl b)) 
+(the ((lk http://wiki.tcl.tk/ )) Tool Command Language lk))): 
+the executable script is a ((i bash i)) script called ((b plcompile b))
+which magically redirects the instructions to ((i tclsh i)) which is the
+Tcl shell. Tcl is installed by default on OSX since version 10.3 (aka
+Panther) so ((i tclsh i)) is normally present on every MacOSX system
+starting from this version, and there should be nothing special to do for
+this script to run there.
+
+((b PList Compiler b)) is currently a project under development: the 
+((s [plc::getVersion] s)) release is a fully functional beta release. It
+has been thoroughly tested but there is certainly room left for
+improvements. Thank you for trying it and sending feedback.
+
+A help file with complete documentation about the PLC syntax and
+instructions about the usage of the compiler in an XCode project is
+included in the distribution. You can also
+((lk http://webperso.easyconnect.fr/bdesgraupes/DocHTML/PListCompilerHelp.html )) read it online. lk)) 
+
+((b PList Compiler b)) is a ((i free software i)). It is also an ((i Open Source Project i))
+distributed under the same BSD License as the Tcl language itself: see the
+file ((i License_terms i)) in the distribution or the
+((lk http://www.opensource.org/licenses/bsd-license )) Open Source Initiative site. lk))
+
+The official home page for the project is at SourceForge:
+((nl <http://sourceforge.net/projects/plistcompiler>
+
+There is a users mailing list where any kind of problems about
+PList Compiler can be discussed, in particular the questions related to its 
+scriptability and AppleScript syntax. 
+((lk http://lists.sourceforge.net/lists/listinfo/plistcompiler-users ))Subscribe here lk))
+
+
+Please e-mail me any problem you encounter with this software:
+((nl <bdesgraupes@users.sourceforge.net>
+
+(c) Copyright: Bernard Desgraupes, ((s [clock format [clock seconds] -format "%Y"] s))
+((nl All rights reserved.
+
+$Date$
