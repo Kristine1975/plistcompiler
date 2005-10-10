@@ -30,7 +30,7 @@
 
 // Check the value of an XCode variable
 #if __DEBUGGING_SYMBOLS__
-// 	#define kBundleLongInfo_EN kBundleShortInfoString ", built " __DATE__ " at " __TIME__ " with debugging symbols"
+	#define kBundleLongInfo_EN kBundleShortInfoString ", built " __DATE__ " at " __TIME__ " with debugging symbols"
 	#define kBundleLongInfo_FR kBundleShortInfoString ", compilé le " __DATE__ " à " __TIME__  " avec les symboles de débogage"
 #else
 	#define kBundleLongInfo_EN kBundleShortInfoString ", built " __DATE__ " at " __TIME__  " without debugging symbols"
