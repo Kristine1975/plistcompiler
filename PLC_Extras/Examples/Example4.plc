@@ -1,0 +1,24 @@
+// ===========================================================================
+// Example2.plc
+//                       Created: 2005-10-05 12:26:37
+//             Last modification: 2005-10-10 14:14:05
+// Author: Bernard Desgraupes
+// e-mail: <bdesgraupes@easyconnect.fr>
+// www: <http://webperso.easyconnect.fr/bdesgraupes/>
+// © Copyright: Bernard Desgraupes 2005
+// All rights reserved.
+// $Date$
+// $Revision$
+// ===========================================================================
+
+// Example of utf-16 output
+// ========================
+
+// This forces the localized files to be utf-16 encoded
+#pragma output_encoding "utf-16"
+
+
+// To create localized strings lists
+#include "Ploc_files/PListCompiler_EN.ploc"
+#include "Ploc_files/PListCompiler_FR.ploc"
+
