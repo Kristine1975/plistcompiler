@@ -128,8 +128,8 @@ command line or pragmas in the source files. See the
 
 The complete syntax to run the compiler is:
 ((|
-    plcompile [-input_encoding <enc>] [-output_encoding <enc>] [-input_eol <eol>] 
-                            [-output_eol <eol>] [-dest folder] [-plist <version>] plcFile
+    plcompile [-input_encoding enc] [-output_encoding enc] [-input_eol eol] 
+                            [-output_eol eol] [-dest folder] [-plist version] plcFile
 |))
 
 The options have the following meaning:
