@@ -6,7 +6,7 @@ exec tclsh "$0" "$@"
 # ===========================================================================
 # File: "PlistComp.tcl"
 #                        Created: 2005-10-01 21:46:19
-#              Last modification: 2005-10-07 17:59:20
+#              Last modification: 2005-10-09 22:23:47
 # Author: Bernard Desgraupes
 # e-mail: <bdesgraupes@easyconnect.fr>
 # www: <http://webperso.easyconnect.fr/bdesgraupes/>
@@ -64,7 +64,6 @@ set plc_def(HOURS) [clock format [clock seconds] -format "%H"]
 set plc_def(MINUTES) [clock format [clock seconds] -format "%M"]
 set plc_def(SECONDS) [clock format [clock seconds] -format "%S"]
 
-
 # Initializations
 # ---------------
 set plc(context) ""
@@ -74,8 +73,8 @@ set plc(localizing) 0
 
 set plc_def(PLIST) "1.0"
 set plc(output_filename) ""
-if {[info exists plc_def(BUILT_PRODUCTS_DIR)] && [info exists plc_def(CONTENTS_FOLDER_PATH)]} {
-	set plc(output_folder) [file join $plc_def(BUILT_PRODUCTS_DIR) $plc_def(CONTENTS_FOLDER_PATH)]
+if {[info exists plc_def(BUILT_PRODUCTS_DIR)] && [info exists plc_def(INFOPLIST_PATH)]} {
+	set plc(output_folder) [file join $plc_def(BUILT_PRODUCTS_DIR) [file dir $plc_def(INFOPLIST_PATH)]]
 } 
 set plc(in_package_directory) ""
 set plc(localize_directory) "Resources"
@@ -567,16 +566,15 @@ proc plc::parseNumber {args} {
 	foreach a $args {
 		append value [plc::substitute $a]
 	} 
+	# Check the value format 
 	if {![string is double $value]} {
-		error "not a number: $value"
+		error "not a number '$value'"
 	} 
 	if {[regexp {\.} $value]} {
 		set num real
 	} else {
 		set num integer
 	}
-	# There should be some checking of the value format here
-	# todo...
 	plc::writeTag $num
 	plc::writeOut $value
 	plc::writeTag $num close
@@ -790,8 +788,9 @@ proc plc::usage { {showAll 0} } {
 	puts "Usage:\n\t$script \[-input_encoding <enc>\] \[-output_encoding <enc>\] \[-input_eol <eol>\] \[-output_eol <eol>\] \[-dest folder\] \[-plist <version>\] plcFile"
 	puts "\t$script (-help | -encodings)\n"
 	if {$showAll} {
-		puts "Default is macRoman for -input_encoding and utf-8 for -output_encoding"
-		puts "Default is \$BUILT_PRODUCTS_DIR/\$CONTENTS_FOLDER_PATH for -dest"
+		puts "Default for -input_encoding is macRoman"
+		puts "Default for -output_encoding is utf-8"
+		puts "Default for -dest is dirname of \$BUILT_PRODUCTS_DIR/\$INFOPLIST_PATH"
 		puts "Possible values for -input_eol and -output_eol: [join $plc(eols) ", "] (default is cr)"
 		puts "Possible values for -plist: 0.9 and 1.0 (default is 1.0)"
 	} 
