@@ -1,7 +1,7 @@
 !! !! ===========================================================================
 !! !! PListCompilerHelp.aida
 !! !!                       Created: 2005-10-03 16:27:26
-!! !!             Last modification: 2005-10-07 20:02:09
+!! !!             Last modification: 2005-10-10 06:42:06
 !! !! Author: Bernard Desgraupes
 !! !! e-mail: <bdesgraupes@easyconnect.fr>
 !! !! www: <http://webperso.easyconnect.fr/bdesgraupes/>
@@ -16,7 +16,7 @@
 :Author:      Bernard DESGRAUPES <bdesgraupes@easyconnect.fr>
 :Homepage:    <http://webperso.easyconnect.fr/bdesgraupes/>
 :Created:     2005-10-03 16:27:26
-:Modified:    2005-10-07 20:02:09
+:Modified:    2005-10-10 06:42:06
 :Keywords:    property list, xcode, compiler
 :Source:      PlcAidaMacros.tcl
 
@@ -109,15 +109,19 @@ Unicode utf-8 form.
 
 The default destination folder depends on how you execute the compiler:
 ((lu
-((li if you run the script from XCode as a Shell Script phase (this is the
-recommended way), the destination folder is the ((i Contents i)) folder
-found at the first level of the built product (bundled application, bundle,
-framework, plugin, etc.) as set in your XCode project ;
+((li if you run the script from XCode as a ((i Shell Script phase i)) (this
+is the recommended way), the destination folder depends on the kind of
+product you are building: it is the ((i Contents i)) folder inside the
+application bundle when you are building a packaged application; in the
+case of a framework, it is the ((i Resources i)) subfolder of the
+frapmework ;
 ((li otherwise it is the same folder as the plc file being processed.
 lu))
- 
+
+
 These are default behaviors which can be modified with options on the 
-command line or pragmas in the source files.
+command line or pragmas in the source files. See the
+((rf locout )) Location of the output files rf)) section below.
 
 
 ((s2 Command line options
@@ -139,10 +143,10 @@ source file (((i cr i)) for Mac, ((i lf i)) for Unix and ((i crlf i)) for Window
 ((li the ((i -output_eol i)) option lets you specify the type of line endings used in
 the output files;
 ((li the ((i -dest i)) option lets you specify a destination folder relatively to which
-the output files will be produced. The usual default location is the 
-((i Contents i)) folder inside the application bundle when you are building a packaged 
-application. See also below various pragmas which can additionnally specify 
-different subfolders inside the destination folder.
+the output files will be produced. See the
+((rf locout )) Location of the output files rf)) section below. Various
+pragmas can also be used to specify different subfolders inside the
+destination folder.
 ((li the ((i -plist i)) option lets you specify the version of the plist XML format (0.9 
 or 1.0). The default value is 1.0.
 lu))
@@ -388,6 +392,18 @@ this:
 	string "'" RSRC "'"
 	string "\"" RSRC "\""
 |))
+Similarly, whitespace characters must be escaped. If you write 
+((|
+	string 'TCL '
+|))
+you will get ((i <string>'TCL'</string> i)) (with single quotes and no
+whitespace!) which is probably not what you want. This is because, in that 
+example, the compiler sees two unquoted strings: the first is ((i 'TCL i))
+and the second is an isolated single quote. In order to get 
+((i <string>TCL </string> i)), you must write:
+((|
+	string 'TCL\ '
+|))
 
 
 ((s3 The 'number' command
@@ -573,7 +589,7 @@ folder inside the bundle) would look like this:
 
 ((b Caveat: b)) the ((i comment i)) command can't be used in a ((i plist i)) block.
 
-
+((a locout )) a))
 ((s1 Location of the output files
 
 By default, the ((i plist i)) command causes ((b PList Compiler b)) to
@@ -581,7 +597,7 @@ create a file named ((i Info.plist i)) inside the destination directory. In the
 case of a packaged application, the default destination directory is the
 ((i Contents i)) folder inside the bundle. More generally, the path of this
 destination folder is built by ((b PList Compiler b)) using the values of
-the ((v BUILT_PRODUCTS_DIR v)) and ((v CONTENTS_FOLDER_PATH v)) XCode
+the ((v BUILT_PRODUCTS_DIR v)) and ((v INFOPLIST_PATH v)) XCode
 variables. 
 
 For instance, with XCode 2.1, if your target is in the ((i Release i))
