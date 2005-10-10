@@ -1,15 +1,15 @@
 Changes Log for the PList Compiler project
 ==========================================
 
-PList Compiler is a property list compiler for XCode, Apple's programming 
-environment.
+PList Compiler is a property list compiler for XCode.
 
-This is an Open Source project. The source code for this application can be 
+This is an Open Source project. The source code for this tool can be 
 found on the SourceForge site at: <http://sourceforge.net/projects/plistcompiler>
 
-PList Compiler binary releases are available at
-<http://sourceforge.net/project/showfiles.php?group_id=149940> or on my web 
-page at <http://webperso.easyconnect.fr/bdesgraupes/plistcompiler.html>
+PList Compiler releases are available at
+<http://sourceforge.net/project/showfiles.php?group_id=149940> 
+or on my web page at 
+<http://webperso.easyconnect.fr/bdesgraupes/plistcompiler.html>
 
 The code is under CVS control. You can retrieve the latest stage of 
 development using any CVS client. See instructions at:
@@ -27,13 +27,17 @@ Please e-mail about any problems you might encounter:
 You can subscribe to the plistcompiler-users mailing list at:
 <http://lists.sourceforge.net/mailman/listinfo/plistcompiler-users>
 
+You can also use the tracker to send 
+Bug reports: <https://sourceforge.net/tracker/?group_id=149940&atid=776234>
+Feature requests: <https://sourceforge.net/tracker/?atid=776237&group_id=149940&func=browse>
+Patches: <https://sourceforge.net/tracker/?atid=776236&group_id=149940&func=browse>
 
 This changes log is in reverse chronological order (from bottom to top).
 
 $Date$
 
 ================================================================================
-= 0.1b1	                 	            last update: 
+= 0.1b1	                 	            last update: 2005-10-10 14:35:12
 ================================================================================
 ¥ First beta release.
 
