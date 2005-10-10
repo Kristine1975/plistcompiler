@@ -16,6 +16,6 @@ namespace eval plc {}
 proc plc::getVersion {} {
 	global plc
 	set aidafile [win::Current]
-	catch {source [file normalize [file join [file dir $aidafile] ../../plcompile ]]}
+	catch {source [file normalize [file join [file dir $aidafile] ../../PLC_Sources/plcompile ]]}
 	return $plc(version)
 }
