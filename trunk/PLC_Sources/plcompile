@@ -6,7 +6,7 @@ exec tclsh "$0" "$@"
 # ===========================================================================
 # File: "PlistComp.tcl"
 #                        Created: 2005-10-01 21:46:19
-#              Last modification: 2005-10-09 22:23:47
+#              Last modification: 2005-10-11 19:49:11
 # Author: Bernard Desgraupes
 # e-mail: <bdesgraupes@easyconnect.fr>
 # www: <http://webperso.easyconnect.fr/bdesgraupes/>
@@ -21,7 +21,7 @@ namespace eval plc {}
 unset -nocomplain plc_def plc
 
 # Current version number
-set plc(version) "0.1b1"
+set plc(version) "0.1b2"
 
 # Retrieving the values of the shell variables: the env array contains the
 # values for all the environment variables defined by XCode.
@@ -346,10 +346,11 @@ proc plc::parseMacro {line} {
 				}
 				"include" {
 					set saveFile $plc(input_file)
+					set definition [string trim $definition "\""]
 					if {[file exists $definition]} {
 						set plc(input_file) $definition
 					} else {
-						set plc(input_file) [file normalize [eval file join [file dir $saveFile] $definition]]
+						set plc(input_file) [file normalize [file join [file dir $saveFile] $definition]]
 					}
 					plc::processFile $plc(input_file)
 					set plc(input_file) $saveFile
