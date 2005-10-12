@@ -6,7 +6,7 @@ exec tclsh "$0" "$@"
 # ===========================================================================
 # File: "PlistComp.tcl"
 #                        Created: 2005-10-01 21:46:19
-#              Last modification: 2005-10-11 19:49:11
+#              Last modification: 2005-10-12 23:51:29
 # Author: Bernard Desgraupes
 # e-mail: <bdesgraupes@easyconnect.fr>
 # www: <http://webperso.easyconnect.fr/bdesgraupes/>
@@ -21,7 +21,7 @@ namespace eval plc {}
 unset -nocomplain plc_def plc
 
 # Current version number
-set plc(version) "0.1b2"
+set plc(version) "0.1b3"
 
 # Retrieving the values of the shell variables: the env array contains the
 # values for all the environment variables defined by XCode.
@@ -40,9 +40,6 @@ if {[info exists plc_def(MACOS_TYPE)]} {
 }
 if {[info exists plc_def(PRODUCT_NAME)]} {
 	set plc_def(OUTPUT_FILENAME) $plc_def(PRODUCT_NAME)
-	if {[info exists plc_def(WRAPPER_EXTENSION)]} {
-		append plc_def(OUTPUT_FILENAME) ".$plc_def(WRAPPER_EXTENSION)"
-	}  
 }  else {
 	set plc_def(OUTPUT_FILENAME) ""
 }
@@ -223,7 +220,7 @@ proc plc::normalize {txt} {
 	# Cut all the instructions and align them on the left margin
 	regsub -line -all {^\s+#} $txt "#" txt
 	regsub -all {\s+value\s+(dictionary|array|boolean|number|date|data|string)} $txt "\r\\1" txt
-	regsub -line -all {^\s*(plist|dictionary|array)\s*(\{)?} $txt "\\1\r\\2" txt
+	regsub -line -all {^\s*(plist|dictionary|array|localize)\s*(\{)?} $txt "\\1\r\\2" txt
 	regsub -line -all {^\s*array\s*} $txt "array\r\\1" txt
 	regsub -line -all {^\s+\[} $txt "\[" txt
 	regsub -line -all {^\s*(dictionary|array|key|boolean|number|date|data|string|comment)} $txt {\1} txt
@@ -286,6 +283,9 @@ proc plc::parseContents {txt} {
 							- "comment" 
 							- "localize" {
 								if {[info exists arg]} {
+									# Remove single quotes enclosing the 
+									# whole value (if any)
+									regsub "^'(.*)'$" $arg "\"\\1\"" arg
 									eval plc::parse[string totitle $cmd] $arg
 								} else {
 									plc::parse[string totitle $cmd]
@@ -361,6 +361,8 @@ proc plc::parseMacro {line} {
 							error "macro '$value' already defined"
 						} else {
 							set plc_def($value) ""
+							# Remove single quotes used as string delimiters (if any)
+							regsub "^'(.*)'$" $arg "\"\\1\"" arg
 							foreach a $arg {
 								append plc_def($value) [plc::substitute $a]
 							} 
@@ -504,7 +506,6 @@ proc plc::parseString {args} {
 	global plc
 	set value ""
 	foreach a $args {
-		regsub "^'(.*)'$" $a "\\1" a
 		append value [plc::substitute $a]
 	} 
 	if {$plc(localizing)} {
@@ -643,20 +644,18 @@ proc plc::parseLocalize {args} {
 	plc::contextStart "localize"
 }
 
-proc plc::substitute {args} {
+proc plc::substitute {item} {
 	global plc plc_def
 	set result ""
-	foreach item $args {
-		set var $item
-		regexp "^__(.+)__$" $var -> var
-		if {$var eq "FILE"} {
-			append result [file tail $plc(input_file)]
-		} elseif {[info exists plc_def($var)]} {
-			append result $plc_def($var)
-		} else {
-			append result $item
-		}
-	} 
+	set var $item
+	regexp "^__(.+)__$" $var -> var
+	if {$var eq "FILE"} {
+		append result [file tail $plc(input_file)]
+	} elseif {[info exists plc_def($var)]} {
+		append result $plc_def($var)
+	} else {
+		append result $item
+	}
 	return $result
 }
 

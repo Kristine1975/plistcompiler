@@ -10,7 +10,7 @@
 It is developed as an <I>Open Source</I> project coming with a BSD
 License. The source code is currently hosted and developed on the 
 <A HREF="http://sourceforge.net/projects/plistcompiler">SourceForge site.</A>
-<P> This file documents version 0.1b2 of PList Compiler.
+<P> This file documents version 0.1b3 of PList Compiler.
 </I></P></BLOCKQUOTE><HR><P><UL>
 <LI><A HREF="#M1">Introduction</A>
 <LI><A HREF="#M2">Usage</A>
@@ -267,7 +267,7 @@ instead of square brackets.<P>Here is an example of an array containing a dictio
         }
     }
 </PRE><P><H4><A NAME="M16"></A>The 'string' command</H4><P>The <I>string</I> command lets you specify a string value. Strings are
-enclosed in either single or double quotes in order to distinguish them
+enclosed in double quotes in order to distinguish them
 from a substitutable variable (see below), but this is not required. If
 there is no risk of ambiguity, you can suppress the quotes. Still it
 is good programming practice to write them.<P>The value of a string can be made up of several pieces, mixing quoted strings or 
@@ -278,29 +278,27 @@ variables. For instance:
 where <TT>__YEAR__</TT> is one of the predefined variables set by the 
 compiler. This string will be expanded to something like 
 <I>copyright (c) 2005, all rights reserved</I>.
-The <I>string</I> command corresponds to the &lt;string&gt; XML tag.<P><B>Caveat:</B> PList Compiler accepts both single and double quotes to
-delimit a string value in order to provide a better compatibility with the
-CodeWarrior property list compiler which used the same convention. This
-makes it a little more difficult to obtain values enclosed in quotes in the
-output file. For instance, if you really want to get a string value like
-'RSRC' or "RSRC" (including the quotes), you will have to code it like
-this:
+The <I>string</I> command corresponds to the &lt;string&gt; XML tag.<P><B>Caveat:</B> in order to ensure a better compatibility with the
+CodeWarrior property list compiler which accepted both <I>single</I> and
+<I>double</I> quotes to delimit strings, PList Compiler does its best to
+support the same convention. For instance:
+<PRE>
+	string 'RSRC'
+</PRE>
+will produce <I>&lt;string&gt;RSRC&lt;/string&gt;</I> as it did with the CodeWarrior
+property list compiler. As a consequence, this makes it a little more
+difficult to obtain values enclosed in quotes in the output file. For
+instance, if you really want to get a string value like 'RSRC' or "RSRC"
+(including the quotes), you will have to code it like this:
 <PRE>
 	string "'" RSRC "'"
 	string "\"" RSRC "\""
 </PRE>
-Similarly, whitespace characters must be escaped. If you write 
-<PRE>
-	string 'TCL '
-</PRE>
-you will get <I>&lt;string&gt;'TCL'&lt;/string&gt;</I> (with single quotes and no
-whitespace!) which is probably not what you want. This is because, in that 
-example, the compiler sees two unquoted strings: the first is <I>'TCL</I>
-and the second is an isolated single quote. In order to get 
-<I>&lt;string&gt;TCL &lt;/string&gt;</I>, you must write:
-<PRE>
-	string 'TCL\ '
-</PRE><P><H4><A NAME="M17"></A>The 'number' command</H4><P>The <I>number</I> command lets you specify numeric values. There is no 
+Be also aware that, in the case where you concatenate several strings or
+mix strings and variables, single quotes will confuse the compiler and the
+odds are very high that you won't obtain what you expect, so your best bet
+is to always use double quotes (and no quotes at all for substitutable
+variables).<P><H4><A NAME="M17"></A>The 'number' command</H4><P>The <I>number</I> command lets you specify numeric values. There is no 
 XML tag named <I>number</I> in a plist file, but rather two entities named 
 &lt;real&gt; and &lt;integer&gt; corresponding 
 respectively to integer or floating point values. The <I>number</I> 
@@ -816,7 +814,7 @@ To post to this list, send mail to
 </UL><P><H2><A NAME="M48"></A>License and disclaimer</H2><P><B>PList Compiler</B> is distributed under the same BSD License as
 the Tcl language itself: see the file <I>License_terms</I> in the distribution or 
 the <A HREF="http://www.opensource.org/licenses/bsd-license"> Open Source Initiative site.</A><P><HR>
-<P> Last updated 2005-10-12 11:03:37
+<P> Last updated 2005-10-12 23:53:42
 <!--  logo SF -->
 <!--  ------- -->
 <HR>
