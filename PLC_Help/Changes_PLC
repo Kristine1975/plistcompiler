@@ -39,6 +39,12 @@ $Date$
 ================================================================================
 = 0.1b3	                 	            last update: 
 ================================================================================
+¥ Allow the 'localize' keyword to be preceded by whitespace characters.
+¥ Fixed the default value for OUTPUT_FILENAME which should not contain the 
+  wrapper extension.
+¥ Allow single quotes as string delimiters in #define statements. Single quotes 
+  are only partially supported. They are allowed as outer enclosers when the
+  value is a single string but not in concatenations.
 ¥ 
 
 ================================================================================
