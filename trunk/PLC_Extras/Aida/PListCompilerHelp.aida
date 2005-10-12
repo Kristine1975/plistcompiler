@@ -1176,7 +1176,8 @@ To post to this list, send mail to
 ((s1 Version history
 
 ((lu
-((li 2004-05-07 - 0.1b1 - First public beta release. Basic implementation.
+((li 2005-10-10 - 0.1b1 - First public beta release. Basic implementation.
+((li 2005-10-12 - 0.1b2 - Fixed bug when #including pathname with whitespace.
 lu))
 
 
