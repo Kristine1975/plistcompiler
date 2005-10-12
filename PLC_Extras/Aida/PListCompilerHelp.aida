@@ -366,7 +366,7 @@ Here is an example of an array containing a dictionary and a boolean value:
 ((s3 The 'string' command
 
 The ((i string i)) command lets you specify a string value. Strings are
-enclosed in either single or double quotes in order to distinguish them
+enclosed in double quotes in order to distinguish them
 from a substitutable variable (see below), but this is not required. If
 there is no risk of ambiguity, you can suppress the quotes. Still it
 is good programming practice to write them.
@@ -381,30 +381,40 @@ compiler. This string will be expanded to something like
 ((i copyright (c) 2005, all rights reserved i)).
 The ((i string i)) command corresponds to the <string> XML tag.
 
-((b Caveat: b)) PList Compiler accepts both single and double quotes to
-delimit a string value in order to provide a better compatibility with the
-CodeWarrior property list compiler which used the same convention. This
-makes it a little more difficult to obtain values enclosed in quotes in the
-output file. For instance, if you really want to get a string value like
-'RSRC' or "RSRC" (including the quotes), you will have to code it like
-this:
+((b Caveat: b)) in order to ensure a better compatibility with the
+CodeWarrior property list compiler which accepted both ((i single i)) and
+((i double i)) quotes to delimit strings, PList Compiler does its best to
+support the same convention. For instance:
+((|
+	string 'RSRC'
+|))
+will produce ((i <string>RSRC</string> i)) as it did with the CodeWarrior
+property list compiler. As a consequence, this makes it a little more
+difficult to obtain values enclosed in quotes in the output file. For
+instance, if you really want to get a string value like 'RSRC' or "RSRC"
+(including the quotes), you will have to code it like this:
 ((|
 	string "'" RSRC "'"
 	string "\"" RSRC "\""
 |))
-Similarly, whitespace characters must be escaped. If you write 
-((|
-	string 'TCL '
-|))
-you will get ((i <string>'TCL'</string> i)) (with single quotes and no
-whitespace!) which is probably not what you want. This is because, in that 
-example, the compiler sees two unquoted strings: the first is ((i 'TCL i))
-and the second is an isolated single quote. In order to get 
-((i <string>TCL </string> i)), you must write:
-((|
-	string 'TCL\ '
-|))
+Be also aware that, in the case where you concatenate several strings or
+mix strings and variables, single quotes will confuse the compiler and the
+odds are very high that you won't obtain what you expect, so your best bet
+is to always use double quotes (and no quotes at all for substitutable
+variables).
 
+!! !! Similarly, whitespace characters must be escaped. If you write 
+!! !! ((|
+!! !! 	string 'TCL '
+!! !! |))
+!! !! you will get ((i <string>'TCL'</string> i)) (with single quotes and no
+!! !! whitespace!) which is probably not what you want. This is because, in that 
+!! !! example, the compiler sees two unquoted strings: the first is ((i 'TCL i))
+!! !! and the second is an isolated single quote. In order to get 
+!! !! ((i <string>TCL </string> i)), you must write:
+!! !! ((|
+!! !! 	string 'TCL\ '
+!! !! |))
 
 ((s3 The 'number' command
 
