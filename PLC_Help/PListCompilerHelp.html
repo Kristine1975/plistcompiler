@@ -56,10 +56,11 @@ License. The source code is currently hosted and developed on the
 <UL><LI><A HREF="#M42">Predefined variables</A></UL>
 <UL><LI><A HREF="#M43">XCode environment variables</A></UL>
 <UL><LI><A HREF="#M44">Unsupported variables</A></UL>
-<LI><A HREF="#M45">Download</A>
-<LI><A HREF="#M46">Known problems</A>
-<LI><A HREF="#M47">Version history</A>
-<LI><A HREF="#M48">License and disclaimer</A>
+<LI><A HREF="#M45">Unicode characters</A>
+<LI><A HREF="#M46">Download</A>
+<LI><A HREF="#M47">Known problems</A>
+<LI><A HREF="#M48">Version history</A>
+<LI><A HREF="#M49">License and disclaimer</A>
 </UL>
 <H2><A NAME="M1"></A>Introduction</H2><P><B>PList Compiler</B> is a property list compiler for XCode. It lets you build
 localized and non-localized plist files from plc and ploc source files. 
@@ -291,7 +292,7 @@ difficult to obtain values enclosed in quotes in the output file. For
 instance, if you really want to get a string value like 'RSRC' or "RSRC"
 (including the quotes), you will have to code it like this:
 <PRE>
-	string "'" RSRC "'"
+	string "'RSRC'"
 	string "\"" RSRC "\""
 </PRE>
 Be also aware that, in the case where you concatenate several strings or
@@ -478,7 +479,10 @@ existing macro from its macro table. The syntax is:
 <PRE>
     #undef macro_name
 </PRE>
-If <I>macro_name</I> does not exist, the directive is just ignored.<P><H3><A NAME="M27"></A>Includes</H3>
+If <I>macro_name</I> does not exist, the directive is just ignored.<P><B>Note:</B> the same remarks as with the <I>string</I> keyword apply
+here concerning the use of single quotes as string delimiters. They are
+supported in the case of simple string values but not in concatenations.
+Use double quotes to be safe.<P><H3><A NAME="M27"></A>Includes</H3>
 The <I>#include</I> directive tells the plist compiler to find another 
 plc source
 file and start processing it. The format of this directive is:
@@ -784,7 +788,38 @@ is the list of these variables:
     __APPLEMACHLINKER__, __MACH__, __MERGELINKER__, 
     __MWMACHLINKER__, __MWPEFLINKER__
 </PRE><P>The <TT>__LINE__</TT> variable is not supported either, as well as the 
-<TT>__IDE_TARGET__()</TT> and <TT>__STRING__()</TT> pseudo-macros.<P><H2><A NAME="M45"></A>Download</H2>
+<TT>__IDE_TARGET__()</TT> and <TT>__STRING__()</TT> pseudo-macros.<P><H2><A NAME="M45"></A>Unicode characters</H2><P>By default, <B>PList Compiler</B> assumes that the input file is UTF-8 encoded 
+and it generates its output files in the same encoding. So there is no 
+problem for supporting any Unicode character in your plc source files: you 
+just have to use a text editor which handles the UTF-8 encoding form.
+If you prefer editing your plc source files in macRoman, all you have to 
+do is to specify this to the <I>plcompile</I> script using the <I>-input_encoding</I> 
+option. <P>Alternatively, if you just need occasionnally to use Unicode characters,
+you can also embed them in strings using the <TT>\u</TT> escape sequence:
+each Unicode character can be designated using the sequence <TT>\u</TT>
+followed by the code-point of the character in hexadecimal. For instance,
+the Unicode code-points for the lowercase letters of the greek alphabet
+start at 03B1:
+<P><TABLE BORDER=1 CELLPADDING=1>
+<TR><TD>Code-point</TD><TD>Letter</TD></TR>
+<TR><TD>03B1</TD><TD>GREEK SMALL LETTER ALPHA</TD></TR>
+<TR><TD>03B2</TD><TD>GREEK SMALL LETTER BETA</TD></TR>
+<TR><TD>03B3</TD><TD>GREEK SMALL LETTER GAMMA</TD></TR>
+<TR><TD>03B4</TD><TD>GREEK SMALL LETTER DELTA</TD></TR>
+<TR><TD>03B5</TD><TD>GREEK SMALL LETTER EPSILON</TD></TR>
+<TR><TD>03B6</TD><TD>GREEK SMALL LETTER ZETA</TD></TR>
+<TR><TD>03B7</TD><TD>GREEK SMALL LETTER ETA</TD></TR>
+<TR><TD>03B8</TD><TD>GREEK SMALL LETTER THETA</TD></TR>
+<TR><TD>03B9</TD><TD>GREEK SMALL LETTER IOTA</TD></TR>
+</TABLE></P>
+A string defined like this
+<PRE>
+    	key "UniString1" value string "\u03B1 \u03B2 \u03B3 \u03B4 \u03B5 \u03B6 \u03B7 \u03B8 \u03B9"
+</PRE>
+will produce:
+<P><IMG SRC="Images/plc_greekletters.gif" ALT="String with greek letters" ALIGN=bottom></P><P><B>Note:</B> the sequence to designate Unicode characters is <TT>\u</TT> with a 
+<I>lowercase u</I>. This is a difference with the CodeWarrior property
+list compiler which used \U.<P><H2><A NAME="M46"></A>Download</H2>
 <B>PList Compiler</B> is an Open Source Project. Its source code is 
 freely available and can 
 be found on the SourceForge site at the following address:
@@ -796,7 +831,7 @@ page at
 development using any CVS client. See instructions at:
 <P> <A HREF="http://sourceforge.net/cvs/?group_id=149940">http://sourceforge.net/cvs/?group_id=149940</A><P><P> You can browse the cvs repository online at
 <P> <A HREF="http://cvs.sourceforge.net/cgi-bin/viewcvs.cgi/plistcompiler">http://cvs.sourceforge.net/cgi-bin/viewcvs.cgi/plistcompiler</A> <P><P> You can also download a nightly tarball from
-<P> <A HREF="http://cvs.sourceforge.net/cvstarballs/plistcompiler-cvsroot.tar.bz2">http://cvs.sourceforge.net/cvstarballs/plistcompiler-cvsroot.tar.bz2</A><P><H2><A NAME="M46"></A>Known problems</H2>
+<P> <A HREF="http://cvs.sourceforge.net/cvstarballs/plistcompiler-cvsroot.tar.bz2">http://cvs.sourceforge.net/cvstarballs/plistcompiler-cvsroot.tar.bz2</A><P><H2><A NAME="M47"></A>Known problems</H2>
 <P> Please e-mail any problem or bug you encounter:
 <P> <A HREF="mailto:bdesgraupes@users.sourceforge.net">bdesgraupes@users.sourceforge.net</A>
 <P> Visit my Web page for updates and other recent builds:
@@ -808,13 +843,17 @@ versions will be announced on this list
 too. You can subscribe or unsubscribe from the following address:
 <P> <A HREF="http://lists.sourceforge.net/mailman/listinfo/plistcompiler-users">http://lists.sourceforge.net/mailman/listinfo/plistcompiler-users</A>
 To post to this list, send mail to
-<A HREF="mailto:plistcompiler-users@lists.sourceforge.net">plistcompiler-users@lists.sourceforge.net</A><P><H2><A NAME="M47"></A>Version history</H2><P><UL>
+<A HREF="mailto:plistcompiler-users@lists.sourceforge.net">plistcompiler-users@lists.sourceforge.net</A><P><H2><A NAME="M48"></A>Version history</H2>
+For a detailed list of the changes, see the file <I>Changes_PLC</I> in 
+the CVS repository.
+<UL>
 	<LI> 2005-10-10 - 0.1b1 - First public beta release. Basic implementation.
 	<LI> 2005-10-12 - 0.1b2 - Fixed bug when #including pathname with whitespace.
-</UL><P><H2><A NAME="M48"></A>License and disclaimer</H2><P><B>PList Compiler</B> is distributed under the same BSD License as
+	<LI> 2005-10-14 - 0.1b3 - Improved use of single quotes. Minor fixes.
+</UL><P><H2><A NAME="M49"></A>License and disclaimer</H2><P><B>PList Compiler</B> is distributed under the same BSD License as
 the Tcl language itself: see the file <I>License_terms</I> in the distribution or 
 the <A HREF="http://www.opensource.org/licenses/bsd-license"> Open Source Initiative site.</A><P><HR>
-<P> Last updated 2005-10-12 23:53:42
+<P> Last updated 2005-10-14 05:27:13
 <!--  logo SF -->
 <!--  ------- -->
 <HR>
