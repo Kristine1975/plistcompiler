@@ -1,5 +1,5 @@
 // ===========================================================================
-// Test_ifdef.plc
+// Test_if.plc
 //                       Created: 2005-10-03 06:28:51
 //             Last modification: 2005-10-04 18:30:33
 // Author: Bernard Desgraupes
@@ -19,7 +19,6 @@
 #if kCurrentVersion == kVersionSeven 
 
 #warning "Current version is kVersionSeven"
-
 
 #else
 

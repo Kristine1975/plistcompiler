@@ -1,5 +1,5 @@
 // ===========================================================================
-// Test_define.plc
+// Test_redefined.plc
 //                       Created: 2005-10-03 06:28:51
 //             Last modification: 2005-10-04 06:29:05
 // Author: Bernard Desgraupes
@@ -13,5 +13,5 @@
 
 #define kIdentifier "net.sourceforge.plistcompiler"
 
-// This should generate an error
+// This should generate an error about an already defined macro
 #define kIdentifier "net.sourceforge.plistcompiler"

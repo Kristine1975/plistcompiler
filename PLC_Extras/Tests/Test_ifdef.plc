@@ -1,7 +1,7 @@
 // ===========================================================================
 // Test_ifdef.plc
 //                       Created: 2005-10-03 06:28:51
-//             Last modification: 2005-10-04 18:30:33
+//             Last modification: 2005-10-14 09:02:49
 // Author: Bernard Desgraupes
 // e-mail: <bdesgraupes@easyconnect.fr>
 // www: <http://webperso.easyconnect.fr/bdesgraupes/>
@@ -13,26 +13,36 @@
 
 
 #ifdef kUndefinedMacro
+#undef kUndefinedMacro
+#endif
+
+#ifdef kWillNeverBeDefinedMacro
+#undef kWillNeverBeDefinedMacro
+#endif
+
+#ifdef kUndefinedMacro
+// this will not happen
 #define kWillNeverBeDefinedMacro
 #endif
 
 #ifndef kWillNeverBeDefinedMacro
-#define kHasNotBeenDefined "No, it has not been defined"
 
-plist { 
-	dictionary {
-		key "IsDefined" value string kHasBeenDefined
+	#define kHasNotBeenDefined "No, it has not been defined"
+
+	plist { 
+		dictionary {
+			key "IsDefined" value string kHasNotBeenDefined
+		}
 	}
-}
 
 #else
 
-#define kHasBeenDefined "Yes, it has been defined"
+	#define kHasBeenDefined "Yes, it has been defined"
 
-plist { 
-	dictionary {
-		key "IsDefined" value string kHasBeenDefined
+	plist { 
+		dictionary {
+			key "IsDefined" value string kHasBeenDefined
+		}
 	}
-}
 
 #endif
