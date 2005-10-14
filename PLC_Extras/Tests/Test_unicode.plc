@@ -1,0 +1,95 @@
+// ===========================================================================
+// Test_unicode.plc
+//                       Created: 2005-10-13 22:15:37
+//             Last modification: 2005-10-13 22:15:42
+// Author: Bernard Desgraupes
+// e-mail: <bdesgraupes@easyconnect.fr>
+// www: <http://webperso.easyconnect.fr/bdesgraupes/>
+// © Copyright: Bernard Desgraupes 2005
+// All rights reserved.
+// $Date$
+// $Revision$
+// ===========================================================================
+
+
+
+#define kAppName 'PlcTest'
+// U+00A9 is the code-point of the copyright symbol
+#define kAppInfo kAppName ", \u00A9 " __YEAR__ ", all rights reserved" 
+
+#define kGreekInfo '\u03B1 \u03B2 \u03B3 \u03B4'
+#define kHebrewInfo "\u05D0 \u05D1 \u05D2 \u05D3"
+#define kPi "\u03C0"
+
+plist
+{
+	dictionary
+	{		
+		// Some greek letters
+		key "UniString1" value string "\u03B1 \u03B2 \u03B3 \u03B4 \u03B5 \u03B6 \u03B7 \u03B8 \u03B9"
+		// Some cyrillic letters
+		key "UniString2" value string "\u0430 \u0431 \u0432 \u0433 \u0434 \u0435 \u0436 \u0437 \u0438 \u0439"
+		// Some armenian letters
+		key "UniString3" value string "\u0561 \u0562 \u0563 \u0564 \u0565 \u0566 \u0567 \u0568 \u0569 \u056A"
+		// Some hebrew letters
+		key "UniString4" value string "\u05D0 \u05D1 \u05D2 \u05D3 \u05D4 \u05D5 \u05D6 \u05D7 \u05D8 \u05D9"
+		
+		key "UniString5" value string kGreekInfo
+		
+		key "UniString6" value string kHebrewInfo
+		
+		key "UniString7" value string kAppInfo
+		
+		key "UniString8" value string kPi " = 3.14"
+		
+	}
+}
+
+
+// 03B1;GREEK SMALL LETTER ALPHA;Ll;0;L;;;;;N;;;0391;;0391
+// 03B2;GREEK SMALL LETTER BETA;Ll;0;L;;;;;N;;;0392;;0392
+// 03B3;GREEK SMALL LETTER GAMMA;Ll;0;L;;;;;N;;;0393;;0393
+// 03B4;GREEK SMALL LETTER DELTA;Ll;0;L;;;;;N;;;0394;;0394
+// 03B5;GREEK SMALL LETTER EPSILON;Ll;0;L;;;;;N;;;0395;;0395
+// 03B6;GREEK SMALL LETTER ZETA;Ll;0;L;;;;;N;;;0396;;0396
+// 03B7;GREEK SMALL LETTER ETA;Ll;0;L;;;;;N;;;0397;;0397
+// 03B8;GREEK SMALL LETTER THETA;Ll;0;L;;;;;N;;;0398;;0398
+// 03B9;GREEK SMALL LETTER IOTA;Ll;0;L;;;;;N;;;0399;;0399
+// 
+// 0430;CYRILLIC SMALL LETTER A;Ll;0;L;;;;;N;;;0410;;0410
+// 0431;CYRILLIC SMALL LETTER BE;Ll;0;L;;;;;N;;;0411;;0411
+// 0432;CYRILLIC SMALL LETTER VE;Ll;0;L;;;;;N;;;0412;;0412
+// 0433;CYRILLIC SMALL LETTER GHE;Ll;0;L;;;;;N;CYRILLIC SMALL LETTER GE;;0413;;0413
+// 0434;CYRILLIC SMALL LETTER DE;Ll;0;L;;;;;N;;;0414;;0414
+// 0435;CYRILLIC SMALL LETTER IE;Ll;0;L;;;;;N;;;0415;;0415
+// 0436;CYRILLIC SMALL LETTER ZHE;Ll;0;L;;;;;N;;;0416;;0416
+// 0437;CYRILLIC SMALL LETTER ZE;Ll;0;L;;;;;N;;;0417;;0417
+// 0438;CYRILLIC SMALL LETTER I;Ll;0;L;;;;;N;CYRILLIC SMALL LETTER II;;0418;;0418
+// 0439;CYRILLIC SMALL LETTER SHORT I;Ll;0;L;0438 0306;;;;N;CYRILLIC SMALL LETTER SHORT II;;0419;;0419
+// 
+// 
+// 0561;ARMENIAN SMALL LETTER AYB;Ll;0;L;;;;;N;;;0531;;0531
+// 0562;ARMENIAN SMALL LETTER BEN;Ll;0;L;;;;;N;;;0532;;0532
+// 0563;ARMENIAN SMALL LETTER GIM;Ll;0;L;;;;;N;;;0533;;0533
+// 0564;ARMENIAN SMALL LETTER DA;Ll;0;L;;;;;N;;;0534;;0534
+// 0565;ARMENIAN SMALL LETTER ECH;Ll;0;L;;;;;N;;;0535;;0535
+// 0566;ARMENIAN SMALL LETTER ZA;Ll;0;L;;;;;N;;;0536;;0536
+// 0567;ARMENIAN SMALL LETTER EH;Ll;0;L;;;;;N;;;0537;;0537
+// 0568;ARMENIAN SMALL LETTER ET;Ll;0;L;;;;;N;;;0538;;0538
+// 0569;ARMENIAN SMALL LETTER TO;Ll;0;L;;;;;N;;;0539;;0539
+// 056A;ARMENIAN SMALL LETTER ZHE;Ll;0;L;;;;;N;;;053A;;053A
+// 056B;ARMENIAN SMALL LETTER INI;Ll;0;L;;;;;N;;;053B;;053B
+// 056C;ARMENIAN SMALL LETTER LIWN;Ll;0;L;;;;;N;;;053C;;053C
+// 056D;ARMENIAN SMALL LETTER XEH;Ll;0;L;;;;;N;;;053D;;053D
+// 056E;ARMENIAN SMALL LETTER CA;Ll;0;L;;;;;N;;;053E;;053E
+// 
+// 05D0;HEBREW LETTER ALEF;Lo;0;R;;;;;N;;;;;
+// 05D1;HEBREW LETTER BET;Lo;0;R;;;;;N;;;;;
+// 05D2;HEBREW LETTER GIMEL;Lo;0;R;;;;;N;;;;;
+// 05D3;HEBREW LETTER DALET;Lo;0;R;;;;;N;;;;;
+// 05D4;HEBREW LETTER HE;Lo;0;R;;;;;N;;;;;
+// 05D5;HEBREW LETTER VAV;Lo;0;R;;;;;N;;;;;
+// 05D6;HEBREW LETTER ZAYIN;Lo;0;R;;;;;N;;;;;
+// 05D7;HEBREW LETTER HET;Lo;0;R;;;;;N;;;;;
+// 05D8;HEBREW LETTER TET;Lo;0;R;;;;;N;;;;;
+// 05D9;HEBREW LETTER YOD;Lo;0;R;;;;;N;;;;;
