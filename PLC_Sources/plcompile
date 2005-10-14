@@ -6,7 +6,7 @@ exec tclsh "$0" "$@"
 # ===========================================================================
 # File: "PlistComp.tcl"
 #                        Created: 2005-10-01 21:46:19
-#              Last modification: 2005-10-12 23:51:29
+#              Last modification: 2005-10-14 09:34:52
 # Author: Bernard Desgraupes
 # e-mail: <bdesgraupes@easyconnect.fr>
 # www: <http://webperso.easyconnect.fr/bdesgraupes/>
@@ -21,7 +21,7 @@ namespace eval plc {}
 unset -nocomplain plc_def plc
 
 # Current version number
-set plc(version) "0.1b3"
+set plc(version) "0.1rc1"
 
 # Retrieving the values of the shell variables: the env array contains the
 # values for all the environment variables defined by XCode.
@@ -220,7 +220,8 @@ proc plc::normalize {txt} {
 	# Cut all the instructions and align them on the left margin
 	regsub -line -all {^\s+#} $txt "#" txt
 	regsub -all {\s+value\s+(dictionary|array|boolean|number|date|data|string)} $txt "\r\\1" txt
-	regsub -line -all {^\s*(plist|dictionary|array|localize)\s*(\{)?} $txt "\\1\r\\2" txt
+	regsub -line -all {^\s*(plist|dictionary|array)\s*(\{)?} $txt "\\1\r\\2" txt
+	regsub -line -all {^\s+localize} $txt "localize" txt
 	regsub -line -all {^\s*array\s*} $txt "array\r\\1" txt
 	regsub -line -all {^\s+\[} $txt "\[" txt
 	regsub -line -all {^\s*(dictionary|array|key|boolean|number|date|data|string|comment)} $txt {\1} txt
@@ -283,8 +284,7 @@ proc plc::parseContents {txt} {
 							- "comment" 
 							- "localize" {
 								if {[info exists arg]} {
-									# Remove single quotes enclosing the 
-									# whole value (if any)
+									# Replace outer single quotes (if any) by double quotes
 									regsub "^'(.*)'$" $arg "\"\\1\"" arg
 									eval plc::parse[string totitle $cmd] $arg
 								} else {
@@ -361,7 +361,7 @@ proc plc::parseMacro {line} {
 							error "macro '$value' already defined"
 						} else {
 							set plc_def($value) ""
-							# Remove single quotes used as string delimiters (if any)
+							# Replace outer single quotes (if any) by double quotes
 							regsub "^'(.*)'$" $arg "\"\\1\"" arg
 							foreach a $arg {
 								append plc_def($value) [plc::substitute $a]

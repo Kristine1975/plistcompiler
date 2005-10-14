@@ -10,7 +10,7 @@
 It is developed as an <I>Open Source</I> project coming with a BSD
 License. The source code is currently hosted and developed on the 
 <A HREF="http://sourceforge.net/projects/plistcompiler">SourceForge site.</A>
-<P> This file documents version 0.1b3 of PList Compiler.
+<P> This file documents version 0.1rc1 of PList Compiler.
 </I></P></BLOCKQUOTE><HR><P><UL>
 <LI><A HREF="#M1">Introduction</A>
 <LI><A HREF="#M2">Usage</A>
@@ -801,7 +801,7 @@ followed by the code-point of the character in hexadecimal. For instance,
 the Unicode code-points for the lowercase letters of the greek alphabet
 start at 03B1:
 <P><TABLE BORDER=1 CELLPADDING=1>
-<TR><TD>Code-point</TD><TD>Letter</TD></TR>
+<TR><TD><I>Code-point</I></TD><TD><I>Letter</I></TD></TR>
 <TR><TD>03B1</TD><TD>GREEK SMALL LETTER ALPHA</TD></TR>
 <TR><TD>03B2</TD><TD>GREEK SMALL LETTER BETA</TD></TR>
 <TR><TD>03B3</TD><TD>GREEK SMALL LETTER GAMMA</TD></TR>
@@ -817,7 +817,7 @@ A string defined like this
     	key "UniString1" value string "\u03B1 \u03B2 \u03B3 \u03B4 \u03B5 \u03B6 \u03B7 \u03B8 \u03B9"
 </PRE>
 will produce:
-<P><IMG SRC="Images/plc_greekletters.gif" ALT="String with greek letters" ALIGN=bottom></P><P><B>Note:</B> the sequence to designate Unicode characters is <TT>\u</TT> with a 
+<P><IMG SRC="Images/plc_greekletters.jpg" ALT="String with greek letters" ALIGN=bottom></P><P><B>Note:</B> the sequence to designate Unicode characters is <TT>\u</TT> with a 
 <I>lowercase u</I>. This is a difference with the CodeWarrior property
 list compiler which used \U.<P><H2><A NAME="M46"></A>Download</H2>
 <B>PList Compiler</B> is an Open Source Project. Its source code is 
@@ -849,11 +849,13 @@ the CVS repository.
 <UL>
 	<LI> 2005-10-10 - 0.1b1 - First public beta release. Basic implementation.
 	<LI> 2005-10-12 - 0.1b2 - Fixed bug when #including pathname with whitespace.
-	<LI> 2005-10-14 - 0.1b3 - Improved use of single quotes. Minor fixes.
+	<LI> 2005-10-13 - 0.1b3 - Improved use of single quotes. Minor fixes. 
+Unicode characters.
+	<LI> 2005-10-14 - 0.1rc1 - First release candidate.
 </UL><P><H2><A NAME="M49"></A>License and disclaimer</H2><P><B>PList Compiler</B> is distributed under the same BSD License as
 the Tcl language itself: see the file <I>License_terms</I> in the distribution or 
 the <A HREF="http://www.opensource.org/licenses/bsd-license"> Open Source Initiative site.</A><P><HR>
-<P> Last updated 2005-10-14 05:27:13
+<P> Last updated 2005-10-14 09:42:06
 <!--  logo SF -->
 <!--  ------- -->
 <HR>
