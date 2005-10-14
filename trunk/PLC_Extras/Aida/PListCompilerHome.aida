@@ -1,7 +1,7 @@
 !! !! ===========================================================================
 !! !! File: "PListCompilerHome.aida"
 !! !!                        Created: 2005-10-06 17:56:07
-!! !!              Last modification: 2005-10-08 10:22:23
+!! !!              Last modification: 2005-10-14 09:44:34
 !! !! Author: Bernard Desgraupes
 !! !! e-mail: <bdesgraupes@easyconnect.fr>
 !! !! www: <http://webperso.easyconnect.fr/bdesgraupes/>
@@ -16,7 +16,7 @@
 :Author:      Bernard DESGRAUPES <bdesgraupes@easyconnect.fr>
 :Homepage:    <http://webperso.easyconnect.fr/bdesgraupes/>
 :Created:     2005-10-06 17:56:07
-:Modified:    2005-10-08 10:22:23
+:Modified:    2005-10-14 09:44:34
 :Keywords:    property list, xcode, compiler
 :Source:      PlcAidaMacros.tcl
 
@@ -61,13 +61,14 @@ Unfortunately XCode (as of version 2.1) does not offer such a handy tool...
 ((s1 Download
 All ((b PList Compiler b)) official releases, past and present, are available in the 
 ((lk http://sourceforge.net/project/showfiles.php?group_id=149940 ))download section lk)) 
-of the project at SourceForge. The most recent version is ((b ((s [plc::getVersion] s)) b))
+of the project at SourceForge.
+
+The most recent version is ((b ((s [plc::getVersion] s)) b))
 which can also be downloaded 
 ((lk ../Downloads/PListCompiler.hqx )) from this page. lk))
 
-
 ((b Warning: b)) ((i PList Compiler i)) is currently a project under development: 
-the ((s [plc::getVersion] s)) release is a fully functional beta release.
+the ((s [plc::getVersion] s)) release is a fully functional release.
 It has been thoroughly tested but there is certainly room left for
 improvements. Thank you for trying it and sending feedback.
 

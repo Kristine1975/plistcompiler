@@ -1,7 +1,7 @@
 !! !! ===========================================================================
 !! !! PListCompilerHelp.aida
 !! !!                       Created: 2005-10-03 16:27:26
-!! !!             Last modification: 2005-10-14 05:30:49
+!! !!             Last modification: 2005-10-14 09:42:00
 !! !! Author: Bernard Desgraupes
 !! !! e-mail: <bdesgraupes@easyconnect.fr>
 !! !! www: <http://webperso.easyconnect.fr/bdesgraupes/>
@@ -16,7 +16,7 @@
 :Author:      Bernard DESGRAUPES <bdesgraupes@easyconnect.fr>
 :Homepage:    <http://webperso.easyconnect.fr/bdesgraupes/>
 :Created:     2005-10-03 16:27:26
-:Modified:    2005-10-14 05:30:49
+:Modified:    2005-10-14 09:42:00
 :Keywords:    property list, xcode, compiler
 :Source:      PlcAidaMacros.tcl
 
@@ -1177,7 +1177,7 @@ A string defined like this
     	key "UniString1" value string "\u03B1 \u03B2 \u03B3 \u03B4 \u03B5 \u03B6 \u03B7 \u03B8 \u03B9"
 |))
 will produce:
-((im Images/plc_greekletters.gif
+((im Images/plc_greekletters.jpg
 String with greek letters im))
 
 ((b Note: b)) the sequence to designate Unicode characters is ((v \u v)) with a 
@@ -1232,8 +1232,9 @@ the CVS repository.
 ((lu
 ((li 2005-10-10 - 0.1b1 - First public beta release. Basic implementation.
 ((li 2005-10-12 - 0.1b2 - Fixed bug when #including pathname with whitespace.
-((li 2005-10-14 - 0.1b3 - Improved use of single quotes. Minor fixes. 
+((li 2005-10-13 - 0.1b3 - Improved use of single quotes. Minor fixes. 
 Unicode characters.
+((li 2005-10-14 - 0.1rc1 - First release candidate.
 lu))
 
 

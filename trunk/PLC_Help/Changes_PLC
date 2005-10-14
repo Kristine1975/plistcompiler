@@ -37,7 +37,12 @@ This changes log is in reverse chronological order (from bottom to top).
 $Date$
 
 ================================================================================
-= 0.1b3	                 	            last update: 
+= 0.1rc1                 	            last update: 2005-10-14 10:24:02
+================================================================================
+¥ First public release candidate.
+
+================================================================================
+= 0.1b3	                 	            last update: 2005-10-13 09:35:23
 ================================================================================
 ¥ Allow the 'localize' keyword to be preceded by whitespace characters.
 ¥ Fixed the default value for OUTPUT_FILENAME which should not contain the 
