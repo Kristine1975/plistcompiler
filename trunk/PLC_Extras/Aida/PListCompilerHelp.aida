@@ -1,7 +1,7 @@
 !! !! ===========================================================================
 !! !! PListCompilerHelp.aida
 !! !!                       Created: 2005-10-03 16:27:26
-!! !!             Last modification: 2005-10-10 06:42:06
+!! !!             Last modification: 2005-10-14 05:30:49
 !! !! Author: Bernard Desgraupes
 !! !! e-mail: <bdesgraupes@easyconnect.fr>
 !! !! www: <http://webperso.easyconnect.fr/bdesgraupes/>
@@ -16,7 +16,7 @@
 :Author:      Bernard DESGRAUPES <bdesgraupes@easyconnect.fr>
 :Homepage:    <http://webperso.easyconnect.fr/bdesgraupes/>
 :Created:     2005-10-03 16:27:26
-:Modified:    2005-10-10 06:42:06
+:Modified:    2005-10-14 05:30:49
 :Keywords:    property list, xcode, compiler
 :Source:      PlcAidaMacros.tcl
 
@@ -394,7 +394,7 @@ difficult to obtain values enclosed in quotes in the output file. For
 instance, if you really want to get a string value like 'RSRC' or "RSRC"
 (including the quotes), you will have to code it like this:
 ((|
-	string "'" RSRC "'"
+	string "'RSRC'"
 	string "\"" RSRC "\""
 |))
 Be also aware that, in the case where you concatenate several strings or
@@ -688,6 +688,10 @@ existing macro from its macro table. The syntax is:
 |))
 If ((i macro_name i)) does not exist, the directive is just ignored.
 
+((b Note: b)) the same remarks as with the ((i string i)) keyword apply
+here concerning the use of single quotes as string delimiters. They are
+supported in the case of simple string values but not in concatenations.
+Use double quotes to be safe.
 
 ((s2 Includes
 The ((i #include i)) directive tells the plist compiler to find another 
@@ -711,7 +715,6 @@ examples:
 ((b Note: b)) the CodeWarrior property list compiler also accepts filenames 
 enclosed in angle brackets to designate files located in the system access 
 paths. This is not currently supported by ((b PList Compiler b)) as of version 0.1.
-
 
 
 ((s2 Conditional macros
@@ -1141,6 +1144,46 @@ The ((v __LINE__ v)) variable is not supported either, as well as the
 ((v __IDE_TARGET__() v)) and ((v __STRING__() v)) pseudo-macros.
 
 
+((s1 Unicode characters
+
+By default, ((b PList Compiler b)) assumes that the input file is UTF-8 encoded 
+and it generates its output files in the same encoding. So there is no 
+problem for supporting any Unicode character in your plc source files: you 
+just have to use a text editor which handles the UTF-8 encoding form.
+If you prefer editing your plc source files in macRoman, all you have to 
+do is to specify this to the ((i plcompile i)) script using the ((i -input_encoding i)) 
+option. 
+
+Alternatively, if you just need occasionnally to use Unicode characters,
+you can also embed them in strings using the ((v \u v)) escape sequence:
+each Unicode character can be designated using the sequence ((v \u v))
+followed by the code-point of the character in hexadecimal. For instance,
+the Unicode code-points for the lowercase letters of the greek alphabet
+start at 03B1:
+((t1
+((tr ((i Code-point i))	((i Letter i))
+((tr 03B1	GREEK SMALL LETTER ALPHA
+((tr 03B2	GREEK SMALL LETTER BETA
+((tr 03B3	GREEK SMALL LETTER GAMMA
+((tr 03B4	GREEK SMALL LETTER DELTA
+((tr 03B5	GREEK SMALL LETTER EPSILON
+((tr 03B6	GREEK SMALL LETTER ZETA
+((tr 03B7	GREEK SMALL LETTER ETA
+((tr 03B8	GREEK SMALL LETTER THETA
+((tr 03B9	GREEK SMALL LETTER IOTA
+t))
+A string defined like this
+((|
+    	key "UniString1" value string "\u03B1 \u03B2 \u03B3 \u03B4 \u03B5 \u03B6 \u03B7 \u03B8 \u03B9"
+|))
+will produce:
+((im Images/plc_greekletters.gif
+String with greek letters im))
+
+((b Note: b)) the sequence to designate Unicode characters is ((v \u v)) with a 
+((i lowercase u i)). This is a difference with the CodeWarrior property
+list compiler which used \U.
+
 
 ((s1 Download
 ((b PList Compiler b)) is an Open Source Project. Its source code is 
@@ -1184,10 +1227,13 @@ To post to this list, send mail to
 
 
 ((s1 Version history
-
+For a detailed list of the changes, see the file ((i Changes_PLC i)) in 
+the CVS repository.
 ((lu
 ((li 2005-10-10 - 0.1b1 - First public beta release. Basic implementation.
 ((li 2005-10-12 - 0.1b2 - Fixed bug when #including pathname with whitespace.
+((li 2005-10-14 - 0.1b3 - Improved use of single quotes. Minor fixes. 
+Unicode characters.
 lu))
 
 
