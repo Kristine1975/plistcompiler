@@ -1,7 +1,7 @@
 // ===========================================================================
 // Test_define.plc
 //                       Created: 2005-10-03 06:28:51
-//             Last modification: 2005-10-04 06:29:05
+//             Last modification: 2005-10-12 23:52:03
 // Author: Bernard Desgraupes
 // e-mail: <bdesgraupes@easyconnect.fr>
 // www: <http://webperso.easyconnect.fr/bdesgraupes/>
@@ -13,13 +13,13 @@
 
 #define kIdentifier "net.sourceforge.plistcompiler"
 
-#define kAppName "PLC"
+#define kAppName 'PLC '
 
-#define kAppProp "great"
+#define kAppProp 'great'
 
-#define kShortInfo kAppName " is " kAppProp
+#define kShortInfo kAppName "is " kAppProp
 
-#define kLongInfo kShortInfo ", all rights reserved"
+#define kLongInfo kShortInfo ", all rights reserved in " __YEAR__
 
 plist
 {
@@ -29,6 +29,7 @@ plist
 		key "ShortInfo" value string kShortInfo
 		key "LongInfo" value string kLongInfo
 		key "Name" value string kAppName
+		key "SingleQuoted" value string ' App Name '
 	}
 }
 
