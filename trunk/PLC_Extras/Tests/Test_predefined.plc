@@ -20,6 +20,16 @@ plist {
 		key "TestPackageType" value string __OUTPUT_TYPE__
 		key "TestSignature" value string __OUTPUT_CREATOR__
 		key "TestDate" value string __DATE__
+		key "TestDayname" value string __DAYNAME__
+		key "TestDay" value string __DAY__
+		key "TestHours" value string __HOURS__
+		key "TestMinutes" value string __MINUTES__
+		key "TestMonthname" value string __MONTHNAME__
+		key "TestMonth" value string __MONTH__
+		key "TestSeconds" value string __SECONDS__
+		key "TestShortdate" value string __SHORTDATE__
+		key "TestTime" value string __TIME__
+		key "TestYear" value string __YEAR__
 	}
 }
 

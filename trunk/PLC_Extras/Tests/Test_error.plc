@@ -12,5 +12,5 @@
 // ===========================================================================
 
 
-#error "This is a first error message"
-#error "This one will never appear"
+#error "this is a first error message"
+#error "this one will never be reached"

@@ -1,5 +1,5 @@
 // ===========================================================================
-// Test_simple.plc
+// Test_shell.plc
 //                       Created: 2005-10-03 06:28:51
 //             Last modification: 2005-10-04 06:29:05
 // Author: Bernard Desgraupes
@@ -20,6 +20,7 @@ plist
 		key "TestShell3" value string __DISPLAY__
 		key "TestShell4" value string __HOME__
 		key "TestShell5" value string __TERM__
+		key "TestShell6" value string __PATH__
 		
 	}
 }

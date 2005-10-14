@@ -13,5 +13,5 @@
 
 
 #warning "This is a first warning"
-#warning "This is a caveat"
-#warning "And here is a sine qua non"
+#warning "This is a \"caveat\""
+#warning "And here is a 'sine qua non'"
