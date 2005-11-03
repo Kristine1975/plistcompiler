@@ -6,7 +6,7 @@ exec tclsh "$0" "$@"
 # ===========================================================================
 # File: "PlistComp.tcl"
 #                        Created: 2005-10-01 21:46:19
-#              Last modification: 2005-10-14 09:34:52
+#              Last modification: 2005-11-03 07:52:56
 # Author: Bernard Desgraupes
 # e-mail: <bdesgraupes@easyconnect.fr>
 # www: <http://webperso.easyconnect.fr/bdesgraupes/>
@@ -21,7 +21,7 @@ namespace eval plc {}
 unset -nocomplain plc_def plc
 
 # Current version number
-set plc(version) "0.1rc1"
+set plc(version) "0.1"
 
 # Retrieving the values of the shell variables: the env array contains the
 # values for all the environment variables defined by XCode.
@@ -117,6 +117,11 @@ proc plc::execute {args} {
 	# Handle the -help option
 	if {$len == 1 && [regexp -- "-h" $args]} {
 		plc::usage 1 
+		return
+	} 
+	# Handle the -help option
+	if {$len == 1 && [regexp -- "-v" $args]} {
+		puts "$plc(version)"
 		return
 	} 
 	# Handle the -encodings option
@@ -786,7 +791,7 @@ proc plc::usage { {showAll 0} } {
 		puts "Copyright (c) 2005, Bernard Desgraupes <bdesgraupes@users.sourceforge.net>"
 	}
 	puts "Usage:\n\t$script \[-input_encoding <enc>\] \[-output_encoding <enc>\] \[-input_eol <eol>\] \[-output_eol <eol>\] \[-dest folder\] \[-plist <version>\] plcFile"
-	puts "\t$script (-help | -encodings)\n"
+	puts "\t$script (-help | -encodings | -version)\n"
 	if {$showAll} {
 		puts "Default for -input_encoding is macRoman"
 		puts "Default for -output_encoding is utf-8"
