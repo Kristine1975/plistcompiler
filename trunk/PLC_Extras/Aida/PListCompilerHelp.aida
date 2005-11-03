@@ -1,7 +1,7 @@
 !! !! ===========================================================================
 !! !! PListCompilerHelp.aida
 !! !!                       Created: 2005-10-03 16:27:26
-!! !!             Last modification: 2005-10-14 09:42:00
+!! !!             Last modification: 2005-11-03 07:50:32
 !! !! Author: Bernard Desgraupes
 !! !! e-mail: <bdesgraupes@easyconnect.fr>
 !! !! www: <http://webperso.easyconnect.fr/bdesgraupes/>
@@ -16,7 +16,7 @@
 :Author:      Bernard DESGRAUPES <bdesgraupes@easyconnect.fr>
 :Homepage:    <http://webperso.easyconnect.fr/bdesgraupes/>
 :Created:     2005-10-03 16:27:26
-:Modified:    2005-10-14 09:42:00
+:Modified:    2005-11-03 07:50:32
 :Keywords:    property list, xcode, compiler
 :Source:      PlcAidaMacros.tcl
 
@@ -80,7 +80,7 @@ See the file ((i License_terms i)) included in this distribution or the
 The syntax of the ((b plcompile b)) shell script is:
 ((|
     plcompile options plcFile
-    plcompile (-help | -encoding)
+    plcompile (-help | -encoding | -version)
 |))
 
 The first form executes the compilation of the plc source file ((i plcFile i)). 
@@ -94,11 +94,14 @@ In the second form
 ((|
 	plcompile -help
 	plcompile -encoding
+	plcompile -version
 |))
 the script prints some help in the console window: with ((i -help i)), you
-get the usage string and a reminder of the defaults; with ((i -encoding
-i)), you get a list of the available encodings. Note that one can write 
-((i plcompile -h i)) or ((i plcompile -e i)) for short.
+get the usage string and a reminder of the defaults; with ((i -encoding i)), 
+you get a list of the available encodings; with ((i -version i)), you get
+the current version number of the script. Note that one can use 
+abbreviated flags like ((i -h i)) or ((i -v i)) 
+for instance.
 
 
 ((s2 Default behavior
@@ -1060,6 +1063,17 @@ YY-MM-DDTHH:MM:SSZ. For instance ((i "2005-10-04T17:12:23Z" i)).
 lt))
 ld))
 
+((b Caveat: b)) one must be aware that the values of the ((v OUTPUT_CREATOR v)) 
+and ((v OUTPUT_TYPE v)) predefined variables are taken from the XCode
+variables called ((v MACOS_CREATOR v)) and ((v MACOS_TYPE v)), but that, in
+certain circumstances, these variables are not displayed in the ((i Target
+Settings i)) panels in ((i XCode i)). The variables do exist but simply
+are not displayed by default.  As a consequence, their value in that case
+is empty. This is a problem with ((i XCode i)), not with ((i PList
+Compiler i)). The remedy, should this situation occur, is to add these
+variables manually in the ((i Target Settings i)) using the ((i Plus i))
+button and to give them the necessary values corresponding to your project.
+
 Furthermore ((b PList Compiler b)) introduces other useful predefined variables: 
 ((ld
 ((lt __YEAR__
@@ -1235,6 +1249,7 @@ the CVS repository.
 ((li 2005-10-13 - 0.1b3 - Improved use of single quotes. Minor fixes. 
 Unicode characters.
 ((li 2005-10-14 - 0.1rc1 - First release candidate.
+((li 2005-11-03 - 0.1 - First final release. Added -version option.
 lu))
 
 
