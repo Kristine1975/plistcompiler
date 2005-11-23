@@ -6,7 +6,7 @@ exec tclsh "$0" "$@"
 # ===========================================================================
 # File: "PlistComp.tcl"
 #                        Created: 2005-10-01 21:46:19
-#              Last modification: 2005-11-23 09:00:37
+#              Last modification: 2005-11-23 17:19:07
 # Author: Bernard Desgraupes
 # e-mail: <bdesgraupes@easyconnect.fr>
 # www: <http://webperso.easyconnect.fr/bdesgraupes/>
@@ -216,6 +216,9 @@ proc plc::execute {args} {
 			}
 			"pkginfo" {
 				set plc(pkginfo) 1
+			}
+			default {
+				error "unknown option $elem"
 			}
 		}
 		
@@ -469,7 +472,7 @@ proc plc::processInclude {name} {
 		set headerPathOnly 1
 	} 	
 	# Remove outer quotes and whitespace chars
-	set name [string trim $name "\" "]
+	set name [string trim $name "\""]
 	
 	if {[file exists $name]} {
 		# 'name' is an absolute path
@@ -891,6 +894,7 @@ if {[catch {eval plc::execute $argv} err]} {
 	puts "Error: $err"
 	# Don't leave pending file refs
 	catch {close $plc(outid)}
+	exit 1
 } 
 
 
