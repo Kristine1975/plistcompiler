@@ -1,7 +1,7 @@
 !! !! ===========================================================================
 !! !! PListCompilerHelp.aida
 !! !!                       Created: 2005-10-03 16:27:26
-!! !!             Last modification: 2005-11-03 07:50:32
+!! !!             Last modification: 2005-11-23 10:06:43
 !! !! Author: Bernard Desgraupes
 !! !! e-mail: <bdesgraupes@easyconnect.fr>
 !! !! www: <http://webperso.easyconnect.fr/bdesgraupes/>
@@ -16,7 +16,7 @@
 :Author:      Bernard DESGRAUPES <bdesgraupes@easyconnect.fr>
 :Homepage:    <http://webperso.easyconnect.fr/bdesgraupes/>
 :Created:     2005-10-03 16:27:26
-:Modified:    2005-11-03 07:50:32
+:Modified:    2005-11-23 10:06:43
 :Keywords:    property list, xcode, compiler
 :Source:      PlcAidaMacros.tcl
 
@@ -132,7 +132,7 @@ command line or pragmas in the source files. See the
 The complete syntax to run the compiler is:
 ((|
     plcompile [-input_encoding enc] [-output_encoding enc] [-input_eol eol] 
-                            [-output_eol eol] [-dest folder] [-plist version] plcFile
+                    [-output_eol eol] [-dest folder] [-plist version] [-pkginfo] plcFile
 |))
 
 The options have the following meaning:
@@ -152,7 +152,15 @@ pragmas can also be used to specify different subfolders inside the
 destination folder.
 ((li the ((i -plist i)) option lets you specify the version of the plist XML format (0.9 
 or 1.0). The default value is 1.0.
+((li the ((i -pkginfo i)) option asks ((i PList Compiler i)) to also generate a
+((i PkgInfo i)) file in the same folder as the ((i Info.plist i)) file. This can be useful
+because, when you turn off the plist stuff in Xcode, it stops generating
+itself the ((i PkgInfo i)) file.
 lu))
+
+((b Note: b)) the ((i -pkginfo i)) option has been introduced in version 0.2 of ((b PList Compiler b))
+by ((lk mailto:franz.detro@native-instruments.de )) Franz Detro lk)) (thanks).
+
 
 ((s1 Howto
 
@@ -697,27 +705,34 @@ supported in the case of simple string values but not in concatenations.
 Use double quotes to be safe.
 
 ((s2 Includes
-The ((i #include i)) directive tells the plist compiler to find another 
-plc source
-file and start processing it. The format of this directive is:
-((|
-    #include "filename"
-|))
+The ((i #include i)) directive tells the plist compiler to find another plc
+source file and start processing it. The syntax of this directive has two
+forms:
+((nl #include "filename"
+((nl #include <filename>
 
-The ((i filename i)) value designates a file to include: it can be either 
-an absolute or a relative path. A relative path is resolved relatively to the folder 
-containing the plc source file itself. The following are all valid 
-examples:
+The ((i filename i)) value designates a file to include: it can be either
+an absolute or a relative path. A relative path is resolved by searching
+relatively to various folders: in the first form, ((b PList Compiler b))
+will first try to resolve the path relatively to the folder containing the
+parent source file (i-e, the file which invokes the ((i #include i))
+directive). If this fails, it will try all the paths defined in XCode's
+((v HEADER_SEARCH_PATHS v)) variable. In the second form, where the filename is
+enclosed in angle brackets, only the paths defined in the
+((v HEADER_SEARCH_PATHS v)) variable are searched.
+
+The following are all valid examples (the double quotes are necessary only 
+if the filename contains space characters):
 ((|
     #include /Users/bernardo/Devel/MyApp/Rsrc/OtherFile.plc
     #include OtherFile.plc
-    #include LocFiles/MyStrings_EN.ploc
-    #include ../Rsrc/MyStrings_EN.ploc
+    #include "LocFiles/My Strings_EN.ploc"
+    #include "../Rsrc/My Strings_EN.ploc"
 |))
 
-((b Note: b)) the CodeWarrior property list compiler also accepts filenames 
-enclosed in angle brackets to designate files located in the system access 
-paths. This is not currently supported by ((b PList Compiler b)) as of version 0.1.
+((b Note: b)) the second form of the ((i #include i)) directive is a code
+contribution by ((lk mailto:franz.detro@native-instruments.de )) Franz Detro lk)) (thanks) and
+has been introduced in version 0.2 of ((b PList Compiler b)).
 
 
 ((s2 Conditional macros
@@ -1250,6 +1265,8 @@ the CVS repository.
 Unicode characters.
 ((li 2005-10-14 - 0.1rc1 - First release candidate.
 ((li 2005-11-03 - 0.1 - First final release. Added -version option.
+((li 2005-11-23 - 0.2 - Support for Headers Search Paths in #include 
+directives. Command line option to generate the PkgInfo file.
 lu))
 
 

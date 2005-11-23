@@ -10,7 +10,7 @@
 It is developed as an <I>Open Source</I> project coming with a BSD
 License. The source code is currently hosted and developed on the 
 <A HREF="http://sourceforge.net/projects/plistcompiler">SourceForge site.</A>
-<P> This file documents version 0.1rc1 of PList Compiler.
+<P> This file documents version 0.2b1 of PList Compiler.
 </I></P></BLOCKQUOTE><HR><P><UL>
 <LI><A HREF="#M1">Introduction</A>
 <LI><A HREF="#M2">Usage</A>
@@ -92,7 +92,7 @@ See the file <I>License_terms</I> included in this distribution or the
 <A HREF="http://www.opensource.org/licenses/bsd-license"> Open Source Initiative (OSI) site</A>.<P><H2><A NAME="M2"></A>Usage</H2><P>The syntax of the <B>plcompile</B> shell script is:
 <PRE>
     plcompile options plcFile
-    plcompile (-help | -encoding)
+    plcompile (-help | -encoding | -version)
 </PRE><P>The first form executes the compilation of the plc source file <I>plcFile</I>. 
 Traditionnally these files have a <I>.plc</I> extension but this is not 
 required at all. Most of the time you will not have to worry about the 
@@ -102,10 +102,14 @@ project. The available options are explained below.<P>In the second form
 <PRE>
 	plcompile -help
 	plcompile -encoding
+	plcompile -version
 </PRE>
 the script prints some help in the console window: with <I>-help</I>, you
-get the usage string and a reminder of the defaults; with <I>-encoding</I>, you get a list of the available encodings. Note that one can write 
-<I>plcompile -h</I> or <I>plcompile -e</I> for short.<P><H3><A NAME="M3"></A>Default behavior</H3>
+get the usage string and a reminder of the defaults; with <I>-encoding</I>, 
+you get a list of the available encodings; with <I>-version</I>, you get
+the current version number of the script. Note that one can use 
+abbreviated flags like <I>-h</I> or <I>-v</I> 
+for instance.<P><H3><A NAME="M3"></A>Default behavior</H3>
 By default, <B>plcompile</B> assumes that the input files are encoded in
 MacRoman and have Mac line endings (<I>cr</I>). The same type of line
 endings is used to write the output files but the encoding, this time, is the
@@ -123,7 +127,7 @@ command line or pragmas in the source files. See the
 <A HREF="#locout"> Location of the output files</A> section below.<P><H3><A NAME="M4"></A>Command line options</H3><P>The complete syntax to run the compiler is:
 <PRE>
     plcompile [-input_encoding enc] [-output_encoding enc] [-input_eol eol] 
-                            [-output_eol eol] [-dest folder] [-plist version] plcFile
+                    [-output_eol eol] [-dest folder] [-plist version] [-pkginfo] plcFile
 </PRE><P>The options have the following meaning:
 <UL>
 	<LI> the <I>-input_encoding</I> option lets you specify in which encoding the 
@@ -141,7 +145,12 @@ pragmas can also be used to specify different subfolders inside the
 destination folder.
 	<LI> the <I>-plist</I> option lets you specify the version of the plist XML format (0.9 
 or 1.0). The default value is 1.0.
-</UL><P><H2><A NAME="M5"></A>Howto</H2><P><H3><A NAME="M6"></A>Using PList Compiler in an XCode project</H3><P>The idea is to generate the various plist files and localized strings
+	<LI> the <I>-pkginfo</I> option asks <I>PList Compiler</I> to also generate a
+<I>PkgInfo</I> file in the same folder as the <I>Info.plist</I> file. This can be useful
+because, when you turn off the plist stuff in Xcode, it stops generating
+itself the <I>PkgInfo</I> file.
+</UL><P><B>Note:</B> the <I>-pkginfo</I> option has been introduced in version 0.2 of <B>PList Compiler</B>
+by <A HREF="mailto:franz.detro@native-instruments.de"> Franz Detro</A> (thanks).<P><H2><A NAME="M5"></A>Howto</H2><P><H3><A NAME="M6"></A>Using PList Compiler in an XCode project</H3><P>The idea is to generate the various plist files and localized strings
 files during a <I>Shell Script Build Phase</I> within your XCode project. 
 XCode lets you define <I>Shell Script Build Phases</I>: they are shell
 scripts which can be executed at any stage of the building process. <P>So, in order to use <B>PList Compiler</B> from XCode, you would normally create, in
@@ -483,23 +492,28 @@ If <I>macro_name</I> does not exist, the directive is just ignored.<P><B>Note:</
 here concerning the use of single quotes as string delimiters. They are
 supported in the case of simple string values but not in concatenations.
 Use double quotes to be safe.<P><H3><A NAME="M27"></A>Includes</H3>
-The <I>#include</I> directive tells the plist compiler to find another 
-plc source
-file and start processing it. The format of this directive is:
-<PRE>
-    #include "filename"
-</PRE><P>The <I>filename</I> value designates a file to include: it can be either 
-an absolute or a relative path. A relative path is resolved relatively to the folder 
-containing the plc source file itself. The following are all valid 
-examples:
+The <I>#include</I> directive tells the plist compiler to find another plc
+source file and start processing it. The syntax of this directive has two
+forms:
+<P> #include "filename"
+<P> #include &lt;filename&gt;<P>The <I>filename</I> value designates a file to include: it can be either
+an absolute or a relative path. A relative path is resolved by searching
+relatively to various folders: in the first form, <B>PList Compiler</B>
+will first try to resolve the path relatively to the folder containing the
+parent source file (i-e, the file which invokes the <I>#include</I>
+directive). If this fails, it will try all the paths defined in XCode's
+<TT>HEADER_SEARCH_PATHS</TT> variable. In the second form, where the filename is
+enclosed in angle brackets, only the paths defined in the
+<TT>HEADER_SEARCH_PATHS</TT> variable are searched.<P>The following are all valid examples (the double quotes are necessary only 
+if the filename contains space characters):
 <PRE>
     #include /Users/bernardo/Devel/MyApp/Rsrc/OtherFile.plc
     #include OtherFile.plc
-    #include LocFiles/MyStrings_EN.ploc
-    #include ../Rsrc/MyStrings_EN.ploc
-</PRE><P><B>Note:</B> the CodeWarrior property list compiler also accepts filenames 
-enclosed in angle brackets to designate files located in the system access 
-paths. This is not currently supported by <B>PList Compiler</B> as of version 0.1.<P><H3><A NAME="M28"></A>Conditional macros</H3><P><B>PList Compiler</B> supports the following six conditional directives:
+    #include "LocFiles/My Strings_EN.ploc"
+    #include "../Rsrc/My Strings_EN.ploc"
+</PRE><P><B>Note:</B> the second form of the <I>#include</I> directive is a code
+contribution by <A HREF="mailto:franz.detro@native-instruments.de"> Franz Detro</A> (thanks) and
+has been introduced in version 0.2 of <B>PList Compiler</B>.<P><H3><A NAME="M28"></A>Conditional macros</H3><P><B>PList Compiler</B> supports the following six conditional directives:
 <I><I>#if</I>, <I>#ifdef</I>, <I>#ifndef</I>, <I>#elif</I>, <I>#else</I>, <I>#endif</I></I> which let you build
 conditional blocks of instructions depending on the value of a test
 expression or on the existence or non-existence of a particular variable.<P>The <I>#ifdef</I> directive tests for the definition of a compiler macro, while
@@ -742,7 +756,16 @@ WRAPPER_EXTENSION XCode variables.</DL><P><DT><B>__DATE__</B><DL><DT>
 This is the complete date at the moment where the script is executed. It is
 returned in the format specified by the ISO 8601 standard:
 YY-MM-DDTHH:MM:SSZ. For instance <I>"2005-10-04T17:12:23Z"</I>.</DL>
-</DL><P>Furthermore <B>PList Compiler</B> introduces other useful predefined variables: 
+</DL><P><B>Caveat:</B> one must be aware that the values of the <TT>OUTPUT_CREATOR</TT> 
+and <TT>OUTPUT_TYPE</TT> predefined variables are taken from the XCode
+variables called <TT>MACOS_CREATOR</TT> and <TT>MACOS_TYPE</TT>, but that, in
+certain circumstances, these variables are not displayed in the <I>Target
+Settings</I> panels in <I>XCode</I>. The variables do exist but simply
+are not displayed by default.  As a consequence, their value in that case
+is empty. This is a problem with <I>XCode</I>, not with <I>PList
+Compiler</I>. The remedy, should this situation occur, is to add these
+variables manually in the <I>Target Settings</I> using the <I>Plus</I>
+button and to give them the necessary values corresponding to your project.<P>Furthermore <B>PList Compiler</B> introduces other useful predefined variables: 
 <DL><P><DT><B>__YEAR__</B><DL><DT>
 The current year (four digits)</DL><P><DT><B>__MONTH__</B><DL><DT>
 The current month number (01 - 12)</DL><P><DT><B>__MONTHNAME__</B><DL><DT>
@@ -852,10 +875,13 @@ the CVS repository.
 	<LI> 2005-10-13 - 0.1b3 - Improved use of single quotes. Minor fixes. 
 Unicode characters.
 	<LI> 2005-10-14 - 0.1rc1 - First release candidate.
+	<LI> 2005-11-03 - 0.1 - First final release. Added -version option.
+	<LI> 2005-11-23 - 0.2 - Support for Headers Search Paths in #include 
+directives. Command line option to generate the PkgInfo file.
 </UL><P><H2><A NAME="M49"></A>License and disclaimer</H2><P><B>PList Compiler</B> is distributed under the same BSD License as
 the Tcl language itself: see the file <I>License_terms</I> in the distribution or 
 the <A HREF="http://www.opensource.org/licenses/bsd-license"> Open Source Initiative site.</A><P><HR>
-<P> Last updated 2005-10-14 09:42:06
+<P> Last updated 2005-11-23 10:03:09
 <!--  logo SF -->
 <!--  ------- -->
 <HR>

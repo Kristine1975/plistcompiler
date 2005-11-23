@@ -6,7 +6,7 @@ exec tclsh "$0" "$@"
 # ===========================================================================
 # File: "PlistComp.tcl"
 #                        Created: 2005-10-01 21:46:19
-#              Last modification: 2005-11-03 07:52:56
+#              Last modification: 2005-11-23 09:00:37
 # Author: Bernard Desgraupes
 # e-mail: <bdesgraupes@easyconnect.fr>
 # www: <http://webperso.easyconnect.fr/bdesgraupes/>
@@ -21,7 +21,7 @@ namespace eval plc {}
 unset -nocomplain plc_def plc
 
 # Current version number
-set plc(version) "0.1"
+set plc(version) "0.2b1"
 
 # Retrieving the values of the shell variables: the env array contains the
 # values for all the environment variables defined by XCode.
@@ -30,13 +30,17 @@ array set plc_def [array get env]
 # Legacy: predefined variables of the CodeWarrior property list compiler 
 if {[info exists plc_def(MACOS_CREATOR)]} {
 	set plc_def(OUTPUT_CREATOR) $plc_def(MACOS_CREATOR)
+	set plc(bundle_signature) $plc_def(MACOS_CREATOR)
 } else {
 	set plc_def(OUTPUT_CREATOR) ""
+	set plc(bundle_signature) "????"
 }
 if {[info exists plc_def(MACOS_TYPE)]} {
 	set plc_def(OUTPUT_TYPE) $plc_def(MACOS_TYPE)
+	set plc(bundle_type) $plc_def(MACOS_TYPE)
 }  else {
 	set plc_def(OUTPUT_TYPE) ""
+	set plc(bundle_type) "????"
 }
 if {[info exists plc_def(PRODUCT_NAME)]} {
 	set plc_def(OUTPUT_FILENAME) $plc_def(PRODUCT_NAME)
@@ -67,6 +71,8 @@ set plc(context) ""
 set plc(contextlevel) 0
 set plc(parsing) 0
 set plc(localizing) 0
+set plc(pkginfo) 0
+set plc(currkey) ""
 
 set plc_def(PLIST) "1.0"
 set plc(output_filename) ""
@@ -75,6 +81,12 @@ if {[info exists plc_def(BUILT_PRODUCTS_DIR)] && [info exists plc_def(INFOPLIST_
 } 
 set plc(in_package_directory) ""
 set plc(localize_directory) "Resources"
+
+if {[info exists plc_def(HEADER_SEARCH_PATHS)]} {
+	set plc(search_path) $plc_def(HEADER_SEARCH_PATHS)
+}  else {
+	set plc(search_path) ""
+}
 
 set plc(input_encoding) "macRoman"
 set plc(output_encoding) "utf-8"
@@ -109,7 +121,7 @@ set plc(wraplen) 60
 proc plc::execute {args} {
 	global plc plc_def
 	set len [llength $args]
-	if {$len == 0 || $len > 13} {
+	if {$len == 0 || $len > 14} {
 		puts "Error: wrong number of arguments"
 		plc::usage
 		return
@@ -153,7 +165,7 @@ proc plc::execute {args} {
 	set failed 0
 	for {set i 0} {$i < $len} {incr i} {
 		# Ignore the leading hyphen
-		set elem [string range [lindex $args $i] 1 end]
+		set elem [string trimleft [lindex $args $i] "-"]
 		switch -- $elem {
 			"input_encoding" 
 			- "output_encoding" {
@@ -202,6 +214,9 @@ proc plc::execute {args} {
 					set failed 1
 				}
 			}
+			"pkginfo" {
+				set plc(pkginfo) 1
+			}
 		}
 		
 		if {$failed} {
@@ -213,6 +228,11 @@ proc plc::execute {args} {
 	
 	# Now call the compiler
 	plc::processFile $srcfile
+
+	# Generate PkgInfo file, if requested
+	if {$plc(pkginfo)} {
+		plc::generatePkgInfo
+	}
 }
 
 # Regexp to capture C-like comments (works with the (?w) directive or
@@ -350,15 +370,7 @@ proc plc::parseMacro {line} {
 					incr plc(iflevel) -1
 				}
 				"include" {
-					set saveFile $plc(input_file)
-					set definition [string trim $definition "\""]
-					if {[file exists $definition]} {
-						set plc(input_file) $definition
-					} else {
-						set plc(input_file) [file normalize [file join [file dir $saveFile] $definition]]
-					}
-					plc::processFile $plc(input_file)
-					set plc(input_file) $saveFile
+					plc::processInclude $definition					
 				}
 				"define" {
 					if {[regexp {(\w+)[ \t]*([^\r\n]*)$} $definition -> value arg]} {
@@ -444,6 +456,51 @@ proc plc::parseMacro {line} {
 	} 
 }
 
+# Use the HEADER_SEARCH_PATHS variable to resolve includes.
+# Author: Franz Detro <franz.detro@native-instruments.de>
+proc plc::processInclude {name} {
+	global plc plc_def
+	
+	set saveFile $plc(input_file)
+	set headerPathOnly 0
+	
+	# Remove outer < > (if any)
+	if {[regsub "^<(.*)>$" $name "\\1" name]} {
+		set headerPathOnly 1
+	} 	
+	# Remove outer quotes and whitespace chars
+	set name [string trim $name "\" "]
+	
+	if {[file exists $name]} {
+		# 'name' is an absolute path
+		set plc(input_file) $name
+	} else {
+		set found 0
+		if {!$headerPathOnly} {
+			# Search relatively to the dir of the parent file
+			set plc(input_file) [file normalize [file join [file dir $saveFile] $name]]
+			set found [file exists $plc(input_file)]
+		}
+		# If the file does not exist, search the HEADER_SEARCH_PATHS dirs
+		if {!$found} {
+			foreach dir $plc_def(HEADER_SEARCH_PATHS) {
+				set candidate [file normalize [file join $dir $name]]			
+				if {[file exists $candidate]} {			
+					set plc(input_file) $candidate
+					set found 1
+					break
+				}
+			} 
+		} 
+		if {!$found} {
+			error "can't find file '$name' to include"
+		} 
+	} 
+	
+	plc::processFile $plc(input_file)
+	set plc(input_file) $saveFile
+}
+
 proc plc::parsePragma {name value} {
 	global plc plc_def
 	# Pragmas are not allowed inside a 'plist' or 'localize' block
@@ -519,6 +576,13 @@ proc plc::parseString {args} {
 		plc::writeTag string
 		plc::writeOut $value
 		plc::writeTag string close
+		if {$plc(pkginfo)} {
+			if {$plc(currkey) eq "CFBundleSignature"} {
+				set plc(bundle_signature) $value			
+			} elseif {$plc(currkey) eq "CFBundlePackageType"} {
+				set plc(bundle_type) $value
+			}
+		} 
 	}
 }
 
@@ -599,6 +663,7 @@ proc plc::parseKey {args} {
 		plc::writeTag "key"
 		plc::writeOut $value
 		plc::writeTag "key" close
+		set plc(currkey) $value
 	}
 }
 
@@ -782,6 +847,22 @@ proc plc::encodeBase64 {hexstring} {
 	return $result
 }
 
+# Support for PkgInfo files introduced in vs 0.2.
+# Author: Franz Detro <franz.detro@native-instruments.de>
+proc plc::generatePkgInfo {} {
+	global plc
+
+	set outfolder [file normalize [file join $plc(output_folder) $plc(in_package_directory)]]
+	if {![file exists $outfolder]} {
+		file mkdir $outfolder
+	} 
+	set outfile [file join $outfolder "PkgInfo"]
+	set pkgid [open $outfile w+]
+	fconfigure $pkgid -encoding $plc(output_encoding) -translation $plc(output_eol)
+	puts $pkgid $plc(bundle_signature)$plc(bundle_type)
+	close $pkgid
+}
+
 # Usage proc
 proc plc::usage { {showAll 0} } {
 	global plc
@@ -790,7 +871,7 @@ proc plc::usage { {showAll 0} } {
 		puts "$script, version $plc(version)"
 		puts "Copyright (c) 2005, Bernard Desgraupes <bdesgraupes@users.sourceforge.net>"
 	}
-	puts "Usage:\n\t$script \[-input_encoding <enc>\] \[-output_encoding <enc>\] \[-input_eol <eol>\] \[-output_eol <eol>\] \[-dest folder\] \[-plist <version>\] plcFile"
+	puts "Usage:\n\t$script \[-input_encoding <enc>\] \[-output_encoding <enc>\] \[-input_eol <eol>\] \[-output_eol <eol>\] \[-dest folder\] \[-plist <version>\] \[-pkginfo\] plcFile"
 	puts "\t$script (-help | -encodings | -version)\n"
 	if {$showAll} {
 		puts "Default for -input_encoding is macRoman"
@@ -798,6 +879,7 @@ proc plc::usage { {showAll 0} } {
 		puts "Default for -dest is dirname of \$BUILT_PRODUCTS_DIR/\$INFOPLIST_PATH"
 		puts "Possible values for -input_eol and -output_eol: [join $plc(eols) ", "] (default is cr)"
 		puts "Possible values for -plist: 0.9 and 1.0 (default is 1.0)"
+		puts "Use the -pkginfo option to also generate a PkgInfo file"
 	} 
 }
 
