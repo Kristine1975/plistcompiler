@@ -1,7 +1,7 @@
 !! !! ===========================================================================
 !! !! File: "PListCompilerReadme.aida"
 !! !!                        Created: 2005-10-06 18:02:08
-!! !!              Last modification: 2005-10-08 07:04:38
+!! !!              Last modification: 2005-11-03 08:37:23
 !! !! Author: Bernard Desgraupes
 !! !! e-mail: <bdesgraupes@easyconnect.fr>
 !! !! www: <http://webperso.easyconnect.fr/bdesgraupes/>
@@ -16,7 +16,7 @@
 :Author:      Bernard DESGRAUPES <bdesgraupes@easyconnect.fr>
 :Homepage:    <http://webperso.easyconnect.fr/bdesgraupes/>
 :Created:     2005-10-06 18:02:08
-:Modified:    2005-10-08 07:04:38
+:Modified:    2005-11-03 08:37:23
 :Keywords:    property list, xcode, compiler
 :Source:      PlcAidaMacros.tcl
 
@@ -51,10 +51,9 @@ Panther) so ((i tclsh i)) is normally present on every MacOSX system
 starting from this version, and there should be nothing special to do for
 this script to run there.
 
-((b PList Compiler b)) is currently a project under development: the 
-((s [plc::getVersion] s)) release is a fully functional beta release. It
-has been thoroughly tested but there is certainly room left for
-improvements. Thank you for trying it and sending feedback.
+The ((s [plc::getVersion] s)) release of ((b PList Compiler b)) is a fully
+functional release. It has been thoroughly tested but there is certainly
+room left for improvements.  Thank you for sending feedback.
 
 A help file with complete documentation about the PLC syntax and
 instructions about the usage of the compiler in an XCode project is
@@ -80,4 +79,4 @@ Please e-mail me any problem you encounter with this software:
 (c) Copyright: Bernard Desgraupes, ((s [clock format [clock seconds] -format "%Y"] s))
 ((nl All rights reserved.
 
-$Date$
+Last update ((s [ISOTime::ISODateAndTimeRelaxed] s))
