@@ -67,10 +67,10 @@ The most recent version is ((b ((s [plc::getVersion] s)) b))
 which can also be downloaded 
 ((lk ../Downloads/PListCompiler.hqx )) from this page. lk))
 
-((b Warning: b)) ((i PList Compiler i)) is currently a project under development: 
-the ((s [plc::getVersion] s)) release is a fully functional release.
-It has been thoroughly tested but there is certainly room left for
-improvements. Thank you for trying it and sending feedback.
+((b Warning: b)) ((i PList Compiler i)) ((s [plc::getVersion] s)) is a
+fully functional and stable release. It has been thoroughly tested but
+there is certainly room left for improvements. Thank you for trying it and
+sending feedback.
 
 
 ((s1 Help
