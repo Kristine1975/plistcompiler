@@ -5,10 +5,8 @@
 // Author: Bernard Desgraupes
 // e-mail: <bdesgraupes@easyconnect.fr>
 // www: <http://webperso.easyconnect.fr/bdesgraupes/>
-// © Copyright: Bernard Desgraupes 2005
+// Â© Copyright: Bernard Desgraupes 2005
 // All rights reserved.
-// $Date$
-// $Revision$
 // ===========================================================================
 
 localize "English" as "SubLocal.strings"
@@ -23,7 +21,7 @@ localize "Spanish" as "SubLocal.strings"
 {
 	comment "Sub: " kEnglishComment
 	comment "Generated from " __FILE__
-	key "Number of Recent Items:" value string "Nœmero de ’tems recientes:"
+	key "Number of Recent Items:" value string "NÂœmero de Â’tems recientes:"
 	key "General Preference Pane" value string "Panel de preferencias General"
 }
 
