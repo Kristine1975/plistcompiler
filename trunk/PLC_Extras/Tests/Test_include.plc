@@ -5,15 +5,13 @@
 // Author: Bernard Desgraupes
 // e-mail: <bdesgraupes@easyconnect.fr>
 // www: <http://webperso.easyconnect.fr/bdesgraupes/>
-// © Copyright: Bernard Desgraupes 2005
+// Â© Copyright: Bernard Desgraupes 2005
 // All rights reserved.
-// $Date$
-// $Revision$
 // ===========================================================================
 
 
 #define kEnglishComment "This is a comment in english"
-#define kFrenchComment "Ceci est un commentaire en franais"
+#define kFrenchComment "Ceci est un commentaire en franÂais"
 
 #include "Test_local_EN.ploc"
 
