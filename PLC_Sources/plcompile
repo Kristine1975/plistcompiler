@@ -21,7 +21,7 @@ namespace eval plc {}
 unset -nocomplain plc_def plc
 
 # Current version number
-set plc(version) "0.2"
+set plc(version) "0.3"
 
 # Retrieving the values of the shell variables: the env array contains the
 # values for all the environment variables defined by XCode.
@@ -245,20 +245,18 @@ proc plc::normalize {txt} {
 	# Strip comments
 	regsub  -line -all {//.*$} $txt {} txt
 	regsub -all -lineanchor {/\*([^*]|\*+[^*/])*\*+/} $txt {} txt
-	# Cut all the instructions and align them on the left margin
-	regsub -line -all {^\s+#} $txt "#" txt
-	regsub -all {\s+value\s+(dictionary|array|boolean|number|date|data|string)} $txt "\r\\1" txt
-	regsub -line -all {^\s*(plist|dictionary|array)\s*(\{)?} $txt "\\1\r\\2" txt
-	regsub -line -all {^\s+localize} $txt "localize" txt
-	regsub -line -all {^\s*array\s*} $txt "array\r\\1" txt
-	regsub -line -all {^\s+\[} $txt "\[" txt
-	regsub -line -all {^\s*(dictionary|array|key|boolean|number|date|data|string|comment)} $txt {\1} txt
+	# Cut all the instructions
+	regsub -all {\s+value\s+(dictionary|array)\s*} $txt "\r\\1\r" txt
+	regsub -all {\s+value\s+(boolean|number|date|data|string)} $txt "\r\\1" txt
+	regsub -line -all {^\s*(plist|dictionary|array)\s*} $txt "\\1\r" txt
 	regsub -all {({|\[)\s*(}|\])} $txt "\\1\r\\2" txt
-	regsub -line -all {^\s*(\}|\])} $txt {\1} txt
+	# Align them on the left margin
+	regsub -line -all "^\[ \t\]+" $txt "" txt
 	# Remove empty lines
 	regsub -line -all "^\[\r\n\]" $txt "" txt
 	return $txt	
 }
+
 
 proc plc::processFile {file} {
 	global plc
@@ -900,7 +898,7 @@ if {[catch {eval plc::execute $argv} err]} {
 	puts "Error: $err"
 	# Don't leave pending file refs
 	catch {close $plc(outid)}
-	exit 1
+# 	exit 1
 } 
 
 
