@@ -36,6 +36,25 @@ This changes log is in reverse chronological order (from bottom to top).
 
 $Date$
 
+
+================================================================================
+= 0.3	                 	            last update: 2005-12-13 09:53:05
+================================================================================
+¥ Fixed parsing bug when an opening bracket or brace immediately follows the 
+  'array' keyword.
+¥ Added script to execute all tests in CVS repository.
+¥ Third release.
+
+================================================================================
+= 0.2	                 	            last update: 2005-11-29 18:37:41
+================================================================================
+¥ Added a -pkginfo command line option to ask PList Compiler to 
+automatically generate the PkgInfo file
+¥ Added support for the angle brackets syntax in the #include directives
+(instead of double quotes). In that case, included files are searched in
+the paths contained in the HEADER_SEARCH_PATHS variable.
+¥ Second release.
+
 ================================================================================
 = 0.1	                 	            last update: 2005-11-03 08:07:21
 ================================================================================

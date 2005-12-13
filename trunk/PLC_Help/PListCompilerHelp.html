@@ -10,7 +10,7 @@
 It is developed as an <I>Open Source</I> project coming with a BSD
 License. The source code is currently hosted and developed on the 
 <A HREF="http://sourceforge.net/projects/plistcompiler">SourceForge site.</A>
-<P> This file documents version 0.2 of PList Compiler.
+<P> This file documents version 0.3 of PList Compiler.
 </I></P></BLOCKQUOTE><HR><P><UL>
 <LI><A HREF="#M1">Introduction</A>
 <LI><A HREF="#M2">Usage</A>
@@ -835,11 +835,11 @@ start at 03B1:
 <TR><TD>03B8</TD><TD>GREEK SMALL LETTER THETA</TD></TR>
 <TR><TD>03B9</TD><TD>GREEK SMALL LETTER IOTA</TD></TR>
 </TABLE></P>
-A string defined like this
+A string can thus be defined like this
 <PRE>
     	key "UniString1" value string "\u03B1 \u03B2 \u03B3 \u03B4 \u03B5 \u03B6 \u03B7 \u03B8 \u03B9"
 </PRE>
-will produce:
+and will produce:
 <P><IMG SRC="Images/plc_greekletters.jpg" ALT="String with greek letters" ALIGN=bottom></P><P><B>Note:</B> the sequence to designate Unicode characters is <TT>\u</TT> with a 
 <I>lowercase u</I>. This is a difference with the CodeWarrior property
 list compiler which used \U.<P><H2><A NAME="M46"></A>Download</H2>
@@ -878,10 +878,12 @@ Unicode characters.
 	<LI> 2005-11-03 - 0.1 - First final release. Added -version option.
 	<LI> 2005-11-23 - 0.2 - Support for Headers Search Paths in #include 
 directives. Command line option to generate the PkgInfo file.
+	<LI> 2005-12-13 - 0.3 - Fixed bug when array keyword followed by opening 
+bracket on the same line.
 </UL><P><H2><A NAME="M49"></A>License and disclaimer</H2><P><B>PList Compiler</B> is distributed under the same BSD License as
 the Tcl language itself: see the file <I>License_terms</I> in the distribution or 
 the <A HREF="http://www.opensource.org/licenses/bsd-license"> Open Source Initiative site.</A><P><HR>
-<P> Last updated 2005-11-29 19:18:36
+<P> Last updated 2005-12-13 09:40:02
 <!--  logo SF -->
 <!--  ------- -->
 <HR>
