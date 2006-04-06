@@ -38,6 +38,18 @@ $Date$
 
 
 ================================================================================
+= 0.4	                 	            last update: 2006-03-29 13:42:11
+================================================================================
+¥ Modified the parseString proc to generate correct XML entities for the
+  ampersand, greater-than, less-than, quote and apostroph symbols.
+¥ Use TARGET_BUILD_DIR rather than BUILT_PRODUCTS_DIR to define the output
+  folder, in order to point to the correct location regardless of the value of
+  DEPLOYMENT_LOCATION.
+¥ Fixed a bug in the processInclude proc when HEADER_SEARCH_PATHS is not 
+  defined by the XCode project.
+¥ Fourth release.
+
+================================================================================
 = 0.3	                 	            last update: 2005-12-13 09:53:05
 ================================================================================
 ¥ Fixed parsing bug when an opening bracket or brace immediately follows the 

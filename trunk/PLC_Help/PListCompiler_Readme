@@ -4,7 +4,7 @@ PList Compiler
 PList Compiler is a property list compiler for XCode, Apple's development
 environment. It lets you build localized and non-localized plist files from
 plc and ploc source files.
-This is version 0.3.
+This is version 0.4.
 
 PList Compiler is a script that you execute as a Shell Script Build Phase
 within your XCode project and which takes care of generating automatically
@@ -19,7 +19,7 @@ is the Tcl shell. Tcl is installed by default on OSX since version 10.3
 from this version, and there should be nothing special to do for this
 script to run there.
 
-The 0.3 release of PList Compiler is a fully functional release. It has
+The 0.4 release of PList Compiler is a fully functional release. It has
 been thoroughly tested but there is certainly room left for improvements.
 Thank you for sending feedback.
 
