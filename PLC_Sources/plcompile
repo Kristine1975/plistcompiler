@@ -6,14 +6,12 @@ exec tclsh "$0" "$@"
 # ===========================================================================
 # File: "PlistComp.tcl"
 #                        Created: 2005-10-01 21:46:19
-#              Last modification: 2005-11-29 17:37:13
+#              Last modification: 2006-03-29 13:31:42
 # Author: Bernard Desgraupes
 # e-mail: <bdesgraupes@easyconnect.fr>
 # www: <http://webperso.easyconnect.fr/bdesgraupes/>
-# (c) Copyright: Bernard Desgraupes 2005
+# (c) Copyright: Bernard Desgraupes 2005-2006
 # All rights reserved.
-# $Date$
-# $Revision$
 # ===========================================================================
 
 namespace eval plc {}
@@ -21,7 +19,7 @@ namespace eval plc {}
 unset -nocomplain plc_def plc
 
 # Current version number
-set plc(version) "0.3"
+set plc(version) "0.4"
 
 # Retrieving the values of the shell variables: the env array contains the
 # values for all the environment variables defined by XCode.
@@ -48,7 +46,6 @@ if {[info exists plc_def(PRODUCT_NAME)]} {
 	set plc_def(OUTPUT_FILENAME) ""
 }
 	
-
 # Predefined variables
 # --------------------
 # Enclose them between double underscores to invoke 
@@ -76,8 +73,10 @@ set plc(currkey) ""
 
 set plc_def(PLIST) "1.0"
 set plc(output_filename) ""
-if {[info exists plc_def(BUILT_PRODUCTS_DIR)] && [info exists plc_def(INFOPLIST_PATH)]} {
-	set plc(output_folder) [file join $plc_def(BUILT_PRODUCTS_DIR) [file dir $plc_def(INFOPLIST_PATH)]]
+# (vs 0.4) Use TARGET_BUILD_DIR instead of BUILT_PRODUCTS_DIR to point to
+# the correct location regardless of the value of DEPLOYMENT_LOCATION
+if {[info exists plc_def(TARGET_BUILD_DIR)] && [info exists plc_def(INFOPLIST_PATH)]} {
+	set plc(output_folder) [file join $plc_def(TARGET_BUILD_DIR) [file dir $plc_def(INFOPLIST_PATH)]]
 } 
 set plc(in_package_directory) ""
 set plc(localize_directory) "Resources"
@@ -484,7 +483,7 @@ proc plc::processInclude {name} {
 		}
 		# If the file does not exist, search the HEADER_SEARCH_PATHS dirs
 		if {!$found} {
-			foreach dir $plc_def(HEADER_SEARCH_PATHS) {
+			foreach dir $plc(search_path) {
 				set candidate [file normalize [file join $dir $name]]			
 				if {[file exists $candidate]} {			
 					set plc(input_file) $candidate
@@ -571,6 +570,14 @@ proc plc::parseString {args} {
 	foreach a $args {
 		append value [plc::substitute $a]
 	} 
+	
+	# (vs 0.4) Substitute entities for the &, ', ", < and > symbols
+	regsub -all {&} $value {\&amp;} value
+	regsub -all {<} $value {\&lt;} value
+	regsub -all {>} $value {\&gt;} value
+	regsub -all {"} $value {\&quot;} value
+	regsub -all {'} $value {\&apos;} value
+	
 	if {$plc(localizing)} {
 		plc::writeOut "\"$value\";\r"
 	} else {
@@ -883,7 +890,7 @@ proc plc::usage { {showAll 0} } {
 	if {$showAll} {
 		puts "Default for -input_encoding is macRoman"
 		puts "Default for -output_encoding is utf-8"
-		puts "Default for -dest is dirname of \$BUILT_PRODUCTS_DIR/\$INFOPLIST_PATH"
+		puts "Default for -dest is dirname of \$TARGET_BUILD_DIR/\$INFOPLIST_PATH"
 		puts "Possible values for -input_eol and -output_eol: [join $plc(eols) ", "] (default is cr)"
 		puts "Possible values for -plist: 0.9 and 1.0 (default is 1.0)"
 		puts "Use the -pkginfo option to also generate a PkgInfo file"
