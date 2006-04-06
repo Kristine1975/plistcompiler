@@ -1,7 +1,7 @@
 !! !! ===========================================================================
 !! !! PListCompilerHelp.aida
 !! !!                       Created: 2005-10-03 16:27:26
-!! !!             Last modification: 2005-11-23 10:06:43
+!! !!             Last modification: 2005-12-13 09:39:46
 !! !! Author: Bernard Desgraupes
 !! !! e-mail: <bdesgraupes@easyconnect.fr>
 !! !! www: <http://webperso.easyconnect.fr/bdesgraupes/>
@@ -16,9 +16,10 @@
 :Author:      Bernard DESGRAUPES <bdesgraupes@easyconnect.fr>
 :Homepage:    <http://webperso.easyconnect.fr/bdesgraupes/>
 :Created:     2005-10-03 16:27:26
-:Modified:    2005-11-23 10:06:43
+:Modified:    2005-12-13 09:39:46
 :Keywords:    property list, xcode, compiler
 :Source:      PlcAidaMacros.tcl
+:ManSection:	1
 
 
 ((/
@@ -414,6 +415,10 @@ odds are very high that you won't obtain what you expect, so your best bet
 is to always use double quotes (and no quotes at all for substitutable
 variables).
 
+Since version 0.4, the ampersand, greater-than, less-than, quote and
+apostroph symbols are correctly converted into XML entities to ensure 
+the well-formedness of the output file.
+
 !! !! Similarly, whitespace characters must be escaped. If you write 
 !! !! ((|
 !! !! 	string 'TCL '
@@ -618,7 +623,7 @@ create a file named ((i Info.plist i)) inside the destination directory. In the
 case of a packaged application, the default destination directory is the
 ((i Contents i)) folder inside the bundle. More generally, the path of this
 destination folder is built by ((b PList Compiler b)) using the values of
-the ((v BUILT_PRODUCTS_DIR v)) and ((v INFOPLIST_PATH v)) XCode
+the ((v TARGET_BUILD_DIR v)) and ((v INFOPLIST_PATH v)) XCode
 variables. 
 
 For instance, with XCode 2.1, if your target is in the ((i Release i))
@@ -1201,18 +1206,28 @@ start at 03B1:
 ((tr 03B8	GREEK SMALL LETTER THETA
 ((tr 03B9	GREEK SMALL LETTER IOTA
 t))
-A string defined like this
+A string can thus be defined like this
 ((|
     	key "UniString1" value string "\u03B1 \u03B2 \u03B3 \u03B4 \u03B5 \u03B6 \u03B7 \u03B8 \u03B9"
 |))
-will produce:
+!! !! ===================================
+((if $aida_params(target) eq "Html"
+!! !! ===================================
+and will produce:
 ((im Images/plc_greekletters.jpg
 String with greek letters im))
+!! !! ===================================
+if))
+!! !! ===================================
 
 ((b Note: b)) the sequence to designate Unicode characters is ((v \u v)) with a 
 ((i lowercase u i)). This is a difference with the CodeWarrior property
 list compiler which used \U.
 
+
+!! !! ===================================
+((if $aida_params(target) eq "Html"
+!! !! ===================================
 
 ((s1 Download
 ((b PList Compiler b)) is an Open Source Project. Its source code is 
@@ -1254,6 +1269,9 @@ too. You can subscribe or unsubscribe from the following address:
 To post to this list, send mail to
 <plistcompiler-users@lists.sourceforge.net>
 
+!! !! ===================================
+if))
+!! !! ===================================
 
 ((s1 Version history
 For a detailed list of the changes, see the file ((i Changes_PLC i)) in 
@@ -1267,6 +1285,11 @@ Unicode characters.
 ((li 2005-11-03 - 0.1 - First final release. Added -version option.
 ((li 2005-11-23 - 0.2 - Support for Headers Search Paths in #include 
 directives. Command line option to generate the PkgInfo file.
+((li 2005-12-13 - 0.3 - Fixed bug when array keyword followed by opening 
+bracket on the same line.
+((li 2006-03-29 - 0.4 - Use TARGET_BUILD_DIR for output dir. Convert some 
+symbols to correct XML entities. Fixed bug when HEADER_SEARCH_PATHS not 
+defined in XCode.
 lu))
 
 
@@ -1279,14 +1302,19 @@ the ((lk http://www.opensource.org/licenses/bsd-license )) Open Source Initiativ
 
 
 
+!! !! ===================================
+((if $aida_params(target) eq "Html"
+!! !! ===================================
+
 ((-
 ((nl Last updated ((s [ISOTime::ISODateAndTimeRelaxed] s))
 !! logo SF
 !! -------
-((if $aida_params(target) eq "Html"
 ((-
 ((nl ((i PList Compiler is hosted by i)) 
 ((lk http://sourceforge.net )) ((im http://sourceforge.net/sflogo.php?group_id=149940&amp;type=4 
 SourceForge.net Logo im)) lk))
-if))
 
+!! !! ===================================
+if))
+!! !! ===================================

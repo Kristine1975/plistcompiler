@@ -10,7 +10,7 @@
 It is developed as an <I>Open Source</I> project coming with a BSD
 License. The source code is currently hosted and developed on the 
 <A HREF="http://sourceforge.net/projects/plistcompiler">SourceForge site.</A>
-<P> This file documents version 0.3 of PList Compiler.
+<P> This file documents version 0.4 of PList Compiler.
 </I></P></BLOCKQUOTE><HR><P><UL>
 <LI><A HREF="#M1">Introduction</A>
 <LI><A HREF="#M2">Usage</A>
@@ -308,7 +308,9 @@ Be also aware that, in the case where you concatenate several strings or
 mix strings and variables, single quotes will confuse the compiler and the
 odds are very high that you won't obtain what you expect, so your best bet
 is to always use double quotes (and no quotes at all for substitutable
-variables).<P><H4><A NAME="M17"></A>The 'number' command</H4><P>The <I>number</I> command lets you specify numeric values. There is no 
+variables).<P>Since version 0.4, the ampersand, greater-than, less-than, quote and
+apostroph symbols are correctly converted into XML entities to ensure 
+the well-formedness of the output file.<P><H4><A NAME="M17"></A>The 'number' command</H4><P>The <I>number</I> command lets you specify numeric values. There is no 
 XML tag named <I>number</I> in a plist file, but rather two entities named 
 &lt;real&gt; and &lt;integer&gt; corresponding 
 respectively to integer or floating point values. The <I>number</I> 
@@ -435,7 +437,7 @@ create a file named <I>Info.plist</I> inside the destination directory. In the
 case of a packaged application, the default destination directory is the
 <I>Contents</I> folder inside the bundle. More generally, the path of this
 destination folder is built by <B>PList Compiler</B> using the values of
-the <TT>BUILT_PRODUCTS_DIR</TT> and <TT>INFOPLIST_PATH</TT> XCode
+the <TT>TARGET_BUILD_DIR</TT> and <TT>INFOPLIST_PATH</TT> XCode
 variables. <P>For instance, with XCode 2.1, if your target is in the <I>Release</I>
 configuration and your application is MyApp, the destination folder would
 be (unless you have non standard settings):
@@ -880,10 +882,13 @@ Unicode characters.
 directives. Command line option to generate the PkgInfo file.
 	<LI> 2005-12-13 - 0.3 - Fixed bug when array keyword followed by opening 
 bracket on the same line.
+	<LI> 2006-03-29 - 0.4 - Use TARGET_BUILD_DIR for output dir. Convert some 
+symbols to correct XML entities. Fixed bug when HEADER_SEARCH_PATHS not 
+defined in XCode.
 </UL><P><H2><A NAME="M49"></A>License and disclaimer</H2><P><B>PList Compiler</B> is distributed under the same BSD License as
 the Tcl language itself: see the file <I>License_terms</I> in the distribution or 
 the <A HREF="http://www.opensource.org/licenses/bsd-license"> Open Source Initiative site.</A><P><HR>
-<P> Last updated 2005-12-13 09:40:02
+<P> Last updated 2006-03-29 14:26:41
 <!--  logo SF -->
 <!--  ------- -->
 <HR>
