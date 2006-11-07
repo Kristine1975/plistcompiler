@@ -1,3 +1,4 @@
+¥ -*-Chng-*-
 Changes Log for the PList Compiler project
 ==========================================
 
@@ -36,6 +37,16 @@ This changes log is in reverse chronological order (from bottom to top).
 
 $Date$
 
+
+================================================================================
+= 0.5	                 	            last update: 2006-11-07 07:47:17
+================================================================================
+¥ new -prefix option (RFE 1461559)
+¥ new -o option (Patch 1474228)
+¥ new escape_entities pragma to control conversion to XML entities
+¥ fixed bug with square brackets and double slashes inside quoted strings
+¥ fixed bug with user defined macros enclosed in double underscores (Bug 1413845)
+¥ Fifth release.
 
 ================================================================================
 = 0.4	                 	            last update: 2006-03-29 13:42:11
