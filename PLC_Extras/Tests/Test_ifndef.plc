@@ -1,5 +1,5 @@
 // ===========================================================================
-// Test_ifdef.plc
+// Test_ifndef.plc
 //                       Created: 2005-10-03 06:28:51
 //             Last modification: 2006-11-06 17:21:40
 // Author: Bernard Desgraupes
@@ -23,7 +23,7 @@
 #define kWillNeverBeDefinedMacro
 #endif
 
-#ifdef kWillNeverBeDefinedMacro
+#ifndef kWillNeverBeDefinedMacro
 
 	#define kHasNotBeenDefined "No, it has not been defined"
 
@@ -46,11 +46,10 @@
 #endif
 
 // Test a predefined variable
-#ifdef YEAR
-	#warning "this year is " YEAR
-	#warning "this year expands to " __YEAR__
+#ifndef YEAR
+	#warning "It should not write that this year is " __YEAR__
 #endif
 	
-#ifdef USER
-	#warning "current user is " __USER__
+#ifndef USER
+	#warning "It should not write that the current user is " __USER__
 #endif

@@ -1,11 +1,11 @@
 !! !! ===========================================================================
 !! !! File: "PListCompilerHome.aida"
 !! !!                        Created: 2005-10-06 17:56:07
-!! !!              Last modification: 2005-10-14 09:44:34
+!! !!              Last modification: 2006-11-04 15:02:55
 !! !! Author: Bernard Desgraupes
-!! !! e-mail: <bdesgraupes@easyconnect.fr>
-!! !! www: <http://webperso.easyconnect.fr/bdesgraupes/>
-!! !! (c) Copyright: Bernard Desgraupes 2005
+!! !! e-mail: <bdesgraupes@orange.fr>
+!! !! www: <http://perso.orange.fr/bdesgraupes/>
+!! !! (c) Copyright: Bernard Desgraupes 2005-2006
 !! !! All rights reserved.
 !! !! $Date$
 !! !! $Revision$
@@ -13,10 +13,10 @@
 
 :Title:       plistcompiler
 :DestFolder:	../../PLC_Help
-:Author:      Bernard DESGRAUPES <bdesgraupes@easyconnect.fr>
-:Homepage:    <http://webperso.easyconnect.fr/bdesgraupes/>
+:Author:      Bernard DESGRAUPES <bdesgraupes@orange.fr>
+:Homepage:    <http://perso.orange.fr/bdesgraupes/>
 :Created:     2005-10-06 17:56:07
-:Modified:    2005-10-14 09:44:34
+:Modified:    2006-11-04 15:02:55
 :Keywords:    property list, xcode, compiler
 :Source:      PlcAidaMacros.tcl
 
@@ -77,7 +77,7 @@ sending feedback.
 A help file with complete documentation about the PLC syntax and
 instructions about the usage of the compiler in an XCode project is
 included in the distribution. You can also
-((lk http://webperso.easyconnect.fr/bdesgraupes/DocHTML/PListCompilerHelp.html )) read it online. lk)) 
+((lk http://perso.orange.fr/bdesgraupes/DocHTML/PListCompilerHelp.html )) read it online. lk)) 
 
 
 ((s1 Requisites
@@ -103,7 +103,7 @@ The source code is public and can be found on the SourceForge site at the
 following address: <http://sourceforge.net/projects/plistcompiler>
 
 Being written in ((b Tcl b)) (the Tool Command Language, see above), the code can easily be
-modified and adapted to your needs. ((b Tcl/Tk b)) is a very easy to use yet
+modified and adapted to suit your needs. ((b Tcl/Tk b)) is a very easy to use yet
 extremely powerful scripting language:
 ((lk http://wiki.tcl.tk/ )) see here lk))
 for more about this language. No compiler is necessary. The code is
@@ -115,8 +115,7 @@ development using any CVS client. See
 
 ((nl You can also 
 ((lk http://cvs.sourceforge.net/cgi-bin/viewcvs.cgi/plistcompiler )) browse the cvs repository lk))
-online and get 
-((lk http://cvs.sourceforge.net/cvstarballs/plistcompiler-cvsroot.tar.bz2 )) nightly tarballs lk)).
+online.
 
 
 ((s1 Code contributions
@@ -146,11 +145,13 @@ To see the collection of prior postings to the list, visit the
 
 You can also e-mail me directly: <bdesgraupes@users.sourceforge.net>
 
-!! logo SF
-!! -------
 ((-
 ((nl Last updated ((s [ISOTime::ISODateAndTimeRelaxed] s))
+((im /cgi-bin/Count.cgi?df=bdesgraupes.dat
+Visitors counter im))
 ((-
+!! logo SF
+!! -------
 ((nl ((i PList Compiler is hosted by i)) 
 ((lk http://sourceforge.net )) ((im http://sourceforge.net/sflogo.php?group_id=149940&amp;type=4 
 SourceForge.net Logo im)) lk))

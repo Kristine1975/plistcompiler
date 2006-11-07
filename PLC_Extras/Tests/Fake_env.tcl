@@ -11,6 +11,10 @@
 # 
 # Fake XCode environment variables used by the tests suite
 
+set env(MACOS_CREATOR) "APPL"
+set env(MACOS_TYPE) "XYZT"
+
+
 set env(__CF_USER_TEXT_ENCODING) "0x1F5:0:91"
 set env(ACTION) "build"
 set env(APPLE_INTERNAL_DEVELOPER_DIR) "/AppleInternal/Developer"

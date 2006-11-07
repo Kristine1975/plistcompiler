@@ -1,14 +1,12 @@
 // ===========================================================================
 // Example.h
 //                       Created: 2005-10-05 12:26:37
-//             Last modification: 2005-10-05 12:32:29
+//             Last modification: 2006-11-04 15:19:06
 // Author: Bernard Desgraupes
-// e-mail: <bdesgraupes@easyconnect.fr>
-// www: <http://webperso.easyconnect.fr/bdesgraupes/>
-// © Copyright: Bernard Desgraupes 2005
+// e-mail: <bdesgraupes@users.sourceforge.net>
+// www: <http://sourceforge.net/projects/plistcompiler>
+// (c) Copyright: Bernard Desgraupes 2005-2006
 // All rights reserved.
-// $Date$
-// $Revision$
 // ===========================================================================
 
 // Bundle identifier string
@@ -26,4 +24,5 @@
 
 #define kCurrentStage kBetaStage
 
-
+# Used in Example3
+#define __DEBUGGING_SYMBOLS__ 1

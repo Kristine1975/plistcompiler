@@ -1,11 +1,11 @@
 // ===========================================================================
 // Test_if.plc
 //                       Created: 2005-10-03 06:28:51
-//             Last modification: 2005-10-04 18:30:33
+//             Last modification: 2006-11-05 00:11:40
 // Author: Bernard Desgraupes
-// e-mail: <bdesgraupes@easyconnect.fr>
-// www: <http://webperso.easyconnect.fr/bdesgraupes/>
-// © Copyright: Bernard Desgraupes 2005
+// e-mail: <bdesgraupes@users.sourceforge.net>
+// www: <http://sourceforge.net/projects/plistcompiler>
+// © Copyright: Bernard Desgraupes 2005-2006
 // All rights reserved.
 // ===========================================================================
 
@@ -16,10 +16,46 @@
 
 #if kCurrentVersion == kVersionSeven 
 
-#warning "Current version is kVersionSeven"
+	#warning "current version is kVersionSeven (= " kVersionSeven ")"
 
 #else
 
-#warning "Current version is not kVersionSeven"
+	#warning "current version is not kVersionSeven (= " kVersionSeven ")"
 
 #endif
+
+
+// Evaluate some Tcl code
+#if "[file exists [file normalize ~/PLC_Extras/Tests/Test_if.plc]]"
+
+	#warning "file Test_if.plc exists!"
+
+#else
+
+	#warning "file Test_if.plc does not exist!"
+
+#endif
+
+
+// Mix macros and Tcl code
+#define SOME_FILE  /Users/bernardo/somefile
+
+#if "[file exists " SOME_FILE "]"
+
+	#warning "file exists: " SOME_FILE
+
+#else
+
+	#warning "file does not exist: " SOME_FILE
+
+#endif
+
+
+
+// Source a Tcl script
+#if "[source [file normalize [file join [file dir [info script]] ../PLC_Extras/Tests/Test_script.tcl]]]"
+
+	#warning "script evaluated OK"
+
+#endif
+
