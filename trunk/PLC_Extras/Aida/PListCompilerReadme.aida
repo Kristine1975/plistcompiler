@@ -76,7 +76,7 @@ PList Compiler can be discussed.
 Please e-mail me any problem you encounter with this software:
 ((nl <bdesgraupes@users.sourceforge.net>
 
-(c) Copyright: Bernard Desgraupes, ((s [clock format [clock seconds] -format "%Y"] s))
+(c) Copyright: Bernard Desgraupes, 2005-((s [clock format [clock seconds] -format "%Y"] s))
 ((nl All rights reserved.
 
 Last update ((s [ISOTime::ISODateAndTimeRelaxed] s))

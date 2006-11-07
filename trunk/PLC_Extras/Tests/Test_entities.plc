@@ -1,14 +1,15 @@
 // ===========================================================================
-// Test_simple.plc
+// Test_entities.plc
 //                       Created: 2006-03-29 13:57:07
-//             Last modification: 2006-03-29 13:57:10
+//             Last modification: 2006-11-05 14:21:52
 // Author: Bernard Desgraupes
-// e-mail: <bdesgraupes@easyconnect.fr>
-// www: <http://webperso.easyconnect.fr/bdesgraupes/>
-// © Copyright: Bernard Desgraupes 2006
+// e-mail: <bdesgraupes@users.sourceforge.net>
+// www: <http://sourceforge.net/projects/plistcompiler>
+// (c) Copyright: Bernard Desgraupes 2006
 // All rights reserved.
 // ===========================================================================
 
+// Escaping is on by default
 plist
 {
 	dictionary
@@ -21,3 +22,28 @@ plist
 	}
 }
 
+
+// Turn escaping off with the escape_entities pragma
+#pragma escape_entities off
+
+localize "English"
+{
+	key "Ampersand" value string  "Three ampersands in a row: &, & and &!"
+	key "Quotes" value string  "Three quotes in a row: \", \" and \""
+	key "Apostroph" value string "Single 'quotes'"
+	key "GreaterThan" value string "Follow the link >>>>!"
+	key "LessThan" value string "expr 1 << 3"
+}
+
+
+// Turn escaping on
+#pragma escape_entities on
+
+localize "French"
+{
+	key "Ampersand" value string  "Three ampersands in a row: &, & and &!"
+	key "Quotes" value string  "Three quotes in a row: \", \" and \""
+	key "Apostroph" value string "Single 'quotes'"
+	key "GreaterThan" value string "Follow the link >>>>!"
+	key "LessThan" value string "expr 1 << 3"
+}

@@ -1,11 +1,11 @@
 // ===========================================================================
 // Test_define.plc
 //                       Created: 2005-10-03 06:28:51
-//             Last modification: 2005-10-12 23:52:03
+//             Last modification: 2006-11-04 12:15:25
 // Author: Bernard Desgraupes
-// e-mail: <bdesgraupes@easyconnect.fr>
-// www: <http://webperso.easyconnect.fr/bdesgraupes/>
-// © Copyright: Bernard Desgraupes 2005
+// e-mail: <bdesgraupes@users.sourceforge.net>
+// www: <http://sourceforge.net/projects/plistcompiler>
+// © Copyright: Bernard Desgraupes 2005-2006
 // All rights reserved.
 // ===========================================================================
 
@@ -19,6 +19,18 @@
 
 #define kLongInfo kShortInfo ", all rights reserved in " __YEAR__
 
+#define __bla__ "ablacadabla"
+
+// The next one will overwrite the existing YEAR predefined variable (which
+// is invoked as __YEAR__, see above). PLC will issue a warning.
+#define __YEAR__ 1789
+
+// The next one conflicts with the existing YEAR predefined variable. PLC
+// raises an error in that case.
+#if PLC_DEBUG == 1
+#define YEAR 2000
+#endif
+
 plist
 {
 	dictionary
@@ -28,6 +40,9 @@ plist
 		key "LongInfo" value string kLongInfo
 		key "Name" value string kAppName
 		key "SingleQuoted" value string ' App Name '
+		key "Magic" value string __bla__
+		key "Revolution" value string __YEAR__
+		key "y2k" value string YEAR
 	}
 }
 

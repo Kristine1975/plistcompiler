@@ -1,11 +1,11 @@
 // ===========================================================================
 // Test_undef.plc
 //                       Created: 2005-10-03 06:28:51
-//             Last modification: 2005-10-07 11:58:03
+//             Last modification: 2006-11-04 12:06:44
 // Author: Bernard Desgraupes
-// e-mail: <bdesgraupes@easyconnect.fr>
-// www: <http://webperso.easyconnect.fr/bdesgraupes/>
-// © Copyright: Bernard Desgraupes 2005
+// e-mail: <bdesgraupes@users.sourceforge.net>
+// www: <http://sourceforge.net/projects/plistcompiler>
+// © Copyright: Bernard Desgraupes 2005-2006
 // All rights reserved.
 // ===========================================================================
 
@@ -26,3 +26,32 @@
 #warning "kNewlyDefinedMacro has now been undefined"
 #endif
 
+
+// Bug 1413845
+#define __bla__
+
+#ifndef __bla__
+#warning "should not come here"
+#else
+#warning "should come here because __bla__ is defined"
+#endif
+
+#undef __bla__
+#ifndef __bla__
+#warning "should come here because __bla__ was undefined"
+#endif
+
+
+// Test a predefined variable
+#ifndef YEAR
+	#warning "This should not appear"
+#else
+	#warning "It appears that this year is " YEAR
+	#warning "It appears that this year expands to " __YEAR__
+#endif
+
+// It is forbidden to undef a predefined variable. PLC
+// raises an error in that case.
+#if PLC_DEBUG == 1
+#undef USER
+#endif

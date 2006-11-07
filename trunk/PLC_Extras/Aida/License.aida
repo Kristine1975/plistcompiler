@@ -3,17 +3,15 @@
 !! !!                        Created: 2005-10-05 10:13:36
 !! !!              Last modification: 2005-10-05 10:13:36
 !! !! Author: Bernard Desgraupes
-!! !! e-mail: <bdesgraupes@easyconnect.fr>
-!! !! www: <http://webperso.easyconnect.fr/bdesgraupes/>
+!! !! e-mail: <bdesgraupes@orange.fr>
+!! !! www: <http://perso.orange.fr/bdesgraupes/>
 !! !! (c) Copyright: Bernard Desgraupes 2005
 !! !! All rights reserved.
-!! !! $Date$
-!! !! $Revision$
 !! !! ===========================================================================
 :Title:       License_terms
 :DestFolder:	../../PLC_Help
 :Author:      Bernard DESGRAUPES <bdesgraupes@users.sourceforge.net>
-:Homepage:    <http://webperso.easyconnect.fr/bdesgraupes/>
+:Homepage:    <http://perso.orange.fr/bdesgraupes/>
 :Created:     2005-10-05 10:13:36
 :Modified:    2005-09-21 18:59:59
 :Keywords:    license
@@ -24,7 +22,7 @@ the Tcl language itself:
 see the ((lk http://www.opensource.org/licenses/bsd-license )) Open Source Initiative site lk))
 
 
-Copyright (c) 2005, Bernard Desgraupes <bdesgraupes@users.sourceforge.net>
+Copyright (c) 2005-((s [clock format [clock seconds] -format "%Y"] s)), Bernard Desgraupes <bdesgraupes@users.sourceforge.net>
 
 All rights reserved.
 
