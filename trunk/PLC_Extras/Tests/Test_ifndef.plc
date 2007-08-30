@@ -1,11 +1,11 @@
 // ===========================================================================
 // Test_ifndef.plc
 //                       Created: 2005-10-03 06:28:51
-//             Last modification: 2006-11-06 17:21:40
+//             Last modification: 2007-08-30 10:01:18
 // Author: Bernard Desgraupes
 // e-mail: <bdesgraupes@users.sourceforge.net>
 // www: <http://sourceforge.net/projects/plistcompiler>
-// © Copyright: Bernard Desgraupes 2005-2006
+// (c) Copyright: Bernard Desgraupes 2005-2007
 // All rights reserved.
 // ===========================================================================
 
@@ -25,7 +25,8 @@
 
 #ifndef kWillNeverBeDefinedMacro
 
-	#define kHasNotBeenDefined "No, it has not been defined"
+	#define kHasNotBeenDefined "no, it has not been defined"
+	#warning "should come here since " kHasNotBeenDefined
 
 	plist { 
 		dictionary {
@@ -35,7 +36,8 @@
 
 #else
 
-	#define kHasBeenDefined "Yes, it has been defined"
+	#define kHasBeenDefined "yes, it has been defined"
+	#warning "should NOT come here since " kHasBeenDefined
 
 	plist { 
 		dictionary {
@@ -46,10 +48,14 @@
 #endif
 
 // Test a predefined variable
-#ifndef YEAR
+#ifndef __YEAR__
 	#warning "It should not write that this year is " __YEAR__
+#else
+	#warning "should come here since __YEAR__ is defined"
 #endif
 	
 #ifndef USER
-	#warning "It should not write that the current user is " __USER__
+	#warning "should not come here since USER should be defined"
+#else
+	#warning "should write that current user is " USER
 #endif

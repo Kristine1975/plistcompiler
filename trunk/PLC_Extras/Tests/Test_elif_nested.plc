@@ -1,11 +1,11 @@
 // ===========================================================================
-// Test_elif.plc
+// Test_elif_nested.plc
 //                       Created: 2005-10-03 06:28:51
-//             Last modification: 2005-10-07 11:55:02
+//             Last modification: 2007-08-30 10:14:09
 // Author: Bernard Desgraupes
 // e-mail: <bdesgraupes@users.sourceforge.net>
 // www: <http://sourceforge.net/projects/plistcompiler>
-// © Copyright: Bernard Desgraupes 2005-2006
+// (c) Copyright: Bernard Desgraupes 2005-2007
 // All rights reserved.
 // ===========================================================================
 
@@ -14,13 +14,17 @@
 #define kVersionSix 6
 #define kVersionSeven 7
 #define kVersionEight 8
+#define kVersionNine 9
 
-#define kCurrentVersion kVersionSix
+// Try different values in the following #define
+#define kCurrentVersion kVersionNine
 
+
+#warning "Setting current version to " kCurrentVersion
 
 #if kCurrentVersion <= kVersionFive 
 
-#warning "Current version is <= " kVersionFive
+	#warning "Current version is <= " kVersionFive
 
 #elif kCurrentVersion <= kVersionEight 
 
@@ -42,6 +46,6 @@
 
 #else
 
-#warning "Current version is > " kVersionEight
+	#warning "Current version is > " kVersionEight
 
 #endif

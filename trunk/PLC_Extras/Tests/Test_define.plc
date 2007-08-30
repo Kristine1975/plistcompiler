@@ -1,11 +1,11 @@
 // ===========================================================================
 // Test_define.plc
 //                       Created: 2005-10-03 06:28:51
-//             Last modification: 2006-11-04 12:15:25
+//             Last modification: 2007-05-21 17:51:05
 // Author: Bernard Desgraupes
 // e-mail: <bdesgraupes@users.sourceforge.net>
 // www: <http://sourceforge.net/projects/plistcompiler>
-// © Copyright: Bernard Desgraupes 2005-2006
+// (c) Copyright: Bernard Desgraupes 2005-2007
 // All rights reserved.
 // ===========================================================================
 
@@ -17,19 +17,21 @@
 
 #define kShortInfo kAppName "is " kAppProp
 
-#define kLongInfo kShortInfo ", all rights reserved in " __YEAR__
+#define kLongInfo kShortInfo ", all rights reserved for " __YEAR__
 
 #define __bla__ "ablacadabla"
+
+#define bla_bla "abla_ca_dabla"
+
+#define bla_bla_bla bla_bla "_" bla_bla
 
 // The next one will overwrite the existing YEAR predefined variable (which
 // is invoked as __YEAR__, see above). PLC will issue a warning.
 #define __YEAR__ 1789
 
-// The next one conflicts with the existing YEAR predefined variable. PLC
-// raises an error in that case.
-#if PLC_DEBUG == 1
+// The next one does not conflict anymore with the existing __YEAR__
+// predefined variable. 
 #define YEAR 2000
-#endif
 
 plist
 {
@@ -41,8 +43,10 @@ plist
 		key "Name" value string kAppName
 		key "SingleQuoted" value string ' App Name '
 		key "Magic" value string __bla__
+		key "Underscored" value string bla_bla
+		key "LongMagic" value string bla_bla_bla
 		key "Revolution" value string __YEAR__
-		key "y2k" value string YEAR
+		key "Y2K" value string YEAR
 	}
 }
 
