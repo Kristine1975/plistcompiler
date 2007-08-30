@@ -39,6 +39,35 @@ $Date$
 
 
 ================================================================================
+= 0.6	                 	            last update: 
+================================================================================
+¥ Removed the experimental -show option
+¥ Removed the "# -*-Tcl-*-" magic line which seems to cause trouble with the 
+csh shell.
+¥ Fixed an inconsistency related to end of line character in preamble.
+¥ Added support for -Dmacro[=value] options on the command line.
+¥ Fixed bug 1699538 (#ifndef __PLIST__ broken in 0.5).
+¥ Simplified the variable substitution mechanism: it is not necessary anymore 
+to enclose inherited shell variables in double underscores. Plcompile still 
+handles this case for backward compatibility.
+¥ implemented support for backslash at end of line interpreted as line 
+continuation character.
+¥ Added support for soft links to specify the plc file or a prefix file on the 
+command line.
+
+================================================================================
+= 0.5.2	                 	            last update: 2007-05-21 16:24:04
+================================================================================
+¥ New command line option -show to only display the output in the console 
+  without writing any file or creating any folder.
+
+================================================================================
+= 0.5.1	                 	            last update: 2006-11-12 10:59:38
+================================================================================
+¥ improved generation of Pkginfo file. Support of PKGINFO_SIGNATURE and
+  PKGINFO_TYPE preprocessor macros.
+
+================================================================================
 = 0.5	                 	            last update: 2006-11-07 07:47:17
 ================================================================================
 ¥ new -prefix option (RFE 1461559)

@@ -1,4 +1,3 @@
-# -*-Tcl-*-
 #!/bin/bash
 # the next line restarts using tclsh \
 exec tclsh "$0" "$@"
@@ -6,61 +5,58 @@ exec tclsh "$0" "$@"
 # ===========================================================================
 # File: "PlistComp.tcl"
 #                        Created: 2005-10-01 21:46:19
-#              Last modification: 2006-11-05 14:24:40
+#              Last modification: 2007-08-29 22:34:35
 # Author: Bernard Desgraupes
 # e-mail: <bdesgraupes@users.sourceforge.net>
 # www: <http://sourceforge.net/projects/plistcompiler>
-# (c) Copyright: Bernard Desgraupes 2005-2006
+# (c) Copyright: Bernard Desgraupes 2005-2007
 # All rights reserved.
 # ===========================================================================
 
 namespace eval plc {}
 
-unset -nocomplain plc_def plc_predef plc
+# This is for debugging when the script is used repeatedly in the same interpreter
+unset -nocomplain plc_def plc_int plc
 
 # Current version number
-set plc(version) "0.5"
+set plc(version) "0.6"
 
 # Retrieving the values of the shell variables: the env array contains the
 # values for all the environment variables defined by XCode.
-array set plc_predef [array get env]
+array set plc_def [array get env]
 
 # Legacy: predefined variables of the CodeWarrior property list compiler 
-if {[info exists plc_predef(MACOS_CREATOR)]} {
-	set plc_predef(OUTPUT_CREATOR) $plc_predef(MACOS_CREATOR)
-	set plc(bundle_signature) $plc_predef(MACOS_CREATOR)
+if {[info exists env(MACOS_CREATOR)]} {
+	set plc_int(__OUTPUT_CREATOR__) $env(MACOS_CREATOR)
 } else {
-	set plc_predef(OUTPUT_CREATOR) ""
-	set plc(bundle_signature) "????"
+	set plc_int(__OUTPUT_CREATOR__) ""
 }
-if {[info exists plc_predef(MACOS_TYPE)]} {
-	set plc_predef(OUTPUT_TYPE) $plc_predef(MACOS_TYPE)
-	set plc(bundle_type) $plc_predef(MACOS_TYPE)
+if {[info exists env(MACOS_TYPE)]} {
+	set plc_int(__OUTPUT_TYPE__) $env(MACOS_TYPE)
 }  else {
-	set plc_predef(OUTPUT_TYPE) ""
-	set plc(bundle_type) "????"
+	set plc_int(__OUTPUT_TYPE__) ""
 }
-if {[info exists plc_predef(PRODUCT_NAME)]} {
-	set plc_predef(OUTPUT_FILENAME) $plc_predef(PRODUCT_NAME)
+if {[info exists env(PRODUCT_NAME)]} {
+	set plc_int(__OUTPUT_FILENAME__) $env(PRODUCT_NAME)
 }  else {
-	set plc_predef(OUTPUT_FILENAME) ""
+	set plc_int(__OUTPUT_FILENAME__) ""
 }
 	
 # Predefined variables
 # --------------------
 # Enclose them between double underscores to invoke 
 # them in the plc file. For instance __DATE__ or __YEAR__
-set plc_predef(DATE) [clock format [clock seconds] -format "%Y-%m-%dT%H:%M:%SZ"]
-set plc_predef(SHORTDATE) [clock format [clock seconds] -format "%Y-%m-%d"]
-set plc_predef(YEAR) [clock format [clock seconds] -format "%Y"]
-set plc_predef(MONTH) [clock format [clock seconds] -format "%m"]
-set plc_predef(MONTHNAME) [clock format [clock seconds] -format "%B"]
-set plc_predef(DAY) [clock format [clock seconds] -format "%d"]
-set plc_predef(DAYNAME) [clock format [clock seconds] -format "%A"]
-set plc_predef(TIME) [clock format [clock seconds] -format "%H:%M:%S"]
-set plc_predef(HOURS) [clock format [clock seconds] -format "%H"]
-set plc_predef(MINUTES) [clock format [clock seconds] -format "%M"]
-set plc_predef(SECONDS) [clock format [clock seconds] -format "%S"]
+set plc_int(__DATE__) [clock format [clock seconds] -format "%Y-%m-%dT%H:%M:%SZ"]
+set plc_int(__SHORTDATE__) [clock format [clock seconds] -format "%Y-%m-%d"]
+set plc_int(__YEAR__) [clock format [clock seconds] -format "%Y"]
+set plc_int(__MONTH__) [clock format [clock seconds] -format "%m"]
+set plc_int(__MONTHNAME__) [clock format [clock seconds] -format "%B"]
+set plc_int(__DAY__) [clock format [clock seconds] -format "%d"]
+set plc_int(__DAYNAME__) [clock format [clock seconds] -format "%A"]
+set plc_int(__TIME__) [clock format [clock seconds] -format "%H:%M:%S"]
+set plc_int(__HOURS__) [clock format [clock seconds] -format "%H"]
+set plc_int(__MINUTES__) [clock format [clock seconds] -format "%M"]
+set plc_int(__SECONDS__) [clock format [clock seconds] -format "%S"]
 
 # Initializations
 # ---------------
@@ -72,18 +68,18 @@ set plc(pkginfo) 0
 set plc(currkey) ""
 set plc(escape_entities) 1
 
-set plc_predef(PLIST) "1.0"
+set plc_int(__PLIST__) "1.0"
 set plc(output_filename) ""
 # (vs 0.4) Use TARGET_BUILD_DIR instead of BUILT_PRODUCTS_DIR to point to
 # the correct location regardless of the value of DEPLOYMENT_LOCATION
-if {[info exists plc_predef(TARGET_BUILD_DIR)] && [info exists plc_predef(INFOPLIST_PATH)]} {
-	set plc(output_folder) [file join $plc_predef(TARGET_BUILD_DIR) [file dir $plc_predef(INFOPLIST_PATH)]]
+if {[info exists env(TARGET_BUILD_DIR)] && [info exists env(INFOPLIST_PATH)]} {
+	set plc(output_folder) [file join $env(TARGET_BUILD_DIR) [file dir $env(INFOPLIST_PATH)]]
 } 
 set plc(in_package_directory) ""
 set plc(localize_directory) "Resources"
 
-if {[info exists plc_predef(HEADER_SEARCH_PATHS)]} {
-	set plc(search_path) $plc_predef(HEADER_SEARCH_PATHS)
+if {[info exists env(HEADER_SEARCH_PATHS)]} {
+	set plc(search_path) $env(HEADER_SEARCH_PATHS)
 }  else {
 	set plc(search_path) ""
 }
@@ -93,6 +89,7 @@ set plc(output_encoding) "utf-8"
 set plc(input_eol) "cr"
 set plc(output_eol) "cr"
 set plc(eols) [list "cr" "lf" "crlf"]
+
 
 # Nesting level of a conditional block (anything between an if and the 
 # corresponding endif).
@@ -119,38 +116,33 @@ set plc(wraplen) 60
 
 # Main proc
 proc plc::execute {args} {
-	global plc plc_predef
+	global plc plc_int
 	set len [llength $args]
-	if {$len == 0 || $len > 14} {
+	if {$len == 0} {
 		puts "Error: wrong number of arguments"
 		plc::usage
 		return
 	} 
 	# Handle the -help option
-	if {$len == 1 && [regexp -- "-h" $args]} {
+	if {$len == 1 && [string match "-h*" $args]} {
 		plc::usage 1 
 		return
 	} 
 	# Handle the -help option
-	if {$len == 1 && [regexp -- "-v" $args]} {
+	if {$len == 1 && [string match "-v*" $args]} {
 		puts "$plc(version)"
 		return
 	} 
 	# Handle the -encodings option
-	if {$len == 1 && [regexp -- "-e" $args]} {
+	if {$len == 1 && [string match "-e*" $args]} {
 		puts "Available encodings:"
 		puts [join [lsort [concat [encoding names] "utf-16"]] ", "]
 		return
 	} 
 	# Retrieve the last argument
-	set srcfile [file normalize [lindex $args end]]
-	if {$srcfile eq ""} {
-		puts "Error: no file specified"
-		plc::usage
-		return
-	} 
+	set srcfile [plc::resolveFile [lindex $args end]]
 	if {![file exists $srcfile]} {
-		error "can't find '$srcfile'. No such file or directory."
+		error "can't find '$srcfile'. No such file."
 	} 
 	set plc(input_file) $srcfile
 	# Define a default output folder in case nothing was inherited 
@@ -188,12 +180,7 @@ proc plc::execute {args} {
 			- "output_eol" {
 				incr i
 				if {$i <= $len} {
-					set value [lindex $args $i]
-					if {[lsearch $plc(eols) $value] == -1} {
-						puts "Error: wrong value '$value' for eol option. Should be one of [join $plc(eols) ", "]."
-						return
-					} 
-					set plc($elem) $value
+					plc::setEol $elem [lindex $args $i]
 				} else {
 					set failed 1
 				}
@@ -208,15 +195,15 @@ proc plc::execute {args} {
 			}
 			"o" {
 				# Vs-0.5: implement an -o option (this slightly modifies
-				# patch 1474228 contributed by Jens Miltner - thanks).
+				# patch 1474228 contributed by Jens Miltner - thanks!).
 				# If a full path is passed (i-e the string starts with a
-				# slash), set output_folder and output_folder accordingly,
+				# slash), set output_folder and output_filename accordingly,
 				# otherwise use the value as the output file name and build
 				# output_folder as usual.
 				incr i
 				if {$i < $len} {
 					set outname [lindex $args $i]
-					if {[string range $outname 0 0] eq "/"} {
+					if {[string index $outname 0] eq "/"} {
 						set plc(output_folder) [file dir $outname]
 						set plc(output_filename) [file tail $outname]
 					} else {
@@ -229,7 +216,7 @@ proc plc::execute {args} {
 			"plist" {
 				incr i
 				if {$i < $len} {
-					set plc_predef(PLIST) [lindex $args $i]
+					set plc_int(__PLIST__) [lindex $args $i]
 				} else {
 					set failed 1
 				}
@@ -240,13 +227,19 @@ proc plc::execute {args} {
 			"prefix" {
 				incr i
 				if {$i < $len} {
-					set prefixFile [file normalize [lindex $args $i]]
+					set prefixFile [plc::resolveFile [lindex $args $i]]
 				} else {
 					set failed 1
 				}
 			}
 			default {
-				error "unknown option $elem"
+				if {[string index $elem 0] eq "d"} {
+					set macro [string range $elem 1 end]					
+					set macro [split $macro "="]
+					plc::defineMacro [lindex $macro 0] [list [lindex $macro 1]]
+				} else {
+					error "unknown option $elem"
+				}
 			}
 		}
 		
@@ -274,24 +267,33 @@ proc plc::execute {args} {
 	}
 }
 
-# Regexp to capture C-like comments (works with the (?w) directive or
-# -lineanchor option):
-#         /\*([^*]|\*+[^*/])*\*+/
 proc plc::normalize {txt} {
+	# Replace line continuation backslashes: a backslash at the end of a
+	# line is a line continuation character. It is removed and the next
+	# line is concatenated to the previous one after any initial spaces
+	# have been trimmed.
+	regsub -all {\\[\r\n][ \t]+} $txt "" txt
+	
 	# Strip comments: if a line starts with // it is deleted
 	# unconditionnally. If the // is not at the beginning of the line, it
 	# is considered as a comment only if there is no double quote after it
 	# otherwise it might be a double slash inside a quoted string.
 	regsub  -line -all {^//.*$} $txt {} txt
 	regsub  -line -all {//[^"]*$} $txt {} txt
+
+	# Regexp to capture C-like comments (works with the (?w) directive or
+	# -lineanchor option):
 	regsub -all -lineanchor {/\*([^*]|\*+[^*/])*\*+/} $txt {} txt
+
 	# Cut all the instructions
 	regsub -all {\s+value\s+(dictionary|array)\s*} $txt "\r\\1\r" txt
 	regsub -all {\s+value\s+(boolean|number|date|data|string)} $txt "\r\\1" txt
 	regsub -line -all {^\s*(plist|dictionary|array)\s*} $txt "\\1\r" txt
 	regsub -all {^({|\[)\s*(}|\])} $txt "\\1\r\\2" txt
+
 	# Align them on the left margin
 	regsub -line -all "^\[ \t\]+" $txt "" txt
+
 	# Remove empty lines
 	regsub -line -all "^\[\r\n\]" $txt "" txt
 	return $txt	
@@ -368,7 +370,7 @@ proc plc::parseContents {txt} {
 }
 
 proc plc::parseMacro {line} {
-	global plc plc_def plc_predef
+	global plc plc_def plc_int
 	if {[regexp {#[ \t]*(\w+)[ \t]*([^\r\n]*)$} $line -> macro definition]} {
 		if {[set plc(doexec-$plc(iflevel))]} {
 			switch -- $macro {
@@ -385,14 +387,14 @@ proc plc::parseMacro {line} {
 				"ifdef" {
 					incr plc(iflevel)
 					set var $definition
-					set condition [expr [info exists plc_def($var)] || [info exists plc_predef($var)]]
+					set condition [expr [info exists plc_def($var)] || [info exists plc_int($var)]]
 					set plc(execdone-$plc(iflevel)) $condition
 					set plc(doexec-$plc(iflevel)) $condition
 				}
 				"ifndef" {
 					incr plc(iflevel)
 					set var $definition
-					set condition [expr ![info exists plc_def($var)] && ![info exists plc_predef($var)]]
+					set condition [expr ![info exists plc_def($var)] && ![info exists plc_int($var)]]
 					set plc(execdone-$plc(iflevel)) $condition
 					set plc(doexec-$plc(iflevel)) $condition
 				}
@@ -412,40 +414,12 @@ proc plc::parseMacro {line} {
 				}
 				"define" {
 					if {[regexp {(\w+)[ \t]*([^\r\n]*)$} $definition -> value arg]} {
-						# (Bug 1413845) Predefined variables are invoked as
-						# __VAR__ but the user can also have variables
-						# using this scheme, so we must check. The former
-						# would be in the plc_predef array and the latter
-						# in the plc_def array. If a user variable
-						# conflicts with a predefined one, the new var
-						# overwrites the old one and a warning is issued.
-						set strip ""
-						set stripped [regexp "^__(.+)__$" $value -> strip]
-						if {$stripped && [info exists plc_predef($strip)]} {
-							puts "#warning: macro '$value' is overwriting the predefined variable '$strip'"
-							set plc_predef($strip) ""
-							# Replace outer single quotes (if any) by double quotes
-							regsub "^'(.*)'$" $arg "\"\\1\"" arg
-							foreach a $arg {
-								append plc_predef($strip) [plc::substitute $a]
-							} 
-						} elseif {[info exists plc_def($value)]} {
-							error "macro '$value' already defined"
-						} elseif {[info exists plc_predef($value)]} {
-							error "macro '$value' conflicts with predefined macro"
-						} else {
-							set plc_def($value) ""
-							# Replace outer single quotes (if any) by double quotes
-							regsub "^'(.*)'$" $arg "\"\\1\"" arg
-							foreach a $arg {
-								append plc_def($value) [plc::substitute $a]
-							} 
-						}
+						plc::defineMacro $value $arg
 					} 
 				}
 				"undef" {
 					if {[regexp {\w+} $definition value]} {
-						if {[info exists plc_predef($value)]} {
+						if {[info exists plc_int($value)]} {
 							error "can't undef predefined macro '$value'"
 						} 
 						unset -nocomplain plc_def($value)
@@ -562,7 +536,7 @@ proc plc::processInclude {name} {
 }
 
 proc plc::parsePragma {name value} {
-	global plc plc_predef
+	global plc plc_int
 	# Pragmas are not allowed inside a 'plist' or 'localize' block
 	if {$plc(parsing)} {
 		error "illegal '#$name' pragma in plist block"
@@ -575,7 +549,7 @@ proc plc::parsePragma {name value} {
 			set plc(output_encoding) $value
 		}
 		"plist_version" {
-			set plc_predef(PLIST) $value
+			set plc_int(__PLIST__) $value
 		}
 		"escape_entities" {
 			 if {$value eq "on"} {
@@ -587,9 +561,11 @@ proc plc::parsePragma {name value} {
 		}
 		"output_filename" 
 		- "in_package_directory" 
-		- "localize_directory" 
-		- "output_eol" {
-				set plc($name) $value
+		- "localize_directory" {
+			set plc($name) $value
+		}
+		"output_eol" {
+			plc::setEol $name $value
 		}
 		"mark" {
 			# Silently ignored
@@ -606,12 +582,9 @@ proc plc::parsePragma {name value} {
 }
 
 proc plc::parsePlist {args} {
-	global plc plc_predef
+	global plc plc_int
 	plc::checkContext plist
 	set outfolder [file normalize [file join $plc(output_folder) $plc(in_package_directory)]]
-	if {![file exists $outfolder]} {
-		file mkdir $outfolder
-	} 
 	# See if a custom name has been declared by an output_filename pragma
 	# (or, since version 0.5, by an -o option on the command line)
 	if {[info exists plc(output_filename)] && $plc(output_filename) ne ""} {
@@ -620,11 +593,9 @@ proc plc::parsePlist {args} {
 	} else {
 		set outname "Info.plist"
 	}
-	set outfile [file join $outfolder $outname]
-	set plc(outid) [open $outfile w+]
-	fconfigure $plc(outid) -encoding $plc(output_encoding) -translation $plc(output_eol)
+	plc::openOutFile [file join $outfolder $outname]
 	plc::writePreamble
-	plc::writeTag "plist version=\"$plc_predef(PLIST)\"" 
+	plc::writeTag "plist version=\"$plc_int(__PLIST__)\"" 
 	plc::contextStart "plist"
 }
 
@@ -655,7 +626,7 @@ proc plc::parseString {args} {
 	} 
 	
 	if {$plc(localizing)} {
-		plc::writeOut "\"$value\";\r"
+		plc::writeOut "\"$value\";\n"
 	} else {
 		plc::writeTag string
 		plc::writeOut $value
@@ -759,7 +730,7 @@ proc plc::parseComment {args} {
 		foreach a $args {
 			append value [plc::substitute $a]
 		} 
-		set txt "/* $value */\r"
+		set txt "/* $value */\n"
 		plc::writeOut $txt
 	} else {
 		error "illegal 'comment' keyword in $context block"
@@ -776,9 +747,6 @@ proc plc::parseLocalize {args} {
 	} else {
 		error "no language specified with 'localize' keyword"
 	}
-	if {![file exists $outfolder]} {
-		file mkdir $outfolder
-	} 
 	# Look for more arguments ('localize as "language"')
 	set outname ""
 	if {[lindex $args 1] eq "as"} {
@@ -792,9 +760,7 @@ proc plc::parseLocalize {args} {
 			set outname "InfoPlist.strings"
 		}
 	} 	
-	set outfile [file join $outfolder $outname]
-	set plc(outid) [open $outfile w+]
-	fconfigure $plc(outid) -encoding $plc(output_encoding) -translation $plc(output_eol)
+	plc::openOutFile [file join $outfolder $outname]
 	plc::contextStart "localize"
 }
 
@@ -804,19 +770,26 @@ proc plc::quote {item} {
 }
 
 proc plc::substitute {item} {
-	global plc plc_def plc_predef
+	global plc plc_def plc_int env
 	set result ""
-	set var $item
-	set strip $item
-	set stripped [regexp "^__(.+)__$" $var -> strip]
-	if {$strip eq "FILE"} {
+	if {$item eq "__FILE__"} {
 		append result [file tail $plc(input_file)]
-	} elseif {$stripped && [info exists plc_predef($strip)]} {
-		append result $plc_predef($strip)
-	} elseif {[info exists plc_def($var)]} {
-		append result $plc_def($var)
+	} elseif {[info exists plc_int($item)]} {
+		append result $plc_int($item)
+	} elseif {[info exists plc_def($item)]} {
+		append result $plc_def($item)
 	} else {
-		append result $item
+		set strip ""
+		set stripped [regexp "^__(.+)__$" $item -> strip]
+		if {$stripped && [info exists env($strip)]} {
+			# This is for compatibility with versions of plcompile <= 0.5: to
+			# dereference an inherited variable, one had to enclose it between
+			# double underscores.
+			puts "Warning: $strip substitution: inherited variables do not have to be enclosed in double underscores anymore since vs 0.6"
+			append result $env($strip)
+		} else {
+			append result $item
+		}
 	}
 	return $result
 }
@@ -832,10 +805,10 @@ proc plc::contextEnd {what} {
 	set curr [lrange $plc(context) end end]
 	set plc(context) [lreplace $plc(context) end end]
 	incr plc(contextlevel) -1
-	if {$curr ne "localize"} {
+	if {$curr ne "localize" && $curr ne "pkginfo"} {
 		plc::writeTag $curr close 1
 	} 
-	if {$curr eq "plist" || $curr eq "localize"} {
+	if {$curr eq "plist" || $curr eq "localize" || $curr eq "pkginfo"} {
 		close $plc(outid)
 		set plc(parsing) 0
 		set plc(localizing) 0
@@ -850,6 +823,16 @@ proc plc::checkContext {what} {
 	} else {
 		set plc(parsing) 1
 	}
+}
+
+proc plc::openOutFile {outfile} {
+	global plc
+	set outfolder [file dir $outfile]
+	if {![file exists $outfolder]} {
+		file mkdir $outfolder
+	} 
+	set plc(outid) [open $outfile w+]
+	fconfigure $plc(outid) -encoding $plc(output_encoding) -translation $plc(output_eol)
 }
 
 proc plc::writeOut {txt} {
@@ -887,15 +870,60 @@ proc plc::writePreamble {} {
 	if {$enc eq "UNICODE"} {
 		set enc "UTF-16"
 	} 
-	set preamble "<?xml version=\"1.0\" encoding=\"$enc\"?>\r"
+	puts $plc(outid) "<?xml version=\"1.0\" encoding=\"$enc\"?>"
 	# <!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-	append preamble "<!DOCTYPE plist SYSTEM \"file://localhost/System/Library/DTDs/PropertyList.dtd\">"
-	puts $plc(outid) $preamble
+	puts $plc(outid) "<!DOCTYPE plist SYSTEM \"file://localhost/System/Library/DTDs/PropertyList.dtd\">"
 }
 
 proc plc::indent {} {
 	global plc
 	return [string repeat \t $plc(contextlevel)]
+}
+
+proc plc::setEol {name value} {
+	global plc
+	if {[lsearch $plc(eols) $value] == -1} {
+		error "wrong value '$value' for $name. Should be one of [join $plc(eols) ", "]."
+	} 
+	set plc($name) $value
+}
+
+# (Bug 1413845) Predefined internal variables are invoked as __VAR__ but
+# the user can also have variables using this scheme, so we must be
+# careful. The former would be in the plc_int array and the latter in the
+# plc_def array. If a user variable conflicts with a predefined one, the
+# new var overwrites the old one and a warning is issued.
+proc plc::defineMacro {name value} {
+	global plc_def plc_int env
+
+	if {[info exists plc_def($name)]} {
+		if {[info exists env($name)]} {
+			error "macro '$name' conflicts with inherited variable"
+		} else {
+			error "macro '$name' already defined"
+		}
+	} else {
+		# Replace outer single quotes (if any) by double quotes
+		regsub "^'(.*)'$" $value "\"\\1\"" value
+		if {[info exists plc_int($name)]} {
+			puts "Warning: macro definition of '$name' is overwriting a predefined variable"
+			set arr plc_int
+		} else {
+			set arr plc_def
+		} 
+		set [set arr]($name) ""
+		foreach a $value {
+			append [set arr]($name) [plc::substitute $a]
+		} 
+	}
+}
+
+proc plc::resolveFile {name} {
+	set result [file normalize $name]
+	if {[file type $result] eq "link" && ![catch {file readlink $result} trgt]} {
+		set result $trgt
+	} 
+	return $result
 }
 
 proc plc::encodeBase64 {hexstring} {
@@ -911,7 +939,7 @@ proc plc::encodeBase64 {hexstring} {
 	foreach {x y z} $X {
 		# Wrap if necessary
 		if {$plc(wraplen) && $length >= $plc(wraplen)} {
-			append result "\r"
+			append result "\n"
 			set length 0
 		}
 		
@@ -941,25 +969,58 @@ proc plc::encodeBase64 {hexstring} {
 }
 
 # Support for PkgInfo files introduced in vs 0.2.
-# Author: Franz Detro <franz.detro@native-instruments.de>
+# Author: Franz Detro <franz.detro@native-instruments.de> (thanks!)
 proc plc::generatePkgInfo {} {
-	global plc
-
-	foreach typ [list "type" "signature"] {
-		if {[string length $plc(bundle_$typ)] != 4} {
-			puts "Warning: $typ must be 4-chars long. Using '????' instead of '$plc(bundle_$typ)' in PkgInfo"
-			set plc(bundle_$typ) "????"
-		} 
-	} 
+	global plc env
+	if {[info exists env(GENERATE_PKGINFO_FILE)] && [plc::boolValue $env(GENERATE_PKGINFO_FILE)] == 1} {
+		error "you must turn off the 'Force Package Info Generation' setting in XCode to use the -pkginfo option"
+	} 	
+	# Get signature and type
+	plc::getInfoForPkg "signature" "MACOS_CREATOR"
+	plc::getInfoForPkg "type" "MACOS_TYPE"
+	# Create the file
 	set outfolder [file normalize [file join $plc(output_folder) $plc(in_package_directory)]]
-	if {![file exists $outfolder]} {
-		file mkdir $outfolder
+	plc::contextStart "pkginfo"
+	plc::openOutFile [file join $outfolder "PkgInfo"]
+	puts $plc(outid) "$plc(bundle_type)$plc(bundle_signature)"
+	plc::contextEnd "pkginfo"
+}
+
+proc plc::getInfoForPkg {kind macro} {
+	global plc plc_def env
+	
+	# The signature and type used for the PkgInfo file are computed like this:
+	# * if a PKGINFO_SIGNATURE or PKGINFO_TYPE preprocessor macro has
+	#   been defined in the plc file, use it
+	# * otherwise, if the CFBundleSignature and CFBundleType keys have
+	#   been specified, use their value (captured in parseString)
+	# * otherwise, if the MACOS_CREATOR and MACOS_TYPE variables have
+	#   been defined in XCode, use their value
+	# * as last resort, use "????"
+	if {[info exists plc_def(PKGINFO_[string toupper $kind])]} {
+		set plc(bundle_$kind) [set plc_def(PKGINFO_[string toupper $kind])]
+	} elseif {![info exists plc(bundle_$kind)]} {
+		if {[info exists env($macro)]} {
+			set plc(bundle_$kind) $env($macro)
+		} else {
+			set plc(bundle_$kind) "????"
+		}
 	} 
-	set outfile [file join $outfolder "PkgInfo"]
-	set pkgid [open $outfile w+]
-	fconfigure $pkgid -encoding $plc(output_encoding) -translation $plc(output_eol)
-	puts $pkgid "$plc(bundle_type)$plc(bundle_signature)"
-	close $pkgid
+	# Adjust string length
+	set len [string length $plc(bundle_$kind)]
+	if {$len == 4} {
+		return
+	} elseif {$len > 0 && $len < 4} {
+		# Padd with blanks
+		set plc(bundle_$kind) [format %-4s $plc(bundle_$kind)]
+		puts "Warning: $kind for PkgInfo is shorter than 4-chars. Padding with blanks ('$plc(bundle_$kind)')"
+	} elseif {$len > 4} {
+		set plc(bundle_$kind) [string range $plc(bundle_$kind) 0 3]
+		puts "Warning: $kind for PkgInfo is longer than 4-chars. Trimmed to '$plc(bundle_$kind)'"
+	} else {
+		set plc(bundle_$kind) "????"
+		puts "Warning: $kind for PkgInfo is empty. Using '????' instead"
+	}
 }
 
 # Usage proc
@@ -971,7 +1032,10 @@ proc plc::usage { {showAll 0} } {
 		puts "$script, version $plc(version)"
 		puts "Copyright (c) 2005-$year, Bernard Desgraupes <bdesgraupes@users.sourceforge.net>"
 	}
-	puts "Usage:\n\t$script \[-input_encoding <enc>\] \[-output_encoding <enc>\] \[-input_eol <eol>\] \[-output_eol <eol>\] \[-dest <folder>\] \[-o <name>\] \[-plist <version>\] \[-pkginfo\] plcFile"
+	set usage "Usage:\n\t$script \[-input_encoding <enc>\] \[-output_encoding <enc>\]\n"
+	append usage "\t\t\[-input_eol <eol>\] \[-output_eol <eol>\] \[-dest <folder>\] \[-o <name>\]\n"
+	append usage "\t\t\[-Dmacro\[=value\]...\] \[-plist <version>\] \[-pkginfo\] plcFile"
+	puts $usage
 	puts "\t$script (-help | -encodings | -version)\n"
 	if {$showAll} {
 		puts "Default for -input_encoding is macRoman"
@@ -982,6 +1046,17 @@ proc plc::usage { {showAll 0} } {
 		puts "Possible values for -plist: 0.9 and 1.0 (default is 1.0)"
 		puts "Use the -pkginfo option to also generate a PkgInfo file"
 	} 
+}
+
+proc plc::boolValue {str} {
+	set val [string tolower $str]
+	set result $str
+	if {$val eq "true" || $val eq "yes" || $val eq "y" || $val eq "on"} {
+		set result 1
+	} elseif {[string is integer $str]} {
+		set result [expr {$str != 0}]
+	}
+	return $result
 }
 
 
