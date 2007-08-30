@@ -1,9 +1,9 @@
 PList Compiler
-==============
+Version 0.6.
 
 PList Compiler is a property list compiler for XCode, Apple's development
 environment. It lets you build localized and non-localized plist files from
-plc and ploc source files. This is version 0.5.
+plc and ploc source files.
 
 PList Compiler is a script that you execute as a Shell Script Build Phase
 within your XCode project and which takes care of generating automatically
@@ -18,32 +18,33 @@ is the Tcl shell. Tcl is installed by default on OSX since version 10.3
 from this version, and there should be nothing special to do for this
 script to run there.
 
-The 0.5 release of PList Compiler is a fully functional release. It has
+The 0.6 release of PList Compiler is a fully functional release. It has
 been thoroughly tested but there is certainly room left for improvements.
 Thank you for sending feedback.
 
 A help file with complete documentation about the PLC syntax and
 instructions about the usage of the compiler in an XCode project is
 included in the distribution. You can also
-read it online. <http://webperso.easyconnect.fr/bdesgraupes/DocHTML/PListCompilerHelp.html> 
+read it online. 
+<http://perso.orange.fr/bdesgraupes/DocHTML/PListCompilerHelp.html> 
 
 PList Compiler is a free software. It is also an Open Source Project
 distributed under the same BSD License as the Tcl language itself: see the
-file License_terms in the distribution or the
-Open Source Initiative site. <http://www.opensource.org/licenses/bsd-license>
+file License_terms in the distribution or the Open Source Initiative site.
+<http://www.opensource.org/licenses/bsd-license>
 
 The official home page for the project is at SourceForge:
  <http://sourceforge.net/projects/plistcompiler>
 
-There is a users mailing list where any kind of problems about PList
-Compiler can be discussed.
+There is a users mailing list where any kind of problems about
+PList Compiler can be discussed. 
 Subscribe here <http://lists.sourceforge.net/lists/listinfo/plistcompiler-users>
 
 
 Please e-mail me any problem you encounter with this software:
  <bdesgraupes@users.sourceforge.net>
 
-(c) Copyright: Bernard Desgraupes, 2005-2006
+(c) Copyright: Bernard Desgraupes, 2005-2007
  All rights reserved.
 
-Last update 2006-11-04 15:04:17
+Last update 2007-08-30 16:20:02
