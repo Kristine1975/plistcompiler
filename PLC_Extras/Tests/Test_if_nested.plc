@@ -1,11 +1,11 @@
 // ===========================================================================
-// Test_ifdef.plc
+// Test_if_nested.plc
 //                       Created: 2005-10-03 06:28:51
-//             Last modification: 2005-10-07 11:48:56
+//             Last modification: 2007-08-30 10:06:03
 // Author: Bernard Desgraupes
 // e-mail: <bdesgraupes@users.sourceforge.net>
 // www: <http://sourceforge.net/projects/plistcompiler>
-// © Copyright: Bernard Desgraupes 2005-2006
+// (c) Copyright: Bernard Desgraupes 2005-2007
 // All rights reserved.
 // ===========================================================================
 
@@ -15,22 +15,23 @@
 #define kVersionSeven 7
 
 #define kCurrentVersion kVersionSix
+#warning "Setting kCurrentVersion to " kCurrentVersion
 
 
 
 #if kCurrentVersion == kVersionSeven 
 
-#warning "Current version is kVersionSeven"
+	#warning "Current version is kVersionSeven"
 
 #else
 
-#warning "Current version is not kVersionSeven"
+#warning "Current version is not " kVersionSeven
 
-#if kCurrentVersion <= kVersionFive 
-#warning "Current version <= kVersionFive"
-#else
-#warning "Current version > kVersionFive"
-#endif
+	#if kCurrentVersion <= kVersionFive 
+		#warning "Current version is <= " kVersionFive
+	#else
+		#warning "Current version is > " kVersionFive
+	#endif
 
 #endif
 

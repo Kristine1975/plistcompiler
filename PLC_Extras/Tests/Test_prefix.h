@@ -1,28 +1,32 @@
 // ===========================================================================
 // Test_prefix.h
 //                       Created: 2006-11-04 18:16:25
-//             Last modification: 2006-11-05 09:12:10
+//             Last modification: 2007-08-30 14:38:07
 // Author: Bernard Desgraupes
 // e-mail: <bdesgraupes@users.sourceforge.net>
 // www: <http://sourceforge.net/projects/plistcompiler>
-// (c) Copyright: Bernard Desgraupes 2006
+// (c) Copyright: Bernard Desgraupes 2006-2007
 // All rights reserved.
 // ===========================================================================
 // This is a prefix file to test the -prefix command line option introduced
 // in version 0.5 of PList Compiler.
 // 
 // This must be tested from the command line:
-//     ./plcompile -prefix $prefixFile $srcfile
+//     plcompile -prefix Test_prefix.h Test_prefix.plc
+//     
+// Prefix files can also be soft links. This can be tested with the
+// Test_link_prefix.h file which is a soft link to the present file.
+//     plcompile -prefix Test_link_prefix.h Test_prefix.plc
 
 
 #define PLC_Identifier "net.sourceforge.plistcompiler"
 
 #define PREFIX_FILE_FOUND  1
 
-#pragma output_filename "property.list"
+#pragma output_filename "prefix.list"
 
 #if __YEAR__ > 2000
-#define TWENTY_FIRST_CENTURY
+#define TWENTY_FIRST_CENTURY "21st century"
 #endif
 
 #ifdef TWENTY_FIRST_CENTURY
@@ -44,13 +48,16 @@
 #pragma section pintab end
 
 
-/* Some instructions that PLC does not understand */
+/* Deliberately putting instructions that PLC does not understand */
 
 // Note;
-// the double underscores are needed here because we execute from the
-// command line and PLC_DEBUG should be defined therefrom:
+// PLC_DEBUG should be defined in the shell:
 //     export PLC_DEBUG=1
-#if __PLC_DEBUG__ == 1
+//     
+// If it is set to 1, errors will follow
+// If it is set to 0, processing should be ok
+
+#if PLC_DEBUG == 1
 	#ifdef __cplusplus
 	extern "C" {
 	#endif
