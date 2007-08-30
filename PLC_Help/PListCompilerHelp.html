@@ -11,7 +11,7 @@
 It is developed as an <I>Open Source</I> project coming with a BSD
 License. The source code is currently hosted and developed on the 
 <A HREF="http://sourceforge.net/projects/plistcompiler">SourceForge site.</A>
-<P> This file documents version 0.5 of PList Compiler.
+<P> This file documents version 0.6 of PList Compiler.
 </I></P></BLOCKQUOTE><HR><P><UL>
 <LI><A HREF="#M1">Introduction</A>
 <LI><A HREF="#M2">Usage</A>
@@ -59,11 +59,12 @@ License. The source code is currently hosted and developed on the
 <UL><LI><A HREF="#M44">XCode environment variables</A></UL>
 <UL><LI><A HREF="#M45">Unsupported variables</A></UL>
 <LI><A HREF="#M46">Unicode characters</A>
-<LI><A HREF="#M47">Advanced topics</A>
-<LI><A HREF="#M48">Download</A>
-<LI><A HREF="#M49">Known problems</A>
-<LI><A HREF="#M50">Version history</A>
-<LI><A HREF="#M51">License and disclaimer</A>
+<LI><A HREF="#M47">Pkginfo file</A>
+<LI><A HREF="#M48">Advanced topics</A>
+<LI><A HREF="#M49">Download</A>
+<LI><A HREF="#M50">Known problems</A>
+<LI><A HREF="#M51">Version history</A>
+<LI><A HREF="#M52">License and disclaimer</A>
 </UL>
 <H2><A NAME="M1"></A>Introduction</H2><P><B>PList Compiler</B> is a property list compiler for XCode. It lets you build
 localized and non-localized plist files from plc and ploc source files. 
@@ -131,7 +132,7 @@ command line or pragmas in the source files. See the
 <PRE>
     plcompile [-input_encoding enc] [-output_encoding enc] [-input_eol eol] 
                     [-output_eol eol] [-dest folder] [-o name] [-plist version] 
-					[-prefix file] [-pkginfo] plcFile
+					[-prefix file] [-Dmacro[=value]...] [-pkginfo] plcFile
 </PRE><P>The options have the following meaning:
 <UL>
 	<LI> the <I>-input_encoding</I> option lets you specify in which encoding the 
@@ -152,13 +153,16 @@ you need to specify a destination folder and use the <I>-o</I> option only
 to specify the name.<P>	<LI> the <I>-plist</I> option lets you specify the version of the plist
 XML format (0.9 or 1.0). The default value is 1.0.<P>	<LI> the <I>-pkginfo</I> option asks <I>PList Compiler</I> to also
 generate a <I>PkgInfo</I> file in the same folder as the <I>Info.plist</I> 
-file. This can be useful because, when you turn off the plist stuff in
-Xcode, it stops generating itself the <I>PkgInfo</I> file.<P>	<LI> the <I>-prefix</I> option asks <I>PList Compiler</I> to read a 
+file. See the <A HREF="#pkginfo"> Pkginfo file</A> section below.<P>	<LI> the <I>-prefix</I> option asks <I>PList Compiler</I> to read a 
 prefix file before starting its processing. The prefix file should contain 
 only preprocessor macro declarations and pragmas which can be understood by the 
 compiler. The file path specified by this option can be either absolute or 
-relative to the current working directory.
-</UL><P><B>Note:</B> 
+relative to the current working directory.<P>	<LI> the <I>-D</I> option lets you define preprocessor macros directly
+from the command line (rather than with a <I>#define</I> instruction in
+the <I>plc</I> file). The syntax is exactly the same as with compilers
+like <B>cc</B> or <B>gcc</B>: either <I>-Dmacro</I> to simply define a
+macro or <I>-Dmacro=value</I> to define it and attribute a value. There
+can be as many <I>-D</I> options as necessary.<P></UL><P><B>Note:</B> 
 <UL>
 	<LI> the <I>-pkginfo</I> option has been introduced in version 0.2 of <I>PList Compiler</I>
 by <A HREF="mailto:franz.detro@native-instruments.de"> Franz Detro</A> (thanks).
@@ -169,6 +173,8 @@ patch 1474228 contributed by
 feature request made in the 
 <A HREF="http://sourceforge.net/tracker/?group_id=149940"> <I>PList Compiler</I> tracker</A>
 at SourceForge (RFE 1461559).
+	<LI> the <I>-D</I> option has been introduced in version 0.6. It is a
+feature request made privately.
 </UL><P><H2><A NAME="M5"></A>Howto</H2><P><H3><A NAME="M6"></A>Using PList Compiler in an XCode project</H3><P>The idea is to generate the various plist files and localized strings
 files during a <I>Shell Script Build Phase</I> within your XCode project. 
 XCode lets you define <I>Shell Script Build Phases</I>: they are shell
@@ -201,7 +207,10 @@ script there, like this:
         cd /Users/bernardo/Devel/Tools
         ./plcompile  /path/to/MyApp.plc
 </PRE>
-supposing, in the previous example, that <B>plcompile</B> resides in <I>/Users/bernardo/Devel/Tools</I>.<P><H3><A NAME="M7"></A>Using PList Compiler in Terminal</H3><P>The <I>plcompile</I> script can be used directly from the command line (in
+supposing, in the previous example, that <B>plcompile</B> resides in <I>/Users/bernardo/Devel/Tools</I>.<P><P> Since version 0.6, <B>PList Compiler</B> supports symbolic links to
+designate the plc file. This also applies to prefix files specified with
+the <I>-prefix</I> option. Note that this concerns Unix symbolic links
+(created with the <I>ln</I> command) but not Finder aliases.<P><H3><A NAME="M7"></A>Using PList Compiler in Terminal</H3><P>The <I>plcompile</I> script can be used directly from the command line (in
 a Terminal window). There is only one caveat with this approach: only the
 environment variables defined in the current shell window are available.
 This means that you must make sure, if ever your plc file makes use of
@@ -260,8 +269,13 @@ file. An <I>Info.plist</I> file is an XML document. The format of the plist file
 is specified by Apple in a DTD which can be found in 
 <I>/System/Library/DTDs/PropertyList.dtd</I>.
 For a detailed description of property list files, see for instance
-<A HREF="http://developer.apple.com/documentation/CoreFoundation/Conceptual/CFPropertyLists/index.html"> Introduction to Property Lists</A><P>All the commands must be kept on a separate line (but not necessarily at the 
-beginning of the line).<P><H4><A NAME="M12"></A>The 'plist' command</H4><P>The first command found in a <I>.plc</I> file designed to generate a .plist file
+<A HREF="http://developer.apple.com/documentation/CoreFoundation/Conceptual/CFPropertyLists/index.html"> Introduction to Property Lists</A><P>All the commands must be kept on a separate line (but not necessarily at
+the beginning of the line). Since version 0.6, one can use a backslash at
+the end of a line as a line continuator. If a backslash is found as the
+last character of a line, it is interpreted as a line continuation
+character: it is removed and the next line is concatenated to the previous
+one after any initial spaces have been trimmed. This can be useful in order
+to break very long strings on several lines.<P><H4><A NAME="M12"></A>The 'plist' command</H4><P>The first command found in a <I>.plc</I> file designed to generate a .plist file
 is always the <I>plist</I> command. Its argument is a block enclosed
 inside a pair of curly braces. A minimal property list file,
 describing a completely empty property list, would look like this:
@@ -727,12 +741,13 @@ line of the <B>plcompile</B> shell script.
 <PRE>
     #pragma output_eol lf
 </PRE><P><H4><A NAME="M39"></A>The 'output_encoding' pragma</H4>
-The <I>output_eol</I> pragma lets you specify another encoding
-for the output files. The possible values are listed when you execute the 
-command:
+The <I>output_encoding</I> pragma lets you specify another encoding for
+the output files. The possible encodings are listed by the command:
 <PRE>
-    plcompile -help
-</PRE><P>You would normally be interested only in the utf-8 and utf-16 encoding forms 
+    plcompile -encodings
+</PRE>
+which currently returns:
+<P> <I>ascii, big5, cp1250, cp1251, cp1252, cp1253, cp1254, cp1255, cp1256, cp1257, cp1258, cp437, cp737, cp775, cp850, cp852, cp855, cp857, cp860, cp861, cp862, cp863, cp864, cp865, cp866, cp869, cp874, cp932, cp936, cp949, cp950, dingbats, ebcdic, euc-cn, euc-jp, euc-kr, gb12345, gb1988, gb2312, gb2312-raw, identity, iso2022, iso2022-jp, iso2022-kr, iso8859-1, iso8859-10, iso8859-13, iso8859-14, iso8859-15, iso8859-16, iso8859-2, iso8859-3, iso8859-4, iso8859-5, iso8859-6, iso8859-7, iso8859-8, iso8859-9, jis0201, jis0208, jis0212, koi8-r, koi8-u, ksc5601, macCentEuro, macCroatian, macCyrillic, macDingbats, macGreek, macIceland, macJapan, macRoman, macRomania, macThai, macTurkish, macUkraine, shiftjis, symbol, tis-620, unicode, utf-8</I><P><P> You would normally be interested only in the utf-8 and utf-16 encoding forms 
 which are the only encodings recognized for property list files. <B>PList 
 Compiler</B> is able though to handle all the other encodings.<P>This pragma is useful to override a setting made with the 
 <I>-output_encoding</I> option on the command line of the <B>plcompile</B>
@@ -763,14 +778,9 @@ equivalently <I>off</I> or <I>on</I> (default is 1).<P>For instance, to turn esc
 </PRE><P><H2><A NAME="M42"></A>Substitutable variables</H2><P>Substitutable variables are variables whose value is inserted when the
 script is run. These variables can be defined via a <I>#define</I>
 preprocessor macro in the plc file, or as a shell variable in the shell
-environment. There are also some useful predefined variables set by the plc
-compiler itself.<P>To invoke a variable defined in the shell environment, you must surround it with 
-double underscores. This applies in particular to all 
-the variables available in an XCode project, but not only: ordinary shell 
-environment variables, such as <TT>USER</TT>, <TT>DISPLAY</TT>, <TT>SHELL</TT>, 
-etc. are also accessible as <TT>__USER__</TT>, <TT>__DISPLAY__</TT>, 
-<TT>__SHELL__</TT>, respectively.<P>Variables defined with a <I>#define</I> macro can be invoked directly 
-(without the double underscores). For 
+environment, or with the <I>-D</I> option directly on the command line.
+There are also some useful predefined variables set by the plc compiler
+itself.<P>Variables defined with a <I>#define</I> macro can be invoked directly. For 
 instance, if you define
 <PRE>
     #define kBundleShortVersion "1.2.3"
@@ -778,11 +788,13 @@ instance, if you define
 you can then have a key in the <I>plist</I> dictionary declared like this
 <PRE>
     key "CFBundleVersion" value string kBundleShortVersion
-</PRE><P>For variables which can be set at different levels, the order of precedence
-is the following: an option set by a <I>#define</I> directive or modified
-by a <I>#pragma</I> directive in the plc source file overrides any option
-set on the command line which, in turn, overrides an option set by a shell
-environment variable.<P><H3><A NAME="M43"></A>Predefined variables</H3><P>A few predefined variables are set each time the <B>plcompile</B> script is 
+</PRE><P><B>Note:</B>
+<P> In versions older than 0.6, in order to invoke a variable defined in
+the shell environment or inherited from XCode, one had to surround it with
+double underscores (like __USER__ instead of USER). It is not the case
+anymore since version 0.6. For backward compatibility, <B>PList Compiler</B> will still check if a variable surrounded by double underscores is an
+inherited variable but you should update your plc files if you were using
+this old (and confusing) convention.<P><H3><A NAME="M43"></A>Predefined variables</H3><P>A few predefined variables are set each time the <B>plcompile</B> script is 
 run. <P>The five following variables existed in the CodeWarrior property list
 compiler. They are still available with <B>PList Compiler</B> in order to
 ensure some compatibility with already existing plc files (and because they
@@ -838,37 +850,25 @@ The seconds part of the TIME string.</DL>
     __MINUTES__   = 54
     __SECONDS__   = 36
 </PRE><P><H3><A NAME="M44"></A>XCode environment variables</H3><P>All the environment variables set by an XCode project are accessible with
-<B>PList Compiler</B>. See the XCode documentation for a complete list.
-The syntax is the same as for the predefined variables: the name of the
-environment variable must be surrounded by double underscores. For
-instance, if you want to invoke the value of the <TT>INFOPLIST_PATH</TT>
-variable defined in an XCode project, you would write it as 
-<TT>__INFOPLIST_PATH__</TT> in the plc file. For instance
+<B>PList Compiler</B>. See the XCode documentation for a complete list. For instance
 <PRE>
-    key "InfoPlistPath" value string __INFOPLIST_PATH__
+    key "InfoPlistPath" value string INFOPLIST_PATH
 </PRE><P>Some of these variables are set by XCode itself (they are generally meant
 to be read-only variables) while the others can be set in the info window
-or a particular target. The name of a variable corresponding to a
+of a particular target. Tip: the name of a variable corresponding to a
 particular setting is always indicated by XCode between parentheses in the
 help text displayed when you select this setting in a Target Info window.<P><P> <B>Remark:</B> 
-<P> the double underscores are a convention to dereference the environment
-variables but their real name does not contain these underscores and is
-simply something like INFOPLIST_PATH, DEPLOYMENT_LOCATION, etc. This is
-important if you use them in <I>#ifdef</I> or <I>#ifndef</I> statements.
-Here is an example illustrating the difference:
-<PRE>
-    #ifdef INFOPLIST_PATH
-        #warning "Info.plist is located in " __INFOPLIST_PATH__
-    #endif
-</PRE>
-This remark applies to the <I>PList Compiler</I> predefined variables as 
-well, like DATE, SHORTDATE, etc.<P>This implies that you cannot define a macro with the same name as a
-predefined or an environment variable: <I>PList Compiler</I> would raise
-an error in that case. But it is possible to define a macro named __YEAR__
-for instance: the result will be a <I>redefinition</I> of the predefined
-macro YEAR. <I>PList Compiler</I> will just emit a warning to notify about
-this situation.<P>It is not possible to undefine an existing predefined or environment macro
-with <I>#undef</I>. <I>PList Compiler</I> raises an error in that case.<P><H3><A NAME="M45"></A>Unsupported variables</H3><P>A few predefined variables available in the CodeWarrior property list 
+<OL>
+	<LI> since version 0.6, it is not necessary anymore to enclose inherited
+variables in double underscores in order to dereference them. See the note 
+above in the <I>Substitutable variables</I> section.<P>	<LI> one cannot define a macro with the same name as an inherited
+environment variable or an already existing macro: <I>PList Compiler</I>
+will raise an error in that case. But it is possible to define a macro with
+the same name as a predefined variable, like <I>__YEAR__</I> for instance:
+the result will be a <I>redefinition</I> of the predefined internal
+variable <I>__YEAR__</I>. <I>PList Compiler</I> will just emit a warning
+to notify about this situation.<P>	<LI> it is not possible to undefine a predefined variable with <I>#undef</I>.
+<I>PList Compiler</I> raises an error in that case.<P></OL><P><H3><A NAME="M45"></A>Unsupported variables</H3><P>A few predefined variables available in the CodeWarrior property list 
 compiler are not supported by <B>PList Compiler</B>. This is mainly because they 
 are specific to the CodeWarrior IDE and have no meaning with XCode. Here 
 is the list of these variables:
@@ -905,10 +905,31 @@ A string can thus be defined like this
     	key "UniString1" value string "\u03B1 \u03B2 \u03B3 \u03B4 \u03B5 \u03B6 \u03B7 \u03B8 \u03B9"
 </PRE>
 and will produce:
-<P><IMG SRC="Images/plc_greekletters.jpg" ALT="String with greek letters" ALIGN=bottom></P><P><B>Note:</B> the sequence to designate Unicode characters is <TT>\u</TT> with a 
+<BLOCKQUOTE><P><I> 
+<P> &lt;key&gt;UniString1&lt;/key&gt;
+<P> &lt;string&gt;&#945;&nbsp;&#946;&nbsp;&#947;&nbsp;&#948;&nbsp;&#949;&nbsp;&#950;&nbsp;&#951;&nbsp;&#952;&nbsp;&#953;&lt;/string&gt;
+</I></P></BLOCKQUOTE><P><B>Note:</B> the escape sequence to designate Unicode characters is <TT>\u</TT> with a 
 <I>lowercase u</I>. This is a difference with the CodeWarrior property
-list compiler which used \U.<P><A NAME="advanced"></A>
-<H2><A NAME="M47"></A>Advanced topics</H2><P>Since <B>PList Compiler</B> is written in <A HREF="http://wiki.tcl.tk/"> Tcl</A>, 
+list compiler which used \U.<P><A NAME="pkginfo"></A>
+<H2><A NAME="M47"></A>Pkginfo file</H2><P>With the <I>-pkginfo</I> command line option, one can ask <I>PList
+Compiler</I> to generate a <I>PkgInfo</I> file containing the type and
+signature of the product. This file will be located in the same folder as
+the <I>Info.plist</I> file. The type and signature are computed like this:
+<UL>
+	<LI> if <TT>PKGINFO_SIGNATURE</TT> and <TT>PKGINFO_TYPE</TT> preprocessor
+macros have been defined in the <I>plc</I> file or in a prefix file, 
+use them. Defining <TT>PKGINFO_SIGNATURE</TT> and <TT>PKGINFO_TYPE</TT> 
+macros let you override any other setting.<P>	<LI> otherwise, if the <I>CFBundleSignature</I> and <I>CFBundleType</I>
+keys have been specified in the <I>plc</I> file, use their value<P>	<LI> otherwise, if the <TT>MACOS_CREATOR</TT> and <TT>MACOS_TYPE</TT>
+variables have been defined in XCode and are not empty, use their value<P>	<LI> as last resort, if the previous failed, use <I>"????"</I>
+</UL><P>If the type or the signature are shorter than four characters, they are
+padded with blanks. On the contrary, if the string is longer than four
+characters, it is trimmed.<P><B>Caveat:</B>
+in order to use the <I>-pkginfo</I> option, the <I>Force Package Info
+Generation</I> setting in XCode must be off. If it is on, <I>PList
+Compiler</I> will raise an error and will not generate the <I>PkgInfo</I>
+file.<P><A NAME="advanced"></A>
+<H2><A NAME="M48"></A>Advanced topics</H2><P>Since <B>PList Compiler</B> is written in <A HREF="http://wiki.tcl.tk/"> Tcl</A>, 
 it is possible to introduce some Tcl code in the <I>#if</I> conditions.
 One could for instance let an instruction depend on the existence of some
 file like this:
@@ -935,7 +956,7 @@ substitutable variables. For instance:
     #else
         #warning "file does not exist: " SOME_FILE
     #endif
-</PRE><P><H2><A NAME="M48"></A>Download</H2>
+</PRE><P><H2><A NAME="M49"></A>Download</H2>
 <B>PList Compiler</B> is an <I>Open Source Project</I>. Its source code
 is freely available and can be found on the SourceForge site at the
 following address:
@@ -943,10 +964,10 @@ following address:
 <P> <A HREF="http://sourceforge.net/project/showfiles.php?group_id=149940">http://sourceforge.net/project/showfiles.php?group_id=149940</A> 
 <P> or on my web 
 page at 
-<P> <A HREF="http://perso.orange.fr/bdesgraupes/DocHTML/plistcompiler.html">http://perso.orange.fr/bdesgraupes/DocHTML/plistcompiler.html</A><P><P> The code is under CVS control. You can retrieve the latest stage of 
-development using any CVS client. See instructions at:
-<P> <A HREF="http://sourceforge.net/cvs/?group_id=149940">http://sourceforge.net/cvs/?group_id=149940</A><P><P> You can browse the cvs repository online at
-<P> <A HREF="http://cvs.sourceforge.net/cgi-bin/viewcvs.cgi/plistcompiler">http://cvs.sourceforge.net/cgi-bin/viewcvs.cgi/plistcompiler</A> <P><H2><A NAME="M49"></A>Known problems</H2>
+<P> <A HREF="http://perso.orange.fr/bdesgraupes/DocHTML/plistcompiler.html">http://perso.orange.fr/bdesgraupes/DocHTML/plistcompiler.html</A><P><P> The code is under Subversion control. You can retrieve the latest stage of 
+development using any Subversion client. See instructions at:
+<P> <A HREF="http://sourceforge.net/svn/?group_id=149940">http://sourceforge.net/svn/?group_id=149940</A><P><P> You can browse the Subversion repository online at
+<P> <A HREF="http://plistcompiler.svn.sourceforge.net/viewvc/plistcompiler">http://plistcompiler.svn.sourceforge.net/viewvc/plistcompiler</A> <P><H2><A NAME="M50"></A>Known problems</H2>
 <P> Please e-mail any problem or bug you encounter:
 <P> <A HREF="mailto:bdesgraupes@users.sourceforge.net">bdesgraupes@users.sourceforge.net</A>
 <P> Visit my Web page for updates and other recent builds:
@@ -958,9 +979,9 @@ versions will be announced on this list
 too. You can subscribe or unsubscribe from the following address:
 <P> <A HREF="http://lists.sourceforge.net/mailman/listinfo/plistcompiler-users">http://lists.sourceforge.net/mailman/listinfo/plistcompiler-users</A>
 To post to this list, send mail to
-<A HREF="mailto:plistcompiler-users@lists.sourceforge.net">plistcompiler-users@lists.sourceforge.net</A><P><H2><A NAME="M50"></A>Version history</H2>
+<A HREF="mailto:plistcompiler-users@lists.sourceforge.net">plistcompiler-users@lists.sourceforge.net</A><P><H2><A NAME="M51"></A>Version history</H2>
 For a detailed list of the changes, see the file <I>Changes_PLC</I> in 
-the CVS repository.
+the Subversion repository.
 <UL>
 	<LI> 2005-10-10 - 0.1b1 - First public beta release. Basic implementation.
 	<LI> 2005-10-12 - 0.1b2 - Fixed bug when #including pathname with whitespace.
@@ -979,10 +1000,14 @@ defined in XCode.
 slashes in strings. Fixed bug with user defined macros enclosed in double 
 underscores (Bug 1413845). Implements new -prefix option (RFE 1461559) and new 
 -o option (patch 1474228). New pragma escape_entities.
-</UL><P><H2><A NAME="M51"></A>License and disclaimer</H2><P><B>PList Compiler</B> is distributed under the same BSD License as
+	<LI> 2006-11-12 - 0.5.1 - Improved generation of Pkginfo file.
+	<LI> 2007-08-30 - 0.6 - New -D opiton to define macros on the command 
+line. Support for line continuator. Sym links resolution. Simplified 
+variable substitution. Minor fixes.
+</UL><P><H2><A NAME="M52"></A>License and disclaimer</H2><P><B>PList Compiler</B> is distributed under the same BSD License as
 the Tcl language itself: see the file <I>License_terms</I> in the distribution or 
 the <A HREF="http://www.opensource.org/licenses/bsd-license"> Open Source Initiative site.</A><P><HR>
-<P> Last updated 2006-11-06 17:28:56
+<P> Last updated 2007-08-30 15:33:56
 <!--  logo SF -->
 <!--  ------- -->
 <HR>

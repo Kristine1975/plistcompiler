@@ -1,11 +1,11 @@
 !! !! ===========================================================================
 !! !! PListCompilerHelp.aida
 !! !!                       Created: 2005-10-03 16:27:26
-!! !!             Last modification: 2006-11-04 14:37:06
+!! !!             Last modification: 2007-08-30 15:25:47
 !! !! Author: Bernard Desgraupes
 !! !! e-mail: <bdesgraupes@users.sourceforge.net>
 !! !! www: <http://sourceforge.net/projects/plistcompiler>
-!! !! © Copyright: Bernard Desgraupes 2003-2006
+!! !! (c) Copyright: Bernard Desgraupes 2003-2007
 !! !! All rights reserved.
 !! !! ===========================================================================
 
@@ -15,29 +15,36 @@
 :Author:      Bernard DESGRAUPES <bdesgraupes@users.sourceforge.net>
 :Homepage:    <http://sourceforge.net/projects/plistcompiler>
 :Created:     2005-10-03 16:27:26
-:Modified:    2006-11-04 14:37:06
+:Modified:    2007-08-30 15:25:47
 :Keywords:    property list, xcode, compiler
 :Source:      PlcAidaMacros.tcl
 :ManSection:	1
 
+
+!! !! ===================================
+((if $aida_target eq "Html" || $aida_target eq "SplitHtml"
+!! !! ===================================
 
 ((/
 ((b PList Compiler b)) is a property list compiler for XCode. 
 It is developed as an ((i Open Source i)) project coming with a BSD
 License. The source code is currently hosted and developed on the 
 ((lk http://sourceforge.net/projects/plistcompiler ))SourceForge site. lk))
-((nl This file documents version ((s [plc::getVersion] s)) of PList Compiler.
 /))
 
 ((toc
+!! !! ===================================
+if))
+!! !! ===================================
+((nl This file documents version ((s [plc::getVersion] s)) of PList Compiler.
 
 ((s1 Introduction
 
 
-((b PList Compiler b)) is a property list compiler for XCode. It lets you build
-localized and non-localized plist files from plc and ploc source files. 
-These are the property list files found in packages applications, bundles, 
-frameworks, plugins, etc.
+((b PList Compiler b)) is a property list compiler for XCode. It lets you
+build localized and non-localized plist files from plc and ploc source
+files. These are the property list files found in packages applications,
+bundles, frameworks, plugins, etc.
 
 
 It is modelled on the CodeWarrior property list language: the idea of
@@ -133,7 +140,7 @@ The complete syntax to run the compiler is:
 ((|
     plcompile [-input_encoding enc] [-output_encoding enc] [-input_eol eol] 
                     [-output_eol eol] [-dest folder] [-o name] [-plist version] 
-					[-prefix file] [-pkginfo] plcFile
+					[-prefix file] [-Dmacro[=value]...] [-pkginfo] plcFile
 |))
 
 The options have the following meaning:
@@ -172,14 +179,21 @@ XML format (0.9 or 1.0). The default value is 1.0.
 
 ((li the ((i -pkginfo i)) option asks ((i PList Compiler i)) to also
 generate a ((i PkgInfo i)) file in the same folder as the ((i Info.plist i)) 
-file. This can be useful because, when you turn off the plist stuff in
-Xcode, it stops generating itself the ((i PkgInfo i)) file.
+file. See the ((rf pkginfo )) Pkginfo file rf)) section below.
 
 ((li the ((i -prefix i)) option asks ((i PList Compiler i)) to read a 
 prefix file before starting its processing. The prefix file should contain 
 only preprocessor macro declarations and pragmas which can be understood by the 
 compiler. The file path specified by this option can be either absolute or 
 relative to the current working directory.
+
+((li the ((i -D i)) option lets you define preprocessor macros directly
+from the command line (rather than with a ((i #define i)) instruction in
+the ((i plc i)) file). The syntax is exactly the same as with compilers
+like ((b cc b)) or ((b gcc b)): either ((i -Dmacro i)) to simply define a
+macro or ((i -Dmacro=value i)) to define it and attribute a value. There
+can be as many ((i -D i)) options as necessary.
+
 lu))
 
 ((b Note: b)) 
@@ -193,6 +207,8 @@ patch 1474228 contributed by
 feature request made in the 
 ((lk http://sourceforge.net/tracker/?group_id=149940 )) ((i PList Compiler i)) tracker lk))
 at SourceForge (RFE 1461559).
+((li the ((i -D i)) option has been introduced in version 0.6. It is a
+feature request made privately.
 lu))
 
 
@@ -238,6 +254,11 @@ script there, like this:
         ./plcompile  /path/to/MyApp.plc
 |))
 supposing, in the previous example, that ((b plcompile b)) resides in ((i /Users/bernardo/Devel/Tools i)).
+
+((nl Since version 0.6, ((b PList Compiler b)) supports symbolic links to
+designate the plc file. This also applies to prefix files specified with
+the ((i -prefix i)) option. Note that this concerns Unix symbolic links
+(created with the ((i ln i)) command) but not Finder aliases.
 
 
 ((s2 Using PList Compiler in Terminal
@@ -340,8 +361,14 @@ is specified by Apple in a DTD which can be found in
 For a detailed description of property list files, see for instance
 ((lk http://developer.apple.com/documentation/CoreFoundation/Conceptual/CFPropertyLists/index.html )) Introduction to Property Lists lk))
 
-All the commands must be kept on a separate line (but not necessarily at the 
-beginning of the line).
+All the commands must be kept on a separate line (but not necessarily at
+the beginning of the line). Since version 0.6, one can use a backslash at
+the end of a line as a line continuator. If a backslash is found as the
+last character of a line, it is interpreted as a line continuation
+character: it is removed and the next line is concatenated to the previous
+one after any initial spaces have been trimmed. This can be useful in order
+to break very long strings on several lines.
+
 
 ((s3 The 'plist' command
 
@@ -1030,14 +1057,15 @@ line of the ((b plcompile b)) shell script.
 
 
 ((s3 The 'output_encoding' pragma
-The ((i output_eol i)) pragma lets you specify another encoding
-for the output files. The possible values are listed when you execute the 
-command:
+The ((i output_encoding i)) pragma lets you specify another encoding for
+the output files. The possible encodings are listed by the command:
 ((|
-    plcompile -help
+    plcompile -encodings
 |))
+which currently returns:
+((nl ((i ((s [join [lsort [encoding names]] ", "] s)) i))
 
-You would normally be interested only in the utf-8 and utf-16 encoding forms 
+((nl You would normally be interested only in the utf-8 and utf-16 encoding forms 
 which are the only encodings recognized for property list files. ((b PList 
 Compiler b)) is able though to handle all the other encodings.
 
@@ -1088,18 +1116,11 @@ For instance, to turn escaping off:
 Substitutable variables are variables whose value is inserted when the
 script is run. These variables can be defined via a ((i #define i))
 preprocessor macro in the plc file, or as a shell variable in the shell
-environment. There are also some useful predefined variables set by the plc
-compiler itself.
+environment, or with the ((i -D i)) option directly on the command line.
+There are also some useful predefined variables set by the plc compiler
+itself.
 
-To invoke a variable defined in the shell environment, you must surround it with 
-double underscores. This applies in particular to all 
-the variables available in an XCode project, but not only: ordinary shell 
-environment variables, such as ((v USER v)), ((v DISPLAY v)), ((v SHELL v)), 
-etc. are also accessible as ((v __USER__ v)), ((v __DISPLAY__ v)), 
-((v __SHELL__ v)), respectively.
-
-Variables defined with a ((i #define i)) macro can be invoked directly 
-(without the double underscores). For 
+Variables defined with a ((i #define i)) macro can be invoked directly. For 
 instance, if you define
 ((|
     #define kBundleShortVersion "1.2.3"
@@ -1109,11 +1130,15 @@ you can then have a key in the ((i plist i)) dictionary declared like this
     key "CFBundleVersion" value string kBundleShortVersion
 |))
 
-For variables which can be set at different levels, the order of precedence
-is the following: an option set by a ((i #define i)) directive or modified
-by a ((i #pragma i)) directive in the plc source file overrides any option
-set on the command line which, in turn, overrides an option set by a shell
-environment variable.
+
+((b Note: b))
+((nl In versions older than 0.6, in order to invoke a variable defined in
+the shell environment or inherited from XCode, one had to surround it with
+double underscores (like __USER__ instead of USER). It is not the case
+anymore since version 0.6. For backward compatibility, ((b PList Compiler
+b)) will still check if a variable surrounded by double underscores is an
+inherited variable but you should update your plc files if you were using
+this old (and confusing) convention.
 
 
 ((s2 Predefined variables
@@ -1216,45 +1241,41 @@ For instance:
 ((s2 XCode environment variables
 
 All the environment variables set by an XCode project are accessible with
-((b PList Compiler b)). See the XCode documentation for a complete list.
-The syntax is the same as for the predefined variables: the name of the
-environment variable must be surrounded by double underscores. For
-instance, if you want to invoke the value of the ((v INFOPLIST_PATH v))
-variable defined in an XCode project, you would write it as 
-((v __INFOPLIST_PATH__ v)) in the plc file. For instance
+((b PList Compiler b)). See the XCode documentation for a complete list. For instance
 ((|
-    key "InfoPlistPath" value string __INFOPLIST_PATH__
+    key "InfoPlistPath" value string INFOPLIST_PATH
 |))
 
 Some of these variables are set by XCode itself (they are generally meant
 to be read-only variables) while the others can be set in the info window
-or a particular target. The name of a variable corresponding to a
+of a particular target. Tip: the name of a variable corresponding to a
 particular setting is always indicated by XCode between parentheses in the
 help text displayed when you select this setting in a Target Info window.
 
 ((nl ((b Remark: b)) 
-((nl the double underscores are a convention to dereference the environment
-variables but their real name does not contain these underscores and is
-simply something like INFOPLIST_PATH, DEPLOYMENT_LOCATION, etc. This is
-important if you use them in ((i #ifdef i)) or ((i #ifndef i)) statements.
-Here is an example illustrating the difference:
-((|
-    #ifdef INFOPLIST_PATH
-        #warning "Info.plist is located in " __INFOPLIST_PATH__
-    #endif
-|))
-This remark applies to the ((i PList Compiler i)) predefined variables as 
-well, like DATE, SHORTDATE, etc.
+((lo
+((li since version 0.6, it is not necessary anymore to enclose inherited
+variables in double underscores in order to dereference them. See the note 
+above in the ((i Substitutable variables i)) section.
 
-This implies that you cannot define a macro with the same name as a
-predefined or an environment variable: ((i PList Compiler i)) would raise
-an error in that case. But it is possible to define a macro named __YEAR__
-for instance: the result will be a ((i redefinition i)) of the predefined
-macro YEAR. ((i PList Compiler i)) will just emit a warning to notify about
-this situation.
+((li one cannot define a macro with the same name as an inherited
+environment variable or an already existing macro: ((i PList Compiler i))
+will raise an error in that case. But it is possible to define a macro with
+the same name as a predefined variable, like ((i __YEAR__ i)) for instance:
+the result will be a ((i redefinition i)) of the predefined internal
+variable ((i __YEAR__ i)). ((i PList Compiler i)) will just emit a warning
+to notify about this situation.
 
-It is not possible to undefine an existing predefined or environment macro
-with ((i #undef i)). ((i PList Compiler i)) raises an error in that case.
+((li it is not possible to undefine a predefined variable with ((i #undef i)).
+((i PList Compiler i)) raises an error in that case.
+
+lo))
+
+!! !! ((|
+!! !!     #ifdef INFOPLIST_PATH
+!! !!         #warning "Info.plist is located in " __INFOPLIST_PATH__
+!! !!     #endif
+!! !! |))
 
 
 ((s2 Unsupported variables
@@ -1308,19 +1329,56 @@ A string can thus be defined like this
 ((if $aida_target eq "Html" || $aida_target eq "SplitHtml"
 !! !! ===================================
 and will produce:
-((im Images/plc_greekletters.jpg
-String with greek letters im))
+!! !! ((im Images/plc_greekletters.jpg
+!! !! String with greek letters im))
+((q 
+((nl <key>UniString1</key>
+((nl <string>&#945;&nbsp;&#946;&nbsp;&#947;&nbsp;&#948;&nbsp;&#949;&nbsp;&#950;&nbsp;&#951;&nbsp;&#952;&nbsp;&#953;</string>
+q))
 !! !! ===================================
 if))
 !! !! ===================================
 
-((b Note: b)) the sequence to designate Unicode characters is ((v \u v)) with a 
+((b Note: b)) the escape sequence to designate Unicode characters is ((v \u v)) with a 
 ((i lowercase u i)). This is a difference with the CodeWarrior property
 list compiler which used \U.
 
 
+((a pkginfo )) a))
+((s1 Pkginfo file
+
+With the ((i -pkginfo i)) command line option, one can ask ((i PList
+Compiler i)) to generate a ((i PkgInfo i)) file containing the type and
+signature of the product. This file will be located in the same folder as
+the ((i Info.plist i)) file. The type and signature are computed like this:
+((lu
+((li if ((v PKGINFO_SIGNATURE v)) and ((v PKGINFO_TYPE v)) preprocessor
+macros have been defined in the ((i plc i)) file or in a prefix file, 
+use them. Defining ((v PKGINFO_SIGNATURE v)) and ((v PKGINFO_TYPE v)) 
+macros let you override any other setting.
+
+((li otherwise, if the ((i CFBundleSignature i)) and ((i CFBundleType i))
+keys have been specified in the ((i plc i)) file, use their value
+
+((li otherwise, if the ((v MACOS_CREATOR v)) and ((v MACOS_TYPE v))
+variables have been defined in XCode and are not empty, use their value
+
+((li as last resort, if the previous failed, use ((i "????" i))
+lu))
+
+If the type or the signature are shorter than four characters, they are
+padded with blanks. On the contrary, if the string is longer than four
+characters, it is trimmed.
+
+((b Caveat: b))
+in order to use the ((i -pkginfo i)) option, the ((i Force Package Info
+Generation i)) setting in XCode must be off. If it is on, ((i PList
+Compiler i)) will raise an error and will not generate the ((i PkgInfo i))
+file.
+
+
 !! !! ===================================
-((if $aida_target eq "Html"
+((if $aida_target eq "Html" || $aida_target eq "SplitHtml"
 !! !! ===================================
 ((a advanced )) a))
 ((s1 Advanced topics
@@ -1373,15 +1431,12 @@ following address:
 page at 
 ((nl <http://perso.orange.fr/bdesgraupes/DocHTML/plistcompiler.html>
 
-((nl The code is under CVS control. You can retrieve the latest stage of 
-development using any CVS client. See instructions at:
-((nl <http://sourceforge.net/cvs/?group_id=149940>
+((nl The code is under Subversion control. You can retrieve the latest stage of 
+development using any Subversion client. See instructions at:
+((nl <http://sourceforge.net/svn/?group_id=149940>
 
-((nl You can browse the cvs repository online at
-((nl <http://cvs.sourceforge.net/cgi-bin/viewcvs.cgi/plistcompiler> 
-
-!! !! ((nl You can also download a nightly tarball from
-!! !! ((nl <http://cvs.sourceforge.net/cvstarballs/plistcompiler-cvsroot.tar.bz2>
+((nl You can browse the Subversion repository online at
+((nl <http://plistcompiler.svn.sourceforge.net/viewvc/plistcompiler> 
 
 
 
@@ -1407,7 +1462,7 @@ if))
 
 ((s1 Version history
 For a detailed list of the changes, see the file ((i Changes_PLC i)) in 
-the CVS repository.
+the Subversion repository.
 ((lu
 ((li 2005-10-10 - 0.1b1 - First public beta release. Basic implementation.
 ((li 2005-10-12 - 0.1b2 - Fixed bug when #including pathname with whitespace.
@@ -1426,6 +1481,10 @@ defined in XCode.
 slashes in strings. Fixed bug with user defined macros enclosed in double 
 underscores (Bug 1413845). Implements new -prefix option (RFE 1461559) and new 
 -o option (patch 1474228). New pragma escape_entities.
+((li 2006-11-12 - 0.5.1 - Improved generation of Pkginfo file.
+((li 2007-08-30 - 0.6 - New -D opiton to define macros on the command 
+line. Support for line continuator. Sym links resolution. Simplified 
+variable substitution. Minor fixes.
 lu))
 
 
