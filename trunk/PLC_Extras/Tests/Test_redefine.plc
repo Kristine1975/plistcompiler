@@ -1,0 +1,70 @@
+// ===========================================================================
+// Test_redefine.plc
+//                       Created: 2007-08-30 09:07:39
+//             Last modification: 2007-08-30 09:23:18
+// Author: Bernard Desgraupes
+// e-mail: <bdesgraupes@users.sourceforge.net>
+// www: <http://sourceforge.net/projects/plistcompiler>
+// (c) Copyright: Bernard Desgraupes 2007
+// All rights reserved.
+// ===========================================================================
+// 
+// Test conflictual situations: uncomment each of the following blocks
+// successively
+//    
+
+// -------------------------------------------------------------------------
+//    redefinition of already existing variables
+// -------------------------------------------------------------------------
+// Should raise an error
+
+// #define kIdentifier "net.sourceforge.plistcompiler"
+// #define kIdentifier "net.macforge.plistcompiler"
+
+
+
+// -------------------------------------------------------------------------
+//    redefinition of inherited variable
+// -------------------------------------------------------------------------
+// Should raise an error
+
+// #define INSTALL_DIR "/Users/bernardo"
+
+
+
+
+// -------------------------------------------------------------------------
+//    dereferencing inheirted variable enclose in double underscores
+// -------------------------------------------------------------------------
+// Should work when the following #define is enabled and issue a warning when it is disabled
+
+
+#define __INSTALL_DIR__ "/Users/bernardo"
+
+#pragma output_filename "Install.plist"
+plist
+{
+	dictionary
+	{
+		key "InstallLocation" value string __INSTALL_DIR__
+		key "InheritedLocation" value string INSTALL_DIR
+	}
+}
+
+
+// -------------------------------------------------------------------------
+//    redefinition of predefined variable
+// -------------------------------------------------------------------------
+// Should issue a warning
+
+
+#define __DATE__ "yesterday"
+
+#pragma output_filename "Date.plist"
+plist
+{
+	dictionary
+	{
+		key "BuildDate" value string __DATE__
+	}
+}

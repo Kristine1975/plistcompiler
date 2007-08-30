@@ -1,0 +1,50 @@
+// ===========================================================================
+// Test_d_option.plc
+//                       Created: 2005-10-03 06:28:51
+//             Last modification: 2005-10-04 06:29:05
+// Author: Bernard Desgraupes
+// e-mail: <bdesgraupes@users.sourceforge.net>
+// www: <http://sourceforge.net/projects/plistcompiler>
+// (c) Copyright: Bernard Desgraupes 2005-2006
+// All rights reserved.
+// ===========================================================================
+// 
+// This is a test to execute from the command line in the Tests directory:
+// 
+// The following should work
+//     ../../PLC_Sources/plcompile -dNICE="some nice string" -d__AUTHOR__="bernardo" -dIS_TEST Test_d_option.plc
+//     
+// The following should cause conflicts
+//     ../../PLC_Sources/plcompile -dNICE="some nice string" -dNICE="another nice string" -d__AUTHOR__="bernardo" -dIS_TEST Test_d_option.plc
+//     
+//     export EXECUTABLE_NAME="bla"
+//     ../../PLC_Sources/plcompile -dEXECUTABLE_NAME="plc" -dIS_TEST Test_d_option.plc
+//     
+// This one should issue a warning about overwritten predefined var
+//     ../../PLC_Sources/plcompile -dNICE="some nice string" -d__DATE__="yesterday" -d__AUTHOR__="bernardo" -dIS_TEST Test_d_option.plc
+//     
+// This one should work and distinguish between DATE and __DATE__
+//     ../../PLC_Sources/plcompile -dNICE="some nice string" -dDATE="yesterday" -d__AUTHOR__="bernardo" Test_d_option.plc
+//     
+// /Volumes/im2/Devel/Code/PListCompiler/PListCompiler_Devel/PLC_Sources/plcompile
+
+
+#ifdef IS_TEST
+#define TESTING "This is a test"
+#else
+#define TESTING "This is not a test"
+#endif
+
+plist { 
+	dictionary {
+		key "NiceString" value string NICE
+		key "Author" value string __AUTHOR__
+		key "IsTest" value string TESTING
+		key "InternalDate" value string __DATE__
+#ifndef IS_TEST
+		key "ExternalDate" value string DATE
+#endif
+	}
+}
+
+

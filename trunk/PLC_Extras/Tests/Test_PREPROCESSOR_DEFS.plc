@@ -1,0 +1,37 @@
+// ===========================================================================
+// Test_PREPROCESSOR_DEFS.plc
+//                       Created: 2005-10-03 06:28:51
+//             Last modification: 2005-10-04 06:29:05
+// Author: Bernard Desgraupes
+// e-mail: <bdesgraupes@users.sourceforge.net>
+// www: <http://sourceforge.net/projects/plistcompiler>
+// (c) Copyright: Bernard Desgraupes 2007
+// All rights reserved.
+// ===========================================================================
+// XCode doc: 
+// 		<< Space-separated list of preprocessor macros of the form "foo" or
+// 		"foo=bar". These macros are used when preprocessing the Info.plist
+// 		file. [INFOPLIST_PREPROCESSOR_DEFINITIONS] >>
+// 
+// Set the INFOPLIST_PREPROCESSOR_DEFINITIONS vriable in the XCode project like this:
+//     INFOPLIST_PREPROCESSOR_DEFINITIONS: NICE="some nice string" __AUTHOR__="bernardo" IS_TEST
+// 
+// 
+
+
+#ifdef IS_TEST
+#define TESTING "This is a test"
+#else
+#define TESTING "This is not a test"
+#endif
+
+plist { 
+	dictionary {
+		key "NiceString" value string NICE
+		key "Author" value string __AUTHOR__
+		key "IsTest" value string TESTING
+		key "InternalDate" value string __DATE__
+	}
+}
+
+
