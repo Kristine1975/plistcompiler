@@ -5,7 +5,7 @@ exec tclsh "$0" "$@"
 # ===========================================================================
 # File: "PlistComp.tcl"
 #                        Created: 2005-10-01 21:46:19
-#              Last modification: 2007-08-29 22:34:35
+#              Last modification: 2007-08-31 11:34:58
 # Author: Bernard Desgraupes
 # e-mail: <bdesgraupes@users.sourceforge.net>
 # www: <http://sourceforge.net/projects/plistcompiler>
@@ -233,7 +233,7 @@ proc plc::execute {args} {
 				}
 			}
 			default {
-				if {[string index $elem 0] eq "d"} {
+				if {[string index $elem 0] eq "D"} {
 					set macro [string range $elem 1 end]					
 					set macro [split $macro "="]
 					plc::defineMacro [lindex $macro 0] [list [lindex $macro 1]]
@@ -378,22 +378,22 @@ proc plc::parseMacro {line} {
 					incr plc(iflevel)
 					set value ""
 					foreach a $definition {
-						append value [plc::substitute $a]
+						lappend value [plc::substDefinition $a]
 					} 
-					set condition [eval expr [list $value]]
+					set condition [eval expr $value]
 					set plc(execdone-$plc(iflevel)) $condition
 					set plc(doexec-$plc(iflevel)) $condition
 				}
 				"ifdef" {
 					incr plc(iflevel)
-					set var $definition
+					set var [string trim $definition]
 					set condition [expr [info exists plc_def($var)] || [info exists plc_int($var)]]
 					set plc(execdone-$plc(iflevel)) $condition
 					set plc(doexec-$plc(iflevel)) $condition
 				}
 				"ifndef" {
 					incr plc(iflevel)
-					set var $definition
+					set var [string trim $definition]
 					set condition [expr ![info exists plc_def($var)] && ![info exists plc_int($var)]]
 					set plc(execdone-$plc(iflevel)) $condition
 					set plc(doexec-$plc(iflevel)) $condition
@@ -465,9 +465,9 @@ proc plc::parseMacro {line} {
 						# Evaluate the condition
 						set value ""
 						foreach a $definition {
-							append value [plc::substitute $a]
+							lappend value [plc::substDefinition $a]
 						} 
-						set condition [eval expr [list $value]]
+						set condition [eval expr $value]
 						set plc(execdone-$plc(iflevel)) $condition
 						set plc(doexec-$plc(iflevel)) $condition
 					} 
@@ -787,6 +787,31 @@ proc plc::substitute {item} {
 			# double underscores.
 			puts "Warning: $strip substitution: inherited variables do not have to be enclosed in double underscores anymore since vs 0.6"
 			append result $env($strip)
+		} else {
+			append result $item
+		}
+	}
+	return $result
+}
+
+proc plc::substDefinition {item} {
+	global plc plc_def plc_int env
+	set result ""
+	if {$item eq "__FILE__"} {
+		append result {[file tail $plc(input_file)]}
+	} elseif {[info exists plc_int($item)]} {
+		append result "\$plc_int($item)"
+	} elseif {[info exists plc_def($item)]} {
+		append result "\$plc_def($item)"
+	} else {
+		set strip ""
+		set stripped [regexp "^__(.+)__$" $item -> strip]
+		if {$stripped && [info exists env($strip)]} {
+			# This is for compatibility with versions of plcompile <= 0.5: to
+			# dereference an inherited variable, one had to enclose it between
+			# double underscores.
+			puts "Warning: $strip substitution: inherited variables do not have to be enclosed in double underscores anymore since vs 0.6"
+			append result "\$env($strip)"
 		} else {
 			append result $item
 		}
