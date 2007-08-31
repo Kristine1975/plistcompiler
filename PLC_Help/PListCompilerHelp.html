@@ -11,7 +11,6 @@
 It is developed as an <I>Open Source</I> project coming with a BSD
 License. The source code is currently hosted and developed on the 
 <A HREF="http://sourceforge.net/projects/plistcompiler">SourceForge site.</A>
-<P> This file documents version 0.6 of PList Compiler.
 </I></P></BLOCKQUOTE><HR><P><UL>
 <LI><A HREF="#M1">Introduction</A>
 <LI><A HREF="#M2">Usage</A>
@@ -45,31 +44,31 @@ License. The source code is currently hosted and developed on the
 <UL><UL><LI><A HREF="#M30">Example 2</A></UL></UL>
 <UL><UL><LI><A HREF="#M31">Example 3</A></UL></UL>
 <UL><UL><LI><A HREF="#M32">Example 4</A></UL></UL>
-<UL><LI><A HREF="#M33">Errors and warnings</A></UL>
-<UL><LI><A HREF="#M34">Pragmas</A></UL>
-<UL><UL><LI><A HREF="#M35">The 'output_filename' pragma</A></UL></UL>
-<UL><UL><LI><A HREF="#M36">The 'in_package_directory' pragma</A></UL></UL>
-<UL><UL><LI><A HREF="#M37">The 'localize_directory' pragma</A></UL></UL>
-<UL><UL><LI><A HREF="#M38">The 'output_eol' pragma</A></UL></UL>
-<UL><UL><LI><A HREF="#M39">The 'output_encoding' pragma</A></UL></UL>
-<UL><UL><LI><A HREF="#M40">The 'plist_version' pragma</A></UL></UL>
-<UL><UL><LI><A HREF="#M41">The 'escape_entities' pragma</A></UL></UL>
-<LI><A HREF="#M42">Substitutable variables</A>
-<UL><LI><A HREF="#M43">Predefined variables</A></UL>
-<UL><LI><A HREF="#M44">XCode environment variables</A></UL>
-<UL><LI><A HREF="#M45">Unsupported variables</A></UL>
-<LI><A HREF="#M46">Unicode characters</A>
-<LI><A HREF="#M47">Pkginfo file</A>
-<LI><A HREF="#M48">Advanced topics</A>
-<LI><A HREF="#M49">Download</A>
-<LI><A HREF="#M50">Known problems</A>
-<LI><A HREF="#M51">Version history</A>
-<LI><A HREF="#M52">License and disclaimer</A>
-</UL>
-<H2><A NAME="M1"></A>Introduction</H2><P><B>PList Compiler</B> is a property list compiler for XCode. It lets you build
-localized and non-localized plist files from plc and ploc source files. 
-These are the property list files found in packages applications, bundles, 
-frameworks, plugins, etc.<P>It is modelled on the CodeWarrior property list language: the idea of
+<UL><UL><LI><A HREF="#M33">Example 5</A></UL></UL>
+<UL><LI><A HREF="#M34">Errors and warnings</A></UL>
+<UL><LI><A HREF="#M35">Pragmas</A></UL>
+<UL><UL><LI><A HREF="#M36">The 'output_filename' pragma</A></UL></UL>
+<UL><UL><LI><A HREF="#M37">The 'in_package_directory' pragma</A></UL></UL>
+<UL><UL><LI><A HREF="#M38">The 'localize_directory' pragma</A></UL></UL>
+<UL><UL><LI><A HREF="#M39">The 'output_eol' pragma</A></UL></UL>
+<UL><UL><LI><A HREF="#M40">The 'output_encoding' pragma</A></UL></UL>
+<UL><UL><LI><A HREF="#M41">The 'plist_version' pragma</A></UL></UL>
+<UL><UL><LI><A HREF="#M42">The 'escape_entities' pragma</A></UL></UL>
+<LI><A HREF="#M43">Substitutable variables</A>
+<UL><LI><A HREF="#M44">Predefined variables</A></UL>
+<UL><LI><A HREF="#M45">XCode environment variables</A></UL>
+<UL><LI><A HREF="#M46">Unsupported variables</A></UL>
+<LI><A HREF="#M47">Unicode characters</A>
+<LI><A HREF="#M48">Pkginfo file</A>
+<LI><A HREF="#M49">Advanced topics</A>
+<LI><A HREF="#M50">Download</A>
+<LI><A HREF="#M51">Known problems</A>
+<LI><A HREF="#M52">Version history</A>
+<LI><A HREF="#M53">License and disclaimer</A>
+</UL><P><P> This file documents version 0.6 of PList Compiler.<P><H2><A NAME="M1"></A>Introduction</H2><P><B>PList Compiler</B> is a property list compiler for XCode. It lets you
+build localized and non-localized plist files from plc and ploc source
+files. These are the property list files found in packages applications,
+bundles, frameworks, plugins, etc.<P>It is modelled on the CodeWarrior property list language: the idea of
 preparing source files and compiling them during the build process was
 introduced in CodeWarrior Pro 8. The language used in these source files
 lets you have the compiler build the property list files for you
@@ -104,9 +103,9 @@ options. <B>PList Compiler</B> comes with reasonable defaults for the
 optional values, corresponding to a normal usage of these files in a 
 project. The available options are explained below.<P>In the second form
 <PRE>
-	plcompile -help
-	plcompile -encoding
-	plcompile -version
+    plcompile -help
+    plcompile -encoding
+    plcompile -version
 </PRE>
 the script prints some help in the console window: with <I>-help</I>, you
 get the usage string and a reminder of the defaults; with <I>-encoding</I>, 
@@ -132,7 +131,7 @@ command line or pragmas in the source files. See the
 <PRE>
     plcompile [-input_encoding enc] [-output_encoding enc] [-input_eol eol] 
                     [-output_eol eol] [-dest folder] [-o name] [-plist version] 
-					[-prefix file] [-Dmacro[=value]...] [-pkginfo] plcFile
+                    [-prefix file] [-Dmacro[=value]...] [-pkginfo] plcFile
 </PRE><P>The options have the following meaning:
 <UL>
 	<LI> the <I>-input_encoding</I> option lets you specify in which encoding the 
@@ -332,7 +331,7 @@ CodeWarrior property list compiler which accepted both <I>single</I> and
 <I>double</I> quotes to delimit strings, PList Compiler does its best to
 support the same convention. For instance:
 <PRE>
-	string 'RSRC'
+    string 'RSRC'
 </PRE>
 will produce <I>&lt;string&gt;RSRC&lt;/string&gt;</I> as it did with the CodeWarrior
 property list compiler. As a consequence, this makes it a little more
@@ -340,8 +339,8 @@ difficult to obtain values enclosed in quotes in the output file. For
 instance, if you really want to get a string value like 'RSRC' or "RSRC"
 (including the quotes), you will have to code it like this:
 <PRE>
-	string "'RSRC'"
-	string "\"" RSRC "\""
+    string "'RSRC'"
+    string "\"" RSRC "\""
 </PRE>
 Be also aware that, in the case where you concatenate several strings or
 mix strings and variables, single quotes will confuse the compiler and the
@@ -591,7 +590,22 @@ equal sign (==). A single equal sign would provoke an error.
     #else
         #warning "Current version is not " kVersionSeven    
     #endif
-</PRE><P><H4><A NAME="M30"></A>Example 2</H4>
+</PRE><P><H4><A NAME="M30"></A>Example 2</H4><P>When testing a condition involving a string value, one must take care of
+properly quoting the strings. Here is an example 
+(where <I>DEBUGGING_SYMBOLS</I> is an XCode variable whose value 
+is <I>YES</I> or <I>NO</I>):
+<PRE>
+    #if DEBUGGING_SYMBOLS == \"YES\"
+        #warning "debugging symbols are enabled"
+    #endif
+</PRE><P>It is not sufficient to just enclose the string <I>YES</I> in double
+quotes (because of double parsing, first by the preprocessor, then by the
+interpreter). Another possible syntax is:
+<PRE>
+    #if DEBUGGING_SYMBOLS == {"YES"}
+        #warning "debugging symbols are enabled"
+    #endif
+</PRE><P><H4><A NAME="M31"></A>Example 3</H4>
 This example demonstrates nested conditional blocks.
 <PRE>
     #define kVersionFive 5
@@ -609,7 +623,7 @@ This example demonstrates nested conditional blocks.
         #endif
         #warning "Done comparison with kVersionFive"
     #endif
-</PRE><P><H4><A NAME="M31"></A>Example 3</H4>
+</PRE><P><H4><A NAME="M32"></A>Example 4</H4>
 Here is an example using <I>#ifdef</I> and <I>#ifndef</I> directives:
 <PRE>
     #undef kUndefinedMacro
@@ -622,7 +636,7 @@ Here is an example using <I>#ifdef</I> and <I>#ifndef</I> directives:
     #else
     #    define kHasBeenDefined "Yes, it has been defined"
     #endif
-</PRE><P><H4><A NAME="M32"></A>Example 4</H4>
+</PRE><P><H4><A NAME="M33"></A>Example 5</H4>
 Here is an example using the <I>#elif</I> directive:
 <PRE>
     #define kVersionFive 5
@@ -631,7 +645,7 @@ Here is an example using the <I>#elif</I> directive:
     #define kVersionEight 8
     #define kCurrentVersion kVersionSix
     #if kCurrentVersion <= kVersionFive 
-    #warning "Current version is <= " kVersionFive
+        #warning "Current version is <= " kVersionFive
     #elif kCurrentVersion <= kVersionEight 
         #if kCurrentVersion == kVersionSix
             #warning "Current version is " kVersionSix
@@ -647,9 +661,9 @@ Here is an example using the <I>#elif</I> directive:
             #warning "Current version is " kVersionEight
         #endif
     #else
-    #warning "Current version is > " kVersionEight
+        #warning "Current version is > " kVersionEight
     #endif
-</PRE><P><H3><A NAME="M33"></A>Errors and warnings</H3><P>The <I>#error</I> directive raises an error and stops the execution of the
+</PRE><P><H3><A NAME="M34"></A>Errors and warnings</H3><P>The <I>#error</I> directive raises an error and stops the execution of the
 compiler. This is generally used in combination with <I>#if</I> directives
 to test for situations that should never occur.<P>The <I>#warning</I> and <I>#message</I> directives send a message to the
 console: the text of the message is prepended by the word <I>Warning:</I>
@@ -661,7 +675,7 @@ or <I>Message:</I> respectively.<P>Here are a few examples:
        #error "The property list version is too old"
     #endif
 </PRE><P><A NAME="pragma"></A>
-<H3><A NAME="M34"></A>Pragmas</H3><P>Pragmas are directives used to modify the internal state of the compiler. 
+<H3><A NAME="M35"></A>Pragmas</H3><P>Pragmas are directives used to modify the internal state of the compiler. 
 They let you modify some internal settings during the execution of the plc 
 file. They are most useful to modify locally a global setting: the new 
 value set by a pragma holds until another pragma modifies it again. 
@@ -682,7 +696,7 @@ version 0.1.<P><B>Caution:</B> a pragma cannot be used inside a <I>plist</I> or 
 <I>localize</I> block. It must be invoked outside these environments. This
 is because the internal settings they affect can't be modified once a file
 has been opened for output. The compiler will emit an error if such a 
-situation occurs.<P><H4><A NAME="M35"></A>The 'output_filename' pragma</H4>
+situation occurs.<P><H4><A NAME="M36"></A>The 'output_filename' pragma</H4>
 The <I>output_filename</I> pragma lets you override the default name 
 of the current output file. Its value is a string which is the new name. 
 For instance:
@@ -700,7 +714,7 @@ command. More precisely, if the compiler reads the following inxtructions:
 </PRE>
 the pragma will have no effect and the output file will still be named 
 <I>Error.strings</I>. On the other hand, the pragma will remain in effect 
-until it can be applied. <P><H4><A NAME="M36"></A>The 'in_package_directory' pragma</H4>
+until it can be applied. <P><H4><A NAME="M37"></A>The 'in_package_directory' pragma</H4>
 The <I>in_package_directory</I> pragma lets you specify where to place the
 property list file inside the destination folder. It is a string which
 specifies a directory <I>relative</I> to the destination folder. For instance, if
@@ -718,7 +732,7 @@ been otherwise specified).<P>Another valid value for this pragma could be:
 </PRE>
 which would write the output file in <I>MyApp.app/Infos/Properties</I>,
 i-e with the <I>Infos</I> directory at the same level as the 
-<I>Contents</I> directory.<P><H4><A NAME="M37"></A>The 'localize_directory' pragma</H4>
+<I>Contents</I> directory.<P><H4><A NAME="M38"></A>The 'localize_directory' pragma</H4>
 While the previous pragma affected the final location of the <I>Info.plist</I>
 files (produced by the <I>plist</I> command), the <I>localize_directory</I>
 pragma lets you specify where to place the localized strings files produced
@@ -732,7 +746,7 @@ folder inside the destination folder which itself is, by default, the
 will cause the localized strings files to be written in some 
 <I>MyApp.app/Contents/Local/Strings/&lt;language&gt;.lproj</I> folder 
 (depending on the chosen language) instead of 
-<I>MyApp.app/Contents/Resources/&lt;language&gt;.lproj</I>.<P><H4><A NAME="M38"></A>The 'output_eol' pragma</H4>
+<I>MyApp.app/Contents/Resources/&lt;language&gt;.lproj</I>.<P><H4><A NAME="M39"></A>The 'output_eol' pragma</H4>
 The <I>output_eol</I> pragma lets you specify another type of line endings
 for the output files. The possible values are <I>cr</I> for Mac, 
 <I>lf</I> for Unix and <I>crlf</I> for Windows. This pragma is useful to
@@ -740,7 +754,7 @@ override a setting made with the <I>-output_eol</I> option on the command
 line of the <B>plcompile</B> shell script.
 <PRE>
     #pragma output_eol lf
-</PRE><P><H4><A NAME="M39"></A>The 'output_encoding' pragma</H4>
+</PRE><P><H4><A NAME="M40"></A>The 'output_encoding' pragma</H4>
 The <I>output_encoding</I> pragma lets you specify another encoding for
 the output files. The possible encodings are listed by the command:
 <PRE>
@@ -756,7 +770,7 @@ shell script. For instance:
     #pragma output_encoding utf-16
 </PRE><P>Note that there is no equivalent pragma concerning the input encoding
 because it does not make sense: the input file would have already been read
-when the pragma is encountered.<P><H4><A NAME="M40"></A>The 'plist_version' pragma</H4>
+when the pragma is encountered.<P><H4><A NAME="M41"></A>The 'plist_version' pragma</H4>
 The <I>plist_version</I> pragma lets you specify another version of the 
 property list format. The possible values currently are 0.9 and 1.0. This is 
 the value written in the <I>version</I> attribute of the &lt;plist&gt; tag in the 
@@ -766,7 +780,7 @@ the value written in the <I>version</I> attribute of the &lt;plist&gt; tag in th
 </PRE>
 yields
 &lt;plist version="0_9"&gt;<P>This is the same value stored in the <TT>__PLIST__</TT> predefined variable
-(see below).<P><H4><A NAME="M41"></A>The 'escape_entities' pragma</H4>
+(see below).<P><H4><A NAME="M42"></A>The 'escape_entities' pragma</H4>
 The <I>escape_entities</I> pragma was introduced in version 0.5: it lets
 you specify whether to use the standard XML entities or not.<P>Since version 0.4, the <I>ampersand, greater-than, less-than, quote</I> and
 <I>apostroph</I> symbols are automatically converted by <B>PList Compiler</B>
@@ -774,8 +788,8 @@ into their equivalent XML entities. This pragma allows you to turn this
 feature on or off during processing. The possible values are 0 or 1, or
 equivalently <I>off</I> or <I>on</I> (default is 1).<P>For instance, to turn escaping off:
 <PRE>
-	#pragma escape_entities off
-</PRE><P><H2><A NAME="M42"></A>Substitutable variables</H2><P>Substitutable variables are variables whose value is inserted when the
+    #pragma escape_entities off
+</PRE><P><H2><A NAME="M43"></A>Substitutable variables</H2><P>Substitutable variables are variables whose value is inserted when the
 script is run. These variables can be defined via a <I>#define</I>
 preprocessor macro in the plc file, or as a shell variable in the shell
 environment, or with the <I>-D</I> option directly on the command line.
@@ -794,7 +808,7 @@ the shell environment or inherited from XCode, one had to surround it with
 double underscores (like __USER__ instead of USER). It is not the case
 anymore since version 0.6. For backward compatibility, <B>PList Compiler</B> will still check if a variable surrounded by double underscores is an
 inherited variable but you should update your plc files if you were using
-this old (and confusing) convention.<P><H3><A NAME="M43"></A>Predefined variables</H3><P>A few predefined variables are set each time the <B>plcompile</B> script is 
+this old (and confusing) convention.<P><H3><A NAME="M44"></A>Predefined variables</H3><P>A few predefined variables are set each time the <B>plcompile</B> script is 
 run. <P>The five following variables existed in the CodeWarrior property list
 compiler. They are still available with <B>PList Compiler</B> in order to
 ensure some compatibility with already existing plc files (and because they
@@ -849,7 +863,7 @@ The seconds part of the TIME string.</DL>
     __HOURS__     = 15
     __MINUTES__   = 54
     __SECONDS__   = 36
-</PRE><P><H3><A NAME="M44"></A>XCode environment variables</H3><P>All the environment variables set by an XCode project are accessible with
+</PRE><P><H3><A NAME="M45"></A>XCode environment variables</H3><P>All the environment variables set by an XCode project are accessible with
 <B>PList Compiler</B>. See the XCode documentation for a complete list. For instance
 <PRE>
     key "InfoPlistPath" value string INFOPLIST_PATH
@@ -868,7 +882,7 @@ the same name as a predefined variable, like <I>__YEAR__</I> for instance:
 the result will be a <I>redefinition</I> of the predefined internal
 variable <I>__YEAR__</I>. <I>PList Compiler</I> will just emit a warning
 to notify about this situation.<P>	<LI> it is not possible to undefine a predefined variable with <I>#undef</I>.
-<I>PList Compiler</I> raises an error in that case.<P></OL><P><H3><A NAME="M45"></A>Unsupported variables</H3><P>A few predefined variables available in the CodeWarrior property list 
+<I>PList Compiler</I> raises an error in that case.<P></OL><P><H3><A NAME="M46"></A>Unsupported variables</H3><P>A few predefined variables available in the CodeWarrior property list 
 compiler are not supported by <B>PList Compiler</B>. This is mainly because they 
 are specific to the CodeWarrior IDE and have no meaning with XCode. Here 
 is the list of these variables:
@@ -876,7 +890,7 @@ is the list of these variables:
     __APPLEMACHLINKER__, __MACH__, __MERGELINKER__, 
     __MWMACHLINKER__, __MWPEFLINKER__
 </PRE><P>The <TT>__LINE__</TT> variable is not supported either, as well as the 
-<TT>__IDE_TARGET__()</TT> and <TT>__STRING__()</TT> pseudo-macros.<P><H2><A NAME="M46"></A>Unicode characters</H2><P>By default, <B>PList Compiler</B> assumes that the input file is UTF-8 encoded 
+<TT>__IDE_TARGET__()</TT> and <TT>__STRING__()</TT> pseudo-macros.<P><H2><A NAME="M47"></A>Unicode characters</H2><P>By default, <B>PList Compiler</B> assumes that the input file is UTF-8 encoded 
 and it generates its output files in the same encoding. So there is no 
 problem for supporting any Unicode character in your plc source files: you 
 just have to use a text editor which handles the UTF-8 encoding form.
@@ -902,7 +916,7 @@ start at 03B1:
 </TABLE></P>
 A string can thus be defined like this
 <PRE>
-    	key "UniString1" value string "\u03B1 \u03B2 \u03B3 \u03B4 \u03B5 \u03B6 \u03B7 \u03B8 \u03B9"
+    key "UniString1" value string "\u03B1 \u03B2 \u03B3 \u03B4 \u03B5 \u03B6 \u03B7 \u03B8 \u03B9"
 </PRE>
 and will produce:
 <BLOCKQUOTE><P><I> 
@@ -911,7 +925,7 @@ and will produce:
 </I></P></BLOCKQUOTE><P><B>Note:</B> the escape sequence to designate Unicode characters is <TT>\u</TT> with a 
 <I>lowercase u</I>. This is a difference with the CodeWarrior property
 list compiler which used \U.<P><A NAME="pkginfo"></A>
-<H2><A NAME="M47"></A>Pkginfo file</H2><P>With the <I>-pkginfo</I> command line option, one can ask <I>PList
+<H2><A NAME="M48"></A>Pkginfo file</H2><P>With the <I>-pkginfo</I> command line option, one can ask <I>PList
 Compiler</I> to generate a <I>PkgInfo</I> file containing the type and
 signature of the product. This file will be located in the same folder as
 the <I>Info.plist</I> file. The type and signature are computed like this:
@@ -929,7 +943,7 @@ in order to use the <I>-pkginfo</I> option, the <I>Force Package Info
 Generation</I> setting in XCode must be off. If it is on, <I>PList
 Compiler</I> will raise an error and will not generate the <I>PkgInfo</I>
 file.<P><A NAME="advanced"></A>
-<H2><A NAME="M48"></A>Advanced topics</H2><P>Since <B>PList Compiler</B> is written in <A HREF="http://wiki.tcl.tk/"> Tcl</A>, 
+<H2><A NAME="M49"></A>Advanced topics</H2><P>Since <B>PList Compiler</B> is written in <A HREF="http://wiki.tcl.tk/"> Tcl</A>, 
 it is possible to introduce some Tcl code in the <I>#if</I> conditions.
 One could for instance let an instruction depend on the existence of some
 file like this:
@@ -956,7 +970,7 @@ substitutable variables. For instance:
     #else
         #warning "file does not exist: " SOME_FILE
     #endif
-</PRE><P><H2><A NAME="M49"></A>Download</H2>
+</PRE><P><H2><A NAME="M50"></A>Download</H2>
 <B>PList Compiler</B> is an <I>Open Source Project</I>. Its source code
 is freely available and can be found on the SourceForge site at the
 following address:
@@ -967,7 +981,7 @@ page at
 <P> <A HREF="http://perso.orange.fr/bdesgraupes/DocHTML/plistcompiler.html">http://perso.orange.fr/bdesgraupes/DocHTML/plistcompiler.html</A><P><P> The code is under Subversion control. You can retrieve the latest stage of 
 development using any Subversion client. See instructions at:
 <P> <A HREF="http://sourceforge.net/svn/?group_id=149940">http://sourceforge.net/svn/?group_id=149940</A><P><P> You can browse the Subversion repository online at
-<P> <A HREF="http://plistcompiler.svn.sourceforge.net/viewvc/plistcompiler">http://plistcompiler.svn.sourceforge.net/viewvc/plistcompiler</A> <P><H2><A NAME="M50"></A>Known problems</H2>
+<P> <A HREF="http://plistcompiler.svn.sourceforge.net/viewvc/plistcompiler">http://plistcompiler.svn.sourceforge.net/viewvc/plistcompiler</A> <P><H2><A NAME="M51"></A>Known problems</H2>
 <P> Please e-mail any problem or bug you encounter:
 <P> <A HREF="mailto:bdesgraupes@users.sourceforge.net">bdesgraupes@users.sourceforge.net</A>
 <P> Visit my Web page for updates and other recent builds:
@@ -979,7 +993,7 @@ versions will be announced on this list
 too. You can subscribe or unsubscribe from the following address:
 <P> <A HREF="http://lists.sourceforge.net/mailman/listinfo/plistcompiler-users">http://lists.sourceforge.net/mailman/listinfo/plistcompiler-users</A>
 To post to this list, send mail to
-<A HREF="mailto:plistcompiler-users@lists.sourceforge.net">plistcompiler-users@lists.sourceforge.net</A><P><H2><A NAME="M51"></A>Version history</H2>
+<A HREF="mailto:plistcompiler-users@lists.sourceforge.net">plistcompiler-users@lists.sourceforge.net</A><P><H2><A NAME="M52"></A>Version history</H2>
 For a detailed list of the changes, see the file <I>Changes_PLC</I> in 
 the Subversion repository.
 <UL>
@@ -1004,10 +1018,10 @@ underscores (Bug 1413845). Implements new -prefix option (RFE 1461559) and new
 	<LI> 2007-08-30 - 0.6 - New -D opiton to define macros on the command 
 line. Support for line continuator. Sym links resolution. Simplified 
 variable substitution. Minor fixes.
-</UL><P><H2><A NAME="M52"></A>License and disclaimer</H2><P><B>PList Compiler</B> is distributed under the same BSD License as
+</UL><P><H2><A NAME="M53"></A>License and disclaimer</H2><P><B>PList Compiler</B> is distributed under the same BSD License as
 the Tcl language itself: see the file <I>License_terms</I> in the distribution or 
 the <A HREF="http://www.opensource.org/licenses/bsd-license"> Open Source Initiative site.</A><P><HR>
-<P> Last updated 2007-08-30 15:33:56
+<P> Last updated 2007-08-31 12:22:48
 <!--  logo SF -->
 <!--  ------- -->
 <HR>

@@ -54,6 +54,7 @@ handles this case for backward compatibility.
 continuation character.
 ¥ Added support for soft links to specify the plc file or a prefix file on the 
 command line.
+¥ Fixed quoting issues with #if/#elif macros when testing a string value.
 
 ================================================================================
 = 0.5.2	                 	            last update: 2007-05-21 16:24:04

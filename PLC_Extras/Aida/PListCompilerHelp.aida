@@ -99,9 +99,9 @@ project. The available options are explained below.
 
 In the second form
 ((|
-	plcompile -help
-	plcompile -encoding
-	plcompile -version
+    plcompile -help
+    plcompile -encoding
+    plcompile -version
 |))
 the script prints some help in the console window: with ((i -help i)), you
 get the usage string and a reminder of the defaults; with ((i -encoding i)), 
@@ -140,7 +140,7 @@ The complete syntax to run the compiler is:
 ((|
     plcompile [-input_encoding enc] [-output_encoding enc] [-input_eol eol] 
                     [-output_eol eol] [-dest folder] [-o name] [-plist version] 
-					[-prefix file] [-Dmacro[=value]...] [-pkginfo] plcFile
+                    [-prefix file] [-Dmacro[=value]...] [-pkginfo] plcFile
 |))
 
 The options have the following meaning:
@@ -467,7 +467,7 @@ CodeWarrior property list compiler which accepted both ((i single i)) and
 ((i double i)) quotes to delimit strings, PList Compiler does its best to
 support the same convention. For instance:
 ((|
-	string 'RSRC'
+    string 'RSRC'
 |))
 will produce ((i <string>RSRC</string> i)) as it did with the CodeWarrior
 property list compiler. As a consequence, this makes it a little more
@@ -475,8 +475,8 @@ difficult to obtain values enclosed in quotes in the output file. For
 instance, if you really want to get a string value like 'RSRC' or "RSRC"
 (including the quotes), you will have to code it like this:
 ((|
-	string "'RSRC'"
-	string "\"" RSRC "\""
+    string "'RSRC'"
+    string "\"" RSRC "\""
 |))
 Be also aware that, in the case where you concatenate several strings or
 mix strings and variables, single quotes will confuse the compiler and the
@@ -863,7 +863,29 @@ equal sign (==). A single equal sign would provoke an error.
     #endif
 |))
 
+
 ((s3 Example 2
+
+When testing a condition involving a string value, one must take care of
+properly quoting the strings. Here is an example (where ((i
+DEBUGGING_SYMBOLS i)) is an XCode variable whose value is ((i YES i)) or
+((i NO i))):
+((|
+    #if DEBUGGING_SYMBOLS == \"YES\"
+        #warning "debugging symbols are enabled"
+    #endif
+|))
+It is not sufficient to just enclose the string ((i YES i)) in double
+quotes (because of double parsing, first by the preprocessor, then by the
+interpreter). Another possible syntax is:
+((|
+    #if DEBUGGING_SYMBOLS == {"YES"}
+        #warning "debugging symbols are enabled"
+    #endif
+|))
+
+
+((s3 Example 3
 This example demonstrates nested conditional blocks.
 ((|
     #define kVersionFive 5
@@ -884,7 +906,7 @@ This example demonstrates nested conditional blocks.
 |))
 
 
-((s3 Example 3
+((s3 Example 4
 Here is an example using ((i #ifdef i)) and ((i #ifndef i)) directives:
 ((|
     #undef kUndefinedMacro
@@ -900,7 +922,7 @@ Here is an example using ((i #ifdef i)) and ((i #ifndef i)) directives:
 |))
 
 
-((s3 Example 4
+((s3 Example 5
 Here is an example using the ((i #elif i)) directive:
 ((|
     #define kVersionFive 5
@@ -909,7 +931,7 @@ Here is an example using the ((i #elif i)) directive:
     #define kVersionEight 8
     #define kCurrentVersion kVersionSix
     #if kCurrentVersion <= kVersionFive 
-    #warning "Current version is <= " kVersionFive
+        #warning "Current version is <= " kVersionFive
     #elif kCurrentVersion <= kVersionEight 
         #if kCurrentVersion == kVersionSix
             #warning "Current version is " kVersionSix
@@ -925,9 +947,10 @@ Here is an example using the ((i #elif i)) directive:
             #warning "Current version is " kVersionEight
         #endif
     #else
-    #warning "Current version is > " kVersionEight
+        #warning "Current version is > " kVersionEight
     #endif
 |))
+
 
 ((s2 Errors and warnings
 
@@ -1107,7 +1130,7 @@ equivalently ((i off i)) or ((i on i)) (default is 1).
 
 For instance, to turn escaping off:
 ((|
-	#pragma escape_entities off
+    #pragma escape_entities off
 |))
 
 
@@ -1323,7 +1346,7 @@ start at 03B1:
 t))
 A string can thus be defined like this
 ((|
-    	key "UniString1" value string "\u03B1 \u03B2 \u03B3 \u03B4 \u03B5 \u03B6 \u03B7 \u03B8 \u03B9"
+    key "UniString1" value string "\u03B1 \u03B2 \u03B3 \u03B4 \u03B5 \u03B6 \u03B7 \u03B8 \u03B9"
 |))
 !! !! ===================================
 ((if $aida_target eq "Html" || $aida_target eq "SplitHtml"

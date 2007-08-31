@@ -1,7 +1,7 @@
 .de uline
 \Z'\\$1'\v'.25m'\D'l \w'\\$1'u 0'\v'-.25m'
 ..
-.TH plcompile  "1" "" "2007-08-30"
+.TH plcompile  "1" "" "2007-08-31"
 .PP
  This file documents version 0.6 of PList Compiler.
 .SH Introduction
@@ -60,9 +60,9 @@ In the second form
 .RS
 .nf
 .sp
-	plcompile -help
-	plcompile -encoding
-	plcompile -version
+    plcompile -help
+    plcompile -encoding
+    plcompile -version
 .fi
 .RE
 .sp
@@ -101,7 +101,7 @@ The complete syntax to run the compiler is:
 .sp
     plcompile [-input_encoding enc] [-output_encoding enc] [-input_eol eol] 
                     [-output_eol eol] [-dest folder] [-o name] [-plist version] 
-					[-prefix file] [-Dmacro[=value]...] [-pkginfo] plcFile
+                    [-prefix file] [-Dmacro[=value]...] [-pkginfo] plcFile
 .fi
 .RE
 .sp
@@ -441,7 +441,7 @@ support the same convention. For instance:
 .RS
 .nf
 .sp
-	string 'RSRC'
+    string 'RSRC'
 .fi
 .RE
 .sp
@@ -453,8 +453,8 @@ instance, if you really want to get a string value like 'RSRC' or "RSRC"
 .RS
 .nf
 .sp
-	string "'RSRC'"
-	string "\"" RSRC "\""
+    string "'RSRC'"
+    string "\"" RSRC "\""
 .fi
 .RE
 .sp
@@ -856,6 +856,33 @@ equal sign (==). A single equal sign would provoke an error.
 .sp
 .SS Example 2
 .PP
+When testing a condition involving a string value, one must take care of
+properly quoting the strings. Here is an example 
+(where \fI DEBUGGING_SYMBOLS\fP is an XCode variable whose value 
+is \fI YES\fP or \fI NO\fP):
+.RS
+.nf
+.sp
+	#if DEBUGGING_SYMBOLS == \\"YES\\"
+		#warning "debugging symbols are enabled"
+	#endif
+.fi
+.RE
+.sp
+It is not sufficient to just enclose the string \fI YES\fP in double
+quotes (because of double parsing, first by the preprocessor, then by the
+interpreter). Another possible syntax is:
+.RS
+.nf
+.sp
+    #if DEBUGGING_SYMBOLS == {"YES"}
+        #warning "debugging symbols are enabled"
+    #endif
+.fi
+.RE
+.sp
+.SS Example 3
+.PP
 This example demonstrates nested conditional blocks.
 .RS
 .nf
@@ -878,7 +905,7 @@ This example demonstrates nested conditional blocks.
 .fi
 .RE
 .sp
-.SS Example 3
+.SS Example 4
 .PP
 Here is an example using \fI #ifdef\fP and \fI #ifndef\fP directives:
 .RS
@@ -897,7 +924,7 @@ Here is an example using \fI #ifdef\fP and \fI #ifndef\fP directives:
 .fi
 .RE
 .sp
-.SS Example 4
+.SS Example 5
 .PP
 Here is an example using the \fI #elif\fP directive:
 .RS
@@ -909,7 +936,7 @@ Here is an example using the \fI #elif\fP directive:
     #define kVersionEight 8
     #define kCurrentVersion kVersionSix
     #if kCurrentVersion <= kVersionFive 
-    #warning "Current version is <= " kVersionFive
+        #warning "Current version is <= " kVersionFive
     #elif kCurrentVersion <= kVersionEight 
         #if kCurrentVersion == kVersionSix
             #warning "Current version is " kVersionSix
@@ -925,7 +952,7 @@ Here is an example using the \fI #elif\fP directive:
             #warning "Current version is " kVersionEight
         #endif
     #else
-    #warning "Current version is > " kVersionEight
+        #warning "Current version is > " kVersionEight
     #endif
 .fi
 .RE
@@ -1135,7 +1162,7 @@ For instance, to turn escaping off:
 .RS
 .nf
 .sp
-	#pragma escape_entities off
+    #pragma escape_entities off
 .fi
 .RE
 .sp
@@ -1348,7 +1375,7 @@ A string can thus be defined like this
 .RS
 .nf
 .sp
-    	key "UniString1" value string "\u03B1 \u03B2 \u03B3 \u03B4 \u03B5 \u03B6 \u03B7 \u03B8 \u03B9"
+    key "UniString1" value string "\u03B1 \u03B2 \u03B3 \u03B4 \u03B5 \u03B6 \u03B7 \u03B8 \u03B9"
 .fi
 .RE
 .sp
