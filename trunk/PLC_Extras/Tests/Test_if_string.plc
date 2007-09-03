@@ -1,7 +1,7 @@
 // ===========================================================================
 // Test_if_string.plc
 //                       Created: 2007-08-30 17:04:53
-//             Last modification: 2007-08-30 17:27:47
+//             Last modification: 2007-09-03 09:18:04
 // Author: Bernard Desgraupes
 // e-mail: <bdesgraupes@users.sourceforge.net>
 // www: <http://sourceforge.net/projects/plistcompiler>
@@ -9,10 +9,54 @@
 // All rights reserved.
 // ===========================================================================
 // DEBUGGING_SYMBOLS is an inherited variable whose value is YES
+// 
+// When evaluating a condition on string values, strings must be properly
+// quoted like this
+//    DEBUGGING_SYMBOLS == \"YES\"
+//    or better
+//    DEBUGGING_SYMBOLS == {"YES"}
 
 
-#if DEBUGGING_SYMBOLS == "YES"
-   #warning "debugging symbols are enabled"
+#if DEBUGGING_SYMBOLS == {"YES"}
+    #warning "debugging symbols are enabled"
 #else
-	#warning "debugging symbols are disabled"
+    #warning "debugging symbols are disabled"
+#endif
+
+
+#define WRITER "Victor Hugo"
+
+#if WRITER == {"Victor Hugo"}
+	#warning "author is Hugo"
+#else
+	#warning "author is not Hugo"
+#endif
+
+
+// No need to quote numeric values
+#if __PLIST__ > 0.9
+   #warning "The property list version is ok"
+#else
+	#warning "The property list version is too old"
+#endif
+
+
+// Logical "AND"
+#if USER ne {"victor"} && USER ne {"victorine"}
+	#warning "unknown user " USER
+#endif
+
+
+// Logical "OR"
+#define LOGNAME "hugo"
+#if USER ne {"victor"} || LOGNAME eq {"hugo"}
+	#warning "authorized user"
+#endif
+
+
+// Logical "EXCLUSIVE OR"
+#if SHELL eq {"/bin/bash"} ^ USER eq {"victor"}
+	#warning "either shell is bash or user is victor"
+#else
+	#warning "only one of shell and user must be true"
 #endif

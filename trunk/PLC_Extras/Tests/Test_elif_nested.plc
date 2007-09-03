@@ -17,7 +17,7 @@
 #define kVersionNine 9
 
 // Try different values in the following #define
-#define kCurrentVersion kVersionNine
+#define kCurrentVersion kVersionFive
 
 
 #warning "Setting current version to " kCurrentVersion
