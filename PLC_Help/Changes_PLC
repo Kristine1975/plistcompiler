@@ -12,15 +12,12 @@ PList Compiler releases are available at
 or on my web page at 
 <http://webperso.easyconnect.fr/bdesgraupes/plistcompiler.html>
 
-The code is under CVS control. You can retrieve the latest stage of 
-development using any CVS client. See instructions at:
-<http://sourceforge.net/cvs/?group_id=149940>
+The code is under Subversion control. You can retrieve the latest stage of 
+development using any Subversion client. See instructions at:
+<http://sourceforge.net/svn/?group_id=149940>
 
-You can also browse the cvs repository online at
-<http://cvs.sourceforge.net/cgi-bin/viewcvs.cgi/plistcompiler> 
-
-Download a nightly tarball from
-<http://cvs.sourceforge.net/cvstarballs/plistcompiler-cvsroot.tar.bz2>
+You can also browse the Subversion repository online at
+<http://plistcompiler.svn.sourceforge.net/viewvc/plistcompiler>
 
 Please e-mail about any problems you might encounter: 
 <bdesgraupes@users.sourceforge.net> 
@@ -39,7 +36,7 @@ $Date$
 
 
 ================================================================================
-= 0.6	                 	            last update: 
+= 0.6	                 	            last update: 2007-09-03 09:57:34
 ================================================================================
 ¥ Removed the experimental -show option
 ¥ Removed the "# -*-Tcl-*-" magic line which seems to cause trouble with the 
