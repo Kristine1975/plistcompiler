@@ -1,0 +1,48 @@
+// ===========================================================================
+// Test_elif_string.plc
+//                       Created: 2007-08-30 17:04:53
+//             Last modification: 2007-08-30 17:27:47
+// Author: Bernard Desgraupes
+// e-mail: <bdesgraupes@users.sourceforge.net>
+// www: <http://sourceforge.net/projects/plistcompiler>
+// (c) Copyright: Bernard Desgraupes 2007
+// All rights reserved.
+// ===========================================================================
+// DEBUGGING_SYMBOLS is an inherited variable whose value is YES
+// 
+// When evaluating a condition on string values, strings must be properly
+// quoted like this
+//    DEBUGGING_SYMBOLS == \"YES\"
+//    or better
+//    DEBUGGING_SYMBOLS == {"YES"}
+
+
+#if DEBUGGING_SYMBOLS == {"MAYBE"}
+    #warning "debugging symbols are maybe enabled"
+#elif DEBUGGING_SYMBOLS == {"YES"}
+	#warning "debugging symbols are enabled"
+#else
+    #warning "debugging symbols are disabled"
+#endif
+
+
+#define WRITER "Victor Hugo"
+
+#if WRITER == {"William Shakespeare"}
+	#warning "author is Shakespeare"
+#elif WRITER == {"Victor Hugo"}
+	#warning "author is Hugo"
+#else
+	#warning "author is unknown"
+#endif
+
+
+// No need to quote numeric values
+#if __PLIST__ >= 2.0
+   #warning "The property list version is greater than 2"
+#elif __PLIST__ > 0.9
+	#warning "The property list version is ok"
+#else
+	#warning "The property list version is too old"
+#endif
+
