@@ -3,8 +3,8 @@
 !! !!                        Created: 2005-10-06 18:02:08
 !! !!              Last modification: 2005-11-03 08:37:23
 !! !! Author: Bernard Desgraupes
-!! !! e-mail: <bdesgraupes@easyconnect.fr>
-!! !! www: <http://webperso.easyconnect.fr/bdesgraupes/>
+!! !! e-mail: <bdesgraupes@users.sourceforge.net>
+!! !! www: <http://perso.orange.fr/bdesgraupes/>
 !! !! (c) Copyright: Bernard Desgraupes 2005
 !! !! All rights reserved.
 !! !! $Date$
@@ -13,34 +13,24 @@
 
 :Title:       PListCompiler_Readme
 :DestFolder:	../../PLC_Help
-:Author:      Bernard DESGRAUPES <bdesgraupes@easyconnect.fr>
-:Homepage:    <http://webperso.easyconnect.fr/bdesgraupes/>
+:Author:      Bernard DESGRAUPES <bdesgraupes@users.sourceforge.net>
+:Homepage:    <http://perso.orange.fr/bdesgraupes/>
 :Created:     2005-10-06 18:02:08
 :Modified:    2005-11-03 08:37:23
 :Keywords:    property list, xcode, compiler
 :Source:      PlcAidaMacros.tcl
 
 ((b PList Compiler b))
+Version ((s [plc::getVersion] s)).
 
 ((b PList Compiler b)) is a property list compiler for XCode, 
 Apple's development environment. It lets you build localized and
 non-localized plist files from ((i plc i)) and ((i ploc i)) source files.
-This is version ((s [plc::getVersion] s)).
 
 ((i PList Compiler i)) is a script that you execute as a 
 ((i Shell Script Build Phase i)) within your XCode project and which takes
 care of generating automatically the property list files for your packaged
 applications, bundles, frameworks, plugins, etc.
-
-!! !! This new version contains:
-!! !! ((lu
-!! !! ((li 
-!! !! lu))
-
-!! !! Previous versions already implemented the following features:
-!! !! ((lu
-!! !! ((li 
-!! !! lu))
 
 For the curious, ((b PList Compiler b)) is written in fact in ((b Tcl b)) 
 (the ((lk http://wiki.tcl.tk/ )) Tool Command Language lk))): 
@@ -53,12 +43,12 @@ this script to run there.
 
 The ((s [plc::getVersion] s)) release of ((b PList Compiler b)) is a fully
 functional release. It has been thoroughly tested but there is certainly
-room left for improvements.  Thank you for sending feedback.
+room left for improvements. Thank you for sending feedback.
 
 A help file with complete documentation about the PLC syntax and
 instructions about the usage of the compiler in an XCode project is
 included in the distribution. You can also
-((lk http://webperso.easyconnect.fr/bdesgraupes/DocHTML/PListCompilerHelp.html )) read it online. lk)) 
+((lk http://perso.orange.fr/bdesgraupes/DocHTML/PListCompilerHelp.html )) read it online. lk)) 
 
 ((b PList Compiler b)) is a ((i free software i)). It is also an ((i Open Source Project i))
 distributed under the same BSD License as the Tcl language itself: see the
