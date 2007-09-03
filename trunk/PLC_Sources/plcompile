@@ -5,7 +5,7 @@ exec tclsh "$0" "$@"
 # ===========================================================================
 # File: "PlistComp.tcl"
 #                        Created: 2005-10-01 21:46:19
-#              Last modification: 2007-08-31 11:34:58
+#              Last modification: 2007-09-03 09:22:11
 # Author: Bernard Desgraupes
 # e-mail: <bdesgraupes@users.sourceforge.net>
 # www: <http://sourceforge.net/projects/plistcompiler>
@@ -19,7 +19,7 @@ namespace eval plc {}
 unset -nocomplain plc_def plc_int plc
 
 # Current version number
-set plc(version) "0.6"
+set plc(version) "0.6rc1"
 
 # Retrieving the values of the shell variables: the env array contains the
 # values for all the environment variables defined by XCode.
