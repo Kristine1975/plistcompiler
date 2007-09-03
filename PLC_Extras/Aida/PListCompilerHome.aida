@@ -64,8 +64,11 @@ All ((b PList Compiler b)) official releases, past and present, are available in
 of the project at SourceForge.
 
 The most recent version is ((b ((s [plc::getVersion] s)) b))
-which can also be downloaded 
-((lk ../Downloads/PListCompiler.hqx )) from this page. lk))
+which can be downloaded from this page
+((lu
+((li ((lk ../Downloads/PListCompiler.hqx ))PListCompiler.hqx lk))
+((li ((lk ../Downloads/PListCompiler.tgz ))PListCompiler.tgz lk))
+lu))
 
 ((b Warning: b)) ((i PList Compiler i)) ((s [plc::getVersion] s)) is a
 fully functional and stable release. It has been thoroughly tested but
