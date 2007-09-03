@@ -15,6 +15,7 @@
 #define kVersionSeven 7
 #define kVersionEight 8
 
+// Try different values successively
 #define kCurrentVersion 7
 #warning "Current version is " kCurrentVersion
 
