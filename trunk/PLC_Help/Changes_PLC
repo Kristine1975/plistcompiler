@@ -32,7 +32,6 @@ Patches: <https://sourceforge.net/tracker/?atid=776236&group_id=149940&func=brow
 
 This changes log is in reverse chronological order (from bottom to top).
 
-$Date$
 
 
 ================================================================================
@@ -52,6 +51,7 @@ continuation character.
 ¥ Added support for soft links to specify the plc file or a prefix file on the 
 command line.
 ¥ Fixed quoting issues with #if/#elif macros when testing a string value.
+¥ Added variable substitution when parsing "boolean" type (Patch 1683197 - thanks Ron!)
 
 ================================================================================
 = 0.5.2	                 	            last update: 2007-05-21 16:24:04

@@ -19,7 +19,7 @@ namespace eval plc {}
 unset -nocomplain plc_def plc_int plc
 
 # Current version number
-set plc(version) "0.6rc1"
+set plc(version) "0.6rc2"
 
 # Retrieving the values of the shell variables: the env array contains the
 # values for all the environment variables defined by XCode.
@@ -642,19 +642,24 @@ proc plc::parseString {args} {
 }
 
 proc plc::parseBoolean {args} {
+	# Make variable substitution (Patch 1683197 by Ron Wilson <wilee@users.sourceforge.net> - thanks!)
+	set value ""
+	foreach a $args {
+		append value [plc::substitute $a]
+	}
 	# Accept any casing (true, TRUE, True etc)
-	set args [string tolower $args]
+	set value [string tolower $value]
 	# Accept other boolean values (yes/no, 1/0)
-	if {$args eq "yes" || $args == 1} {
-		set args "true"
-	} elseif {$args eq "no" || $args == 0} {
-		set args "false"
+	if {$value eq "yes" || $value == 1} {
+		set value "true"
+	} elseif {$value eq "no" || $value == 0} {
+		set value "false"
 	} 
 	# Reject other values
-	if {$args ne "true" && $args ne "false"} {
-		error "Illegal '$args' value for boolean keyword"
+	if {$value ne "true" && $value ne "false"} {
+		error "Illegal '$value' value for boolean keyword"
 	} else {
-		plc::writeTag $args empty
+		plc::writeTag $value empty
 	}	
 }
 
