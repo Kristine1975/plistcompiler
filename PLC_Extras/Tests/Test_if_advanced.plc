@@ -1,0 +1,89 @@
+// ===========================================================================
+// Test_if_advanced.plc
+//                       Created: 2007-08-30 17:04:53
+//             Last modification: 2007-09-03 09:18:17
+// Author: Bernard Desgraupes
+// e-mail: <bdesgraupes@users.sourceforge.net>
+// www: <http://sourceforge.net/projects/plistcompiler>
+// (c) Copyright: Bernard Desgraupes 2007
+// All rights reserved.
+// ===========================================================================
+// The condition must be quoted
+// Syntax is either
+//     #if "[file exists /Users/bernardo]"
+// or
+//     #if {[file exists /Users/bernardo]}
+// 
+// The following also works
+//     #if [file exists /Users/bernardo]
+// but it is a miracle: it is quoted as
+//     {[file} exists /Users/bernardo\]
+// before being passed to [eval expr]
+
+
+#if "[file exists /Users/bernardo]"
+	#warning "Directory /Users/bernardo exists"
+#else
+	#warning "Directory /Users/bernardo does NOT exist"
+#endif
+
+
+
+#define HOME_DIR /Users/bernardo
+
+#if "[file exists "   HOME_DIR   "]"
+	#warning HOME_DIR " exists"
+#else
+	#warning HOME_DIR " does not exist"
+#endif
+
+
+// Source a Tcl script
+#if "[source [file normalize [file join [file dir [info script]] ../PLC_Extras/Tests/Test_script.tcl]]]"
+	#warning "script evaluated OK"
+#endif
+
+
+// Test Tcl version
+#if "[info tclversion] == 8.4"
+	#warning "Tcl version is 8.4"
+#else
+	#warning "Tcl version is not 8.4"
+#endif
+
+
+// Check even/odd number
+#define BUILD_NUMBER 12345
+#if	"[expr " BUILD_NUMBER " % 2]"
+    #warning "build number is odd (" BUILD_NUMBER ")"
+#else
+    #warning "build number is even (" BUILD_NUMBER ")"
+#endif
+
+
+// Compute a value
+#if	"[expr {" BUILD_NUMBER " / 100 < 10}]"
+	#warning "build number is in low range (" BUILD_NUMBER ")"
+#else
+	#warning "build number is in high range (" BUILD_NUMBER ")"
+#endif
+
+
+// Compare a date
+#if	"[clock format [clock seconds] -format %Y] < 2000"
+	#warning "before y2k"
+#else
+	#warning "after y2k"
+#endif
+
+
+// Test if a value is in a list: for instance is "/sw/bin" in the PATH ?
+#warning "path is " PATH
+#if "[lsearch [split " PATH " \":\"] /sw/bin] != -1"
+    #warning "/sw/bin is in the PATH"
+#else
+    #warning "/sw/bin is not in the PATH"
+#endif
+
+
+
