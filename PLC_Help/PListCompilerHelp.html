@@ -65,7 +65,7 @@ License. The source code is currently hosted and developed on the
 <LI><A HREF="#M51">Known problems</A>
 <LI><A HREF="#M52">Version history</A>
 <LI><A HREF="#M53">License and disclaimer</A>
-</UL><P><P> This file documents version 0.6 of PList Compiler.<P><H2><A NAME="M1"></A>Introduction</H2><P><B>PList Compiler</B> is a property list compiler for XCode. It lets you
+</UL><P><P> This file documents version 0.6rc3 of PList Compiler.<P><H2><A NAME="M1"></A>Introduction</H2><P><B>PList Compiler</B> is a property list compiler for XCode. It lets you
 build localized and non-localized plist files from plc and ploc source
 files. These are the property list files found in packages applications,
 bundles, frameworks, plugins, etc.<P>It is modelled on the CodeWarrior property list language: the idea of
@@ -130,8 +130,8 @@ command line or pragmas in the source files. See the
 <A HREF="#locout"> Location of the output files</A> section below.<P><H3><A NAME="M4"></A>Command line options</H3><P>The complete syntax to run the compiler is:
 <PRE>
     plcompile [-input_encoding enc] [-output_encoding enc] [-input_eol eol] 
-                    [-output_eol eol] [-dest folder] [-o name] [-plist version] 
-                    [-prefix file] [-Dmacro[=value]...] [-pkginfo] plcFile
+              [-output_eol eol] [-dest folder] [-o name] [-plist version] 
+              [-prefix file] [-Dmacro[=value]]... [-pkginfo] [-I path]... plcFile
 </PRE><P>The options have the following meaning:
 <UL>
 	<LI> the <I>-input_encoding</I> option lets you specify in which encoding the 
@@ -161,7 +161,11 @@ from the command line (rather than with a <I>#define</I> instruction in
 the <I>plc</I> file). The syntax is exactly the same as with compilers
 like <B>cc</B> or <B>gcc</B>: either <I>-Dmacro</I> to simply define a
 macro or <I>-Dmacro=value</I> to define it and attribute a value. There
-can be as many <I>-D</I> options as necessary.<P></UL><P><B>Note:</B> 
+can be as many <I>-D</I> options as necessary.<P>	<LI> the <I>-I</I> option lets you define additional search paths to
+resolve <I>#include</I> directives. <B>PList Compiler</B> builds a list
+of search paths by first reading the <TT>HEADER_SEARCH_PATHS</TT> XCode
+variable and then appending any path specified by an <I>-I</I> option.
+There can be as many <I>-I</I> options as necessary.<P></UL><P><B>Note:</B> 
 <UL>
 	<LI> the <I>-pkginfo</I> option has been introduced in version 0.2 of <I>PList Compiler</I>
 by <A HREF="mailto:franz.detro@native-instruments.de"> Franz Detro</A> (thanks).
@@ -174,6 +178,9 @@ feature request made in the
 at SourceForge (RFE 1461559).
 	<LI> the <I>-D</I> option has been introduced in version 0.6. It is a
 feature request made privately.
+	<LI> the <I>-I</I> option has been introduced in version 0.6. It is 
+a code contribution by 
+<A HREF="mailto:jmiltner@users.sourceforge.net"> Jens Miltner</A> (thanks).
 </UL><P><H2><A NAME="M5"></A>Howto</H2><P><H3><A NAME="M6"></A>Using PList Compiler in an XCode project</H3><P>The idea is to generate the various plist files and localized strings
 files during a <I>Shell Script Build Phase</I> within your XCode project. 
 XCode lets you define <I>Shell Script Build Phases</I>: they are shell
@@ -538,15 +545,18 @@ The <I>#include</I> directive tells the plist compiler to find another plc
 source file and start processing it. The syntax of this directive has two
 forms:
 <P> #include "filename"
-<P> #include &lt;filename&gt;<P>The <I>filename</I> value designates a file to include: it can be either
-an absolute or a relative path. A relative path is resolved by searching
-relatively to various folders: in the first form, <B>PList Compiler</B>
-will first try to resolve the path relatively to the folder containing the
-parent source file (i-e, the file which invokes the <I>#include</I>
-directive). If this fails, it will try all the paths defined in XCode's
-<TT>HEADER_SEARCH_PATHS</TT> variable. In the second form, where the filename is
-enclosed in angle brackets, only the paths defined in the
-<TT>HEADER_SEARCH_PATHS</TT> variable are searched.<P>The following are all valid examples (the double quotes are necessary only 
+<P> #include &lt;filename&gt;<P>The two forms are not equivalent: the difference is explained below. The
+<I>filename</I> value designates a file to include: it can be either an
+absolute or a relative path. A relative path is resolved by searching
+relatively to various folders: 
+<UL><P>	<LI> in the first form, <B>PList Compiler</B> will first try to resolve
+the path relatively to the folder containing the parent source file (i-e,
+the file which invokes the <I>#include</I> directive). If this fails, it
+will try all the header search paths: these are the paths defined in
+XCode's <TT>HEADER_SEARCH_PATHS</TT> variable and any path specified on
+the command line using an <I>-I</I> option.<P>	<LI> In the second form, where the file name is enclosed in angle brackets,
+only the header search paths are searched.<P></UL>
+ <P>The following are all valid examples (the double quotes are necessary only 
 if the filename contains space characters):
 <PRE>
     #include /Users/bernardo/Devel/MyApp/Rsrc/OtherFile.plc
@@ -1021,7 +1031,7 @@ variable substitution. Minor fixes.
 </UL><P><H2><A NAME="M53"></A>License and disclaimer</H2><P><B>PList Compiler</B> is distributed under the same BSD License as
 the Tcl language itself: see the file <I>License_terms</I> in the distribution or 
 the <A HREF="http://www.opensource.org/licenses/bsd-license"> Open Source Initiative site.</A><P><HR>
-<P> Last updated 2007-08-31 12:22:48
+<P> Last updated 2007-09-04 10:37:34
 <!--  logo SF -->
 <!--  ------- -->
 <HR>

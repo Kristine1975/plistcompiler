@@ -5,7 +5,7 @@ exec tclsh "$0" "$@"
 # ===========================================================================
 # File: "PlistComp.tcl"
 #                        Created: 2005-10-01 21:46:19
-#              Last modification: 2007-09-03 09:22:11
+#              Last modification: 2007-09-04 11:59:06
 # Author: Bernard Desgraupes
 # e-mail: <bdesgraupes@users.sourceforge.net>
 # www: <http://sourceforge.net/projects/plistcompiler>
@@ -19,7 +19,7 @@ namespace eval plc {}
 unset -nocomplain plc_def plc_int plc
 
 # Current version number
-set plc(version) "0.6rc2"
+set plc(version) "0.6rc3"
 
 # Retrieving the values of the shell variables: the env array contains the
 # values for all the environment variables defined by XCode.
@@ -209,6 +209,15 @@ proc plc::execute {args} {
 					} else {
 						set plc(output_filename) $outname
 					}
+				} else {
+					set failed 1
+				}
+			}
+			"I" {
+				# Contributed by Jens Miltner (thanks!)
+				incr i
+				if {$i < $len} {
+					lappend plc(search_path) [plc::resolveFile [lindex $args $i]]
 				} else {
 					set failed 1
 				}
@@ -410,7 +419,7 @@ proc plc::parseMacro {line} {
 					incr plc(iflevel) -1
 				}
 				"include" {
-					plc::processInclude $definition					
+					processInclude $definition
 				}
 				"define" {
 					if {[regexp {(\w+)[ \t]*([^\r\n]*)$} $definition -> value arg]} {
@@ -497,7 +506,6 @@ proc plc::processInclude {name} {
 	
 	set saveFile $plc(input_file)
 	set headerPathOnly 0
-	
 	# Remove outer < > (if any)
 	if {[regsub "^<(.*)>$" $name "\\1" name]} {
 		set headerPathOnly 1
@@ -515,7 +523,8 @@ proc plc::processInclude {name} {
 			set plc(input_file) [file normalize [file join [file dir $saveFile] $name]]
 			set found [file exists $plc(input_file)]
 		}
-		# If the file does not exist, search the HEADER_SEARCH_PATHS dirs
+		# If the file does not exist, look on the search paths
+		# (HEADER_SEARCH_PATHS variable and -I options)
 		if {!$found} {
 			foreach dir $plc(search_path) {
 				set candidate [file normalize [file join $dir $name]]			
@@ -951,7 +960,7 @@ proc plc::defineMacro {name value} {
 proc plc::resolveFile {name} {
 	set result [file normalize $name]
 	if {[file type $result] eq "link" && ![catch {file readlink $result} trgt]} {
-		set result $trgt
+		set result [file normalize $trgt]
 	} 
 	return $result
 }
@@ -1064,9 +1073,9 @@ proc plc::usage { {showAll 0} } {
 	}
 	set usage "Usage:\n\t$script \[-input_encoding <enc>\] \[-output_encoding <enc>\]\n"
 	append usage "\t\t\[-input_eol <eol>\] \[-output_eol <eol>\] \[-dest <folder>\] \[-o <name>\]\n"
-	append usage "\t\t\[-Dmacro\[=value\]...\] \[-plist <version>\] \[-pkginfo\] plcFile"
+	append usage "\t\t\[-Dmacro\[=value\]\]... \[-plist <version>\] \[-pkginfo\] \[-I <path>\]... plcFile"
 	puts $usage
-	puts "\t$script (-help | -encodings | -version)\n"
+	puts "\t$script (-h\[elp\] | -e\[ncodings\] | -v\[ersion\])\n"
 	if {$showAll} {
 		puts "Default for -input_encoding is macRoman"
 		puts "Default for -output_encoding is utf-8"
@@ -1075,6 +1084,7 @@ proc plc::usage { {showAll 0} } {
 		puts "Possible values for -input_eol and -output_eol: [join $plc(eols) ", "] (default is cr)"
 		puts "Possible values for -plist: 0.9 and 1.0 (default is 1.0)"
 		puts "Use the -pkginfo option to also generate a PkgInfo file"
+		puts "Options -D and -I may occur multiple times"
 	} 
 }
 
