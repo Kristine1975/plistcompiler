@@ -139,8 +139,8 @@ command line or pragmas in the source files. See the
 The complete syntax to run the compiler is:
 ((|
     plcompile [-input_encoding enc] [-output_encoding enc] [-input_eol eol] 
-                    [-output_eol eol] [-dest folder] [-o name] [-plist version] 
-                    [-prefix file] [-Dmacro[=value]...] [-pkginfo] plcFile
+              [-output_eol eol] [-dest folder] [-o name] [-plist version] 
+              [-prefix file] [-Dmacro[=value]]* [-pkginfo] [-I path]* plcFile
 |))
 
 The options have the following meaning:
@@ -194,6 +194,12 @@ like ((b cc b)) or ((b gcc b)): either ((i -Dmacro i)) to simply define a
 macro or ((i -Dmacro=value i)) to define it and attribute a value. There
 can be as many ((i -D i)) options as necessary.
 
+((li the ((i -I i)) option lets you define additional search paths to
+resolve ((i #include i)) directives. ((b PList Compiler b)) builds a list
+of search paths by first reading the ((v HEADER_SEARCH_PATHS v)) XCode
+variable and then appending any path specified by an ((i -I i)) option.
+There can be as many ((i -I i)) options as necessary.
+
 lu))
 
 ((b Note: b)) 
@@ -209,6 +215,9 @@ feature request made in the
 at SourceForge (RFE 1461559).
 ((li the ((i -D i)) option has been introduced in version 0.6. It is a
 feature request made privately.
+((li the ((i -I i)) option has been introduced in version 0.6. It is 
+a code contribution by 
+((lk mailto:jmiltner@users.sourceforge.net )) Jens Miltner lk)) (thanks).
 lu))
 
 
@@ -787,15 +796,24 @@ forms:
 ((nl #include "filename"
 ((nl #include <filename>
 
-The ((i filename i)) value designates a file to include: it can be either
-an absolute or a relative path. A relative path is resolved by searching
-relatively to various folders: in the first form, ((b PList Compiler b))
-will first try to resolve the path relatively to the folder containing the
-parent source file (i-e, the file which invokes the ((i #include i))
-directive). If this fails, it will try all the paths defined in XCode's
-((v HEADER_SEARCH_PATHS v)) variable. In the second form, where the filename is
-enclosed in angle brackets, only the paths defined in the
-((v HEADER_SEARCH_PATHS v)) variable are searched.
+The two forms are not equivalent: the difference is explained below. The
+((i filename i)) value designates a file to include: it can be either an
+absolute or a relative path. A relative path is resolved by searching
+relatively to various folders: 
+((lu
+
+((li in the first form, ((b PList Compiler b)) will first try to resolve
+the path relatively to the folder containing the parent source file (i-e,
+the file which invokes the ((i #include i)) directive). If this fails, it
+will try all the header search paths: these are the paths defined in
+XCode's ((v HEADER_SEARCH_PATHS v)) variable and any path specified on
+the command line using an ((i -I i)) option.
+
+((li In the second form, where the file name is enclosed in angle brackets,
+only the header search paths are searched.
+
+lu))
+ 
 
 The following are all valid examples (the double quotes are necessary only 
 if the filename contains space characters):
@@ -867,14 +885,32 @@ equal sign (==). A single equal sign would provoke an error.
 ((s3 Example 2
 
 When testing a condition involving a string value, one must take care of
-properly quoting the strings. Here is an example (where ((i
-DEBUGGING_SYMBOLS i)) is an XCode variable whose value is ((i YES i)) or
-((i NO i))):
+properly quoting the strings. Here is an example 
+(where ((i DEBUGGING_SYMBOLS i)) is an XCode variable whose value 
+is ((i YES i)) or ((i NO i))):
+!! !! ===================================
+((if $aida_target eq "Html" || $aida_target eq "SplitHtml"
+!! !! ===================================
 ((|
     #if DEBUGGING_SYMBOLS == \"YES\"
         #warning "debugging symbols are enabled"
     #endif
 |))
+!! !! ===================================
+if))
+!! !! ===================================
+!! !! ===================================
+((if $aida_target eq "Man"
+!! !! ===================================
+!! !! Double backslash needed for man page
+((|
+	#if DEBUGGING_SYMBOLS == \\"YES\\"
+		#warning "debugging symbols are enabled"
+	#endif
+|))
+!! !! ===================================
+if))
+!! !! ===================================
 It is not sufficient to just enclose the string ((i YES i)) in double
 quotes (because of double parsing, first by the preprocessor, then by the
 interpreter). Another possible syntax is:

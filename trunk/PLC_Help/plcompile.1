@@ -1,9 +1,9 @@
 .de uline
 \Z'\\$1'\v'.25m'\D'l \w'\\$1'u 0'\v'-.25m'
 ..
-.TH plcompile  "1" "" "2007-08-31"
+.TH plcompile  "1" "" "2007-09-04"
 .PP
- This file documents version 0.6 of PList Compiler.
+ This file documents version 0.6rc3 of PList Compiler.
 .SH Introduction
 .PP
 \fBPList Compiler\fP is a property list compiler for XCode. It lets you
@@ -100,8 +100,8 @@ The complete syntax to run the compiler is:
 .nf
 .sp
     plcompile [-input_encoding enc] [-output_encoding enc] [-input_eol eol] 
-                    [-output_eol eol] [-dest folder] [-o name] [-plist version] 
-                    [-prefix file] [-Dmacro[=value]...] [-pkginfo] plcFile
+              [-output_eol eol] [-dest folder] [-o name] [-plist version] 
+              [-prefix file] [-Dmacro[=value]]* [-pkginfo] [-I path]* plcFile
 .fi
 .RE
 .sp
@@ -155,6 +155,12 @@ the \fI plc\fP file). The syntax is exactly the same as with compilers
 like \fBcc\fP or \fBgcc\fP: either \fI -Dmacro\fP to simply define a
 macro or \fI -Dmacro=value\fP to define it and attribute a value. There
 can be as many \fI -D\fP options as necessary.
+.IP * 4
+the \fI -I\fP option lets you define additional search paths to
+resolve \fI #include\fP directives. \fBPList Compiler\fP builds a list
+of search paths by first reading the HEADER_SEARCH_PATHS XCode
+variable and then appending any path specified by an \fI -I\fP option.
+There can be as many \fI -I\fP options as necessary.
 .RE
 \fBNote:\fP 
 .RS
@@ -173,6 +179,10 @@ at SourceForge (RFE 1461559).
 .IP * 4
 the \fI -D\fP option has been introduced in version 0.6. It is a
 feature request made privately.
+.IP * 4
+the \fI -I\fP option has been introduced in version 0.6. It is 
+a code contribution by 
+Jens Miltner <mailto:jmiltner@users.sourceforge.net> (thanks).
 .RE
 .SH Howto
 .PP
@@ -781,15 +791,23 @@ forms:
  #include "filename"
 .PP
  #include <filename>
-The \fI filename\fP value designates a file to include: it can be either
-an absolute or a relative path. A relative path is resolved by searching
-relatively to various folders: in the first form, \fBPList Compiler\fP
-will first try to resolve the path relatively to the folder containing the
-parent source file (i-e, the file which invokes the \fI #include\fP
-directive). If this fails, it will try all the paths defined in XCode's
-HEADER_SEARCH_PATHS variable. In the second form, where the filename is
-enclosed in angle brackets, only the paths defined in the
-HEADER_SEARCH_PATHS variable are searched.
+The two forms are not equivalent: the difference is explained below. The
+\fI filename\fP value designates a file to include: it can be either an
+absolute or a relative path. A relative path is resolved by searching
+relatively to various folders: 
+.RS
+.IP * 4
+in the first form, \fBPList Compiler\fP will first try to resolve
+the path relatively to the folder containing the parent source file (i-e,
+the file which invokes the \fI #include\fP directive). If this fails, it
+will try all the header search paths: these are the paths defined in
+XCode's HEADER_SEARCH_PATHS variable and any path specified on
+the command line using an \fI -I\fP option.
+.IP * 4
+In the second form, where the file name is enclosed in angle brackets,
+only the header search paths are searched.
+.RE
+ 
 The following are all valid examples (the double quotes are necessary only 
 if the filename contains space characters):
 .RS
