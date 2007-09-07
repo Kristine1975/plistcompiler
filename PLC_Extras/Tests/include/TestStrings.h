@@ -3,9 +3,9 @@
 //                       Created: 2005-11-29 17:51:27
 //             Last modification: 2005-12-13 09:18:02
 // Author: Bernard Desgraupes
-// e-mail: <bdesgraupes@easyconnect.fr>
-// www: <http://webperso.easyconnect.fr/bdesgraupes/>
-// © Copyright: Bernard Desgraupes 2005
+// e-mail: <bdesgraupes@users.sourceforge.net>
+// www: <http://perso.orange.fr/bdesgraupes/>
+// (c) Copyright: Bernard Desgraupes 2005
 // All rights reserved.
 // ===========================================================================
 // This file is included by the Test_include<>.plc via an include macro 

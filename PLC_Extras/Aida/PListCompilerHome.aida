@@ -7,8 +7,6 @@
 !! !! www: <http://perso.orange.fr/bdesgraupes/>
 !! !! (c) Copyright: Bernard Desgraupes 2005-2006
 !! !! All rights reserved.
-!! !! $Date$
-!! !! $Revision$
 !! !! ===========================================================================
 
 :Title:       plistcompiler
@@ -112,13 +110,12 @@ extremely powerful scripting language:
 for more about this language. No compiler is necessary. The code is
 directly executed by the Tcl interpreter.
 
-((nl This code is under CVS control. You can retrieve the latest stage of 
-development using any CVS client. See 
-((lk http://sourceforge.net/cvs/?group_id=149940 )) instructions here lk)).
+((nl The code is under Subversion control. You can retrieve the latest stage of 
+development using any Subversion client. See instructions at:
+<http://sourceforge.net/svn/?group_id=149940>
 
-((nl You can also 
-((lk http://cvs.sourceforge.net/cgi-bin/viewcvs.cgi/plistcompiler )) browse the cvs repository lk))
-online.
+((nl You can browse the Subversion repository online at
+<http://plistcompiler.svn.sourceforge.net/viewvc/plistcompiler> 
 
 
 ((s1 Code contributions
@@ -150,8 +147,8 @@ You can also e-mail me directly: <bdesgraupes@users.sourceforge.net>
 
 ((-
 ((nl Last updated ((s [ISOTime::ISODateAndTimeRelaxed] s))
-((im /cgi-bin/Count.cgi?df=bdesgraupes.dat
-Visitors counter im))
+!! !! ((im /cgi-bin/Count.cgi?df=bdesgraupes.dat
+!! !! Visitors counter im))
 ((-
 !! logo SF
 !! -------

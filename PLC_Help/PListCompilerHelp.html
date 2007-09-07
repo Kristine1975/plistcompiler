@@ -65,7 +65,7 @@ License. The source code is currently hosted and developed on the
 <LI><A HREF="#M51">Known problems</A>
 <LI><A HREF="#M52">Version history</A>
 <LI><A HREF="#M53">License and disclaimer</A>
-</UL><P><P> This file documents version 0.6rc3 of PList Compiler.<P><H2><A NAME="M1"></A>Introduction</H2><P><B>PList Compiler</B> is a property list compiler for XCode. It lets you
+</UL><P><P> This file documents version 0.6 of PList Compiler.<P><H2><A NAME="M1"></A>Introduction</H2><P><B>PList Compiler</B> is a property list compiler for XCode. It lets you
 build localized and non-localized plist files from plc and ploc source
 files. These are the property list files found in packages applications,
 bundles, frameworks, plugins, etc.<P>It is modelled on the CodeWarrior property list language: the idea of
@@ -552,20 +552,32 @@ relatively to various folders:
 <UL><P>	<LI> in the first form, <B>PList Compiler</B> will first try to resolve
 the path relatively to the folder containing the parent source file (i-e,
 the file which invokes the <I>#include</I> directive). If this fails, it
-will try all the header search paths: these are the paths defined in
-XCode's <TT>HEADER_SEARCH_PATHS</TT> variable and any path specified on
-the command line using an <I>-I</I> option.<P>	<LI> In the second form, where the file name is enclosed in angle brackets,
+will try all the header search paths: these are the paths defined in the
+XCode's <TT>HEADER_SEARCH_PATHS</TT> variable and any path specified on the
+command line using an <I>-I</I> option.<P>	<LI> in the second form, where the file name is enclosed in angle brackets,
 only the header search paths are searched.<P></UL>
- <P>The following are all valid examples (the double quotes are necessary only 
+ 
+The following are all valid examples (the double quotes are necessary only 
 if the filename contains space characters):
 <PRE>
     #include /Users/bernardo/Devel/MyApp/Rsrc/OtherFile.plc
     #include OtherFile.plc
     #include "LocFiles/My Strings_EN.ploc"
     #include "../Rsrc/My Strings_EN.ploc"
+</PRE><P>It is also possible to specify a path using a substitutable variable. Here
+is an example:
+<PRE>
+    #define CURRENT_LOCALE "EN"
+    #include "Strings_" CURRENT_LOCALE ".ploc"
 </PRE><P><B>Note:</B> the second form of the <I>#include</I> directive is a code
-contribution by <A HREF="mailto:franz.detro@native-instruments.de"> Franz Detro</A> (thanks) and
-has been introduced in version 0.2 of <B>PList Compiler</B>.<P><H3><A NAME="M28"></A>Conditional macros</H3><P><B>PList Compiler</B> supports the following six conditional directives:
+contribution by 
+<A HREF="mailto:franz.detro@native-instruments.de"> Franz Detro</A> (thanks) 
+introduced in version 0.2 of <B>PList
+Compiler</B>. The support for substitutable variables in #include paths is
+a code contribution by 
+<A HREF="mailto:stevec@shoutingmime.com"> Steve Christensen</A> (thanks) 
+introduced in version 0.6 of <B>PList
+Compiler</B>.<P><H3><A NAME="M28"></A>Conditional macros</H3><P><B>PList Compiler</B> supports the following six conditional directives:
 <I>#if</I>, <I>#ifdef</I>, <I>#ifndef</I>, <I>#elif</I>, 
 <I>#else</I>, <I>#endif</I> 
 which let you build
@@ -1025,13 +1037,13 @@ slashes in strings. Fixed bug with user defined macros enclosed in double
 underscores (Bug 1413845). Implements new -prefix option (RFE 1461559) and new 
 -o option (patch 1474228). New pragma escape_entities.
 	<LI> 2006-11-12 - 0.5.1 - Improved generation of Pkginfo file.
-	<LI> 2007-08-30 - 0.6 - New -D opiton to define macros on the command 
-line. Support for line continuator. Sym links resolution. Simplified 
-variable substitution. Minor fixes.
+	<LI> 2007-09-07 - 0.6 - New -D option to define macros on the command line.
+New -I option to add include paths. Support for line continuator. Sym links
+resolution. Simplified and improved variable substitution. Minor fixes.
 </UL><P><H2><A NAME="M53"></A>License and disclaimer</H2><P><B>PList Compiler</B> is distributed under the same BSD License as
 the Tcl language itself: see the file <I>License_terms</I> in the distribution or 
 the <A HREF="http://www.opensource.org/licenses/bsd-license"> Open Source Initiative site.</A><P><HR>
-<P> Last updated 2007-09-04 10:37:34
+<P> Last updated 2007-09-07 08:25:41
 <!--  logo SF -->
 <!--  ------- -->
 <HR>

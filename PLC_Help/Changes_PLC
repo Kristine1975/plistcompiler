@@ -54,6 +54,8 @@ command line.
 ¥ Added variable substitution when parsing "boolean" type (Patch 1683197 - thanks Ron!)
 ¥ Added -I command line option to specify additional include paths 
 (contributed by Jens Miltner - thanks!)
+¥ Added support for variable substitution in #include paths (contributed by 
+Steve Christensen - thanks!)
 
 ================================================================================
 = 0.5.2	                 	            last update: 2007-05-21 16:24:04
