@@ -5,7 +5,7 @@ exec tclsh "$0" "$@"
 # ===========================================================================
 # File: "PlistComp.tcl"
 #                        Created: 2005-10-01 21:46:19
-#              Last modification: 2007-09-04 11:59:06
+#              Last modification: 2007-09-07 06:56:57
 # Author: Bernard Desgraupes
 # e-mail: <bdesgraupes@users.sourceforge.net>
 # www: <http://sourceforge.net/projects/plistcompiler>
@@ -19,7 +19,7 @@ namespace eval plc {}
 unset -nocomplain plc_def plc_int plc
 
 # Current version number
-set plc(version) "0.6rc3"
+set plc(version) "0.6"
 
 # Retrieving the values of the shell variables: the env array contains the
 # values for all the environment variables defined by XCode.
@@ -419,7 +419,13 @@ proc plc::parseMacro {line} {
 					incr plc(iflevel) -1
 				}
 				"include" {
-					processInclude $definition
+					# Substitute any macro definitions in the path
+					# (contributed by Steve Christensen - thanks!)
+					set value ""
+					foreach a $definition {
+						append value [plc::substitute $a]
+					} 
+					processInclude $value
 				}
 				"define" {
 					if {[regexp {(\w+)[ \t]*([^\r\n]*)$} $definition -> value arg]} {
@@ -455,7 +461,7 @@ proc plc::parseMacro {line} {
 						foreach a $arg {
 							append value [plc::substitute $a]
 						} 
-						plc::parsePragma $name $value
+						parsePragma $name $value
 					}
 				}
 			}
@@ -510,8 +516,6 @@ proc plc::processInclude {name} {
 	if {[regsub "^<(.*)>$" $name "\\1" name]} {
 		set headerPathOnly 1
 	} 	
-	# Remove outer quotes and whitespace chars
-	set name [string trim $name "\""]
 	
 	if {[file exists $name]} {
 		# 'name' is an absolute path

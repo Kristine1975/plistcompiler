@@ -1,14 +1,12 @@
 !! !! ===========================================================================
 !! !! File: "PListCompilerReadme.aida"
 !! !!                        Created: 2005-10-06 18:02:08
-!! !!              Last modification: 2005-11-03 08:37:23
+!! !!              Last modification: 2007-09-07 07:04:12
 !! !! Author: Bernard Desgraupes
 !! !! e-mail: <bdesgraupes@users.sourceforge.net>
 !! !! www: <http://perso.orange.fr/bdesgraupes/>
-!! !! (c) Copyright: Bernard Desgraupes 2005
+!! !! (c) Copyright: Bernard Desgraupes 2005-2007
 !! !! All rights reserved.
-!! !! $Date$
-!! !! $Revision$
 !! !! ===========================================================================
 
 :Title:       PListCompiler_Readme
@@ -16,12 +14,12 @@
 :Author:      Bernard DESGRAUPES <bdesgraupes@users.sourceforge.net>
 :Homepage:    <http://perso.orange.fr/bdesgraupes/>
 :Created:     2005-10-06 18:02:08
-:Modified:    2005-11-03 08:37:23
+:Modified:    2007-09-07 07:04:12
 :Keywords:    property list, xcode, compiler
 :Source:      PlcAidaMacros.tcl
 
 ((b PList Compiler b))
-Version ((s [plc::getVersion] s)).
+Version ((s [plc::getVersion] s))
 
 ((b PList Compiler b)) is a property list compiler for XCode, 
 Apple's development environment. It lets you build localized and

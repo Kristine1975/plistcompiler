@@ -1,5 +1,5 @@
 PList Compiler
-Version 0.6.
+Version 0.6
 
 PList Compiler is a property list compiler for XCode, Apple's development
 environment. It lets you build localized and non-localized plist files from
@@ -24,9 +24,8 @@ Thank you for sending feedback.
 
 A help file with complete documentation about the PLC syntax and
 instructions about the usage of the compiler in an XCode project is
-included in the distribution. You can also
-read it online. 
-<http://perso.orange.fr/bdesgraupes/DocHTML/PListCompilerHelp.html> 
+included in the distribution. You can also read it online.
+<http://perso.orange.fr/bdesgraupes/DocHTML/PListCompilerHelp.html>
 
 PList Compiler is a free software. It is also an Open Source Project
 distributed under the same BSD License as the Tcl language itself: see the
@@ -47,4 +46,4 @@ Please e-mail me any problem you encounter with this software:
 (c) Copyright: Bernard Desgraupes, 2005-2007
  All rights reserved.
 
-Last update 2007-08-30 16:20:02
+Last update 2007-09-07 07:03:03
