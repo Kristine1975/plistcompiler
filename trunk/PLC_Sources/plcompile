@@ -5,7 +5,7 @@ exec tclsh "$0" "$@"
 # ===========================================================================
 # File: "PlistComp.tcl"
 #                        Created: 2005-10-01 21:46:19
-#              Last modification: 2007-09-07 06:56:57
+#              Last modification: 2007-09-10 18:48:54
 # Author: Bernard Desgraupes
 # e-mail: <bdesgraupes@users.sourceforge.net>
 # www: <http://sourceforge.net/projects/plistcompiler>
@@ -445,8 +445,7 @@ proc plc::parseMacro {line} {
 					foreach a $definition {
 						append value [plc::substitute $a]
 					} 
-					puts "#error: $value"
-					error "processing interrupted by #error macro"
+					error $value
 				}
 				"warning" - "message" {
 					set value ""
@@ -585,11 +584,11 @@ proc plc::parsePragma {name value} {
 		}
 		"once" - "notonce" {
 			# Not supported
-			puts "ignoring unsupported pragma $name"
+			puts "Warning: ignoring unsupported pragma $name"
 		}
 		default {
 			# Ignore other pragmas
-			puts "ignoring unknown pragma $name"
+			puts "Warning: ignoring unknown pragma $name"
 		}
 	}
 }
@@ -964,7 +963,12 @@ proc plc::defineMacro {name value} {
 proc plc::resolveFile {name} {
 	set result [file normalize $name]
 	if {[file type $result] eq "link" && ![catch {file readlink $result} trgt]} {
+		# [file normalize] computes paths relative to the current directory
+		# so temporarily switch to the parent dir of $name
+		set olddir [pwd]
+		cd [file dir $result]
 		set result [file normalize $trgt]
+		cd $olddir
 	} 
 	return $result
 }
