@@ -1,7 +1,7 @@
 // ===========================================================================
 // Test_prefix.h
 //                       Created: 2006-11-04 18:16:25
-//             Last modification: 2007-08-30 14:38:07
+//             Last modification: 2007-09-10 19:13:29
 // Author: Bernard Desgraupes
 // e-mail: <bdesgraupes@users.sourceforge.net>
 // www: <http://sourceforge.net/projects/plistcompiler>
@@ -17,6 +17,7 @@
 // Prefix files can also be soft links. This can be tested with the
 // Test_link_prefix.h file which is a soft link to the present file.
 //     plcompile -prefix Test_link_prefix.h Test_prefix.plc
+//     
 
 
 #define PLC_Identifier "net.sourceforge.plistcompiler"
@@ -52,7 +53,10 @@
 
 // Note;
 // PLC_DEBUG should be defined in the shell:
-//     export PLC_DEBUG=1
+//     export PLC_DEBUG=0
+// It is also possible to pass it via the -D option:
+//     plcompile -DPLC_DEBUG=0 -prefix Test_prefix.h Test_prefix.plc
+//
 //     
 // If it is set to 1, errors will follow
 // If it is set to 0, processing should be ok

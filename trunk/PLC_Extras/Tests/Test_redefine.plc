@@ -1,7 +1,7 @@
 // ===========================================================================
 // Test_redefine.plc
 //                       Created: 2007-08-30 09:07:39
-//             Last modification: 2007-08-30 09:23:18
+//             Last modification: 2007-09-11 08:22:02
 // Author: Bernard Desgraupes
 // e-mail: <bdesgraupes@users.sourceforge.net>
 // www: <http://sourceforge.net/projects/plistcompiler>
@@ -34,9 +34,10 @@
 
 
 // -------------------------------------------------------------------------
-//    dereferencing inheirted variable enclose in double underscores
+//    dereferencing inherited variable enclosed in double underscores
 // -------------------------------------------------------------------------
-// Should work when the following #define is enabled and issue a warning when it is disabled
+// Should work when the following #define is enabled and issue a warning
+// when it is disabled
 
 
 #define __INSTALL_DIR__ "/Users/bernardo"

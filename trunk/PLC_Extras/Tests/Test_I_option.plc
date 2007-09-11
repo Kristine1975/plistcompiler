@@ -11,7 +11,10 @@
 // Test the -I option. This test must be executed from the command line or
 // from the test XCode project. Change directory to the Tests folder.
 // 
+// CLI:
 //     ../../PLC_Sources/plcompile -I include-extra Test_I_option.plc
+// XCode:    
+//     ./plcompile -input_encoding macRoman -pkginfo -I ../PLC_Extras/Tests/include-extra ../PLC_Extras/Tests/Test_${testname}.plc
 // 
 // Testing a full path. Put a copy of TestExtraStrings.h in home directory
 //     ../../PLC_Sources/plcompile -I ~ Test_I_option.plc
@@ -21,6 +24,7 @@
 //     Sym link created with
 //     ln -s include-extra include-link
 //     ../../PLC_Sources/plcompile -I include-link Test_I_option.plc
+//     ./plcompile -input_encoding macRoman -pkginfo -I ../PLC_Extras/Tests/include-link ../PLC_Extras/Tests/Test_${testname}.plc
 //     
 
 #include <TestExtraStrings.h>
