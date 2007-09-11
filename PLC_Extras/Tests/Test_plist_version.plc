@@ -12,14 +12,14 @@
 #warning "Checking the version of the plist format (" __PLIST__ ")"
 
 #ifdef __PLIST__
-   #message "__PLIST__  var is defined"
+    #message "__PLIST__  var is defined"
 #else
-	#message "__PLIST__  var is NOT defined"
+    #message "__PLIST__  var is NOT defined"
 #endif
 
 
 // Should raise an error
 #if __PLIST__ < 2.0
-   #error "The property list version is too old"
+    #error "the property list version is too old"
 #endif
 

@@ -35,9 +35,9 @@
 
 // No need to quote numeric values
 #if __PLIST__ > 0.9
-   #warning "The property list version is ok"
+   #warning "the property list version is ok"
 #else
-	#warning "The property list version is too old"
+	#warning "the property list version is too old"
 #endif
 
 

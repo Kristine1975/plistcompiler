@@ -1,7 +1,7 @@
 // ===========================================================================
 // Test_PREPROCESSOR_DEFS.plc
-//                       Created: 2005-10-03 06:28:51
-//             Last modification: 2005-10-04 06:29:05
+//                       Created: 2007-09-11 08:19:45
+//             Last modification: 2007-09-11 08:19:49
 // Author: Bernard Desgraupes
 // e-mail: <bdesgraupes@users.sourceforge.net>
 // www: <http://sourceforge.net/projects/plistcompiler>
@@ -17,6 +17,12 @@
 //     INFOPLIST_PREPROCESSOR_DEFINITIONS: NICE="some nice string" __AUTHOR__="bernardo" IS_TEST
 // 
 // 
+
+/***********************************
+*                                  *
+*   Not implemented (2007-09-11)   *
+*                                  *
+***********************************/
 
 
 #ifdef IS_TEST

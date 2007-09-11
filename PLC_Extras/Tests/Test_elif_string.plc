@@ -1,7 +1,7 @@
 // ===========================================================================
 // Test_elif_string.plc
 //                       Created: 2007-08-30 17:04:53
-//             Last modification: 2007-08-30 17:27:47
+//             Last modification: 2007-09-11 07:18:27
 // Author: Bernard Desgraupes
 // e-mail: <bdesgraupes@users.sourceforge.net>
 // www: <http://sourceforge.net/projects/plistcompiler>
@@ -39,10 +39,10 @@
 
 // No need to quote numeric values
 #if __PLIST__ >= 2.0
-   #warning "The property list version is greater than 2"
+   #warning "the property list version is greater than 2"
 #elif __PLIST__ > 0.9
-	#warning "The property list version is ok"
+	#warning "the property list version is ok"
 #else
-	#warning "The property list version is too old"
+	#warning "the property list version is too old"
 #endif
 

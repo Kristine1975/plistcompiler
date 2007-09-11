@@ -1,13 +1,17 @@
 // ===========================================================================
 // Test_undef.plc
 //                       Created: 2005-10-03 06:28:51
-//             Last modification: 2007-08-30 10:01:46
+//             Last modification: 2007-09-11 08:33:30
 // Author: Bernard Desgraupes
 // e-mail: <bdesgraupes@users.sourceforge.net>
 // www: <http://sourceforge.net/projects/plistcompiler>
 // (c) Copyright: Bernard Desgraupes 2005-2007
 // All rights reserved.
 // ===========================================================================
+// NB: 
+// the PLC_DEBUG variable must be defined. For instance, execute the
+// test from the XCode project like this:
+//     ./plcompile -pkginfo -DPLC_DEBUG=1 ../PLC_Extras/Tests/Test_${testname}.plc
 
 
 #ifndef kNewlyDefinedMacro
