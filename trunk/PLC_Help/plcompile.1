@@ -1,9 +1,9 @@
 .de uline
 \Z'\\$1'\v'.25m'\D'l \w'\\$1'u 0'\v'-.25m'
 ..
-.TH plcompile  "1" "" "2007-09-04"
+.TH plcompile  "1" "" "2007-09-11"
 .PP
- This file documents version 0.6rc3 of PList Compiler.
+ This file documents version 0.6 of PList Compiler.
 .SH Introduction
 .PP
 \fBPList Compiler\fP is a property list compiler for XCode. It lets you
@@ -101,7 +101,7 @@ The complete syntax to run the compiler is:
 .sp
     plcompile [-input_encoding enc] [-output_encoding enc] [-input_eol eol] 
               [-output_eol eol] [-dest folder] [-o name] [-plist version] 
-              [-prefix file] [-Dmacro[=value]]* [-pkginfo] [-I path]* plcFile
+              [-prefix file] [-Dmacro[=value]]... [-pkginfo] [-I path]... plcFile
 .fi
 .RE
 .sp
@@ -161,28 +161,6 @@ resolve \fI #include\fP directives. \fBPList Compiler\fP builds a list
 of search paths by first reading the HEADER_SEARCH_PATHS XCode
 variable and then appending any path specified by an \fI -I\fP option.
 There can be as many \fI -I\fP options as necessary.
-.RE
-\fBNote:\fP 
-.RS
-.IP * 4
-the \fI -pkginfo\fP option has been introduced in version 0.2 of \fI PList Compiler\fP
-by Franz Detro <mailto:franz.detro@native-instruments.de> (thanks).
-.IP * 4
-the \fI -o\fP option has been introduced in version 0.5. This is 
-patch 1474228 contributed by 
-Jens Miltner <mailto:jmiltner@users.sourceforge.net> (thanks).
-.IP * 4
-the \fI -prefix\fP option has been introduced in version 0.5. It is a
-feature request made in the 
-\fI PList Compiler\fP tracker <http://sourceforge.net/tracker/?group_id=149940>
-at SourceForge (RFE 1461559).
-.IP * 4
-the \fI -D\fP option has been introduced in version 0.6. It is a
-feature request made privately.
-.IP * 4
-the \fI -I\fP option has been introduced in version 0.6. It is 
-a code contribution by 
-Jens Miltner <mailto:jmiltner@users.sourceforge.net> (thanks).
 .RE
 .SH Howto
 .PP
@@ -800,11 +778,11 @@ relatively to various folders:
 in the first form, \fBPList Compiler\fP will first try to resolve
 the path relatively to the folder containing the parent source file (i-e,
 the file which invokes the \fI #include\fP directive). If this fails, it
-will try all the header search paths: these are the paths defined in
-XCode's HEADER_SEARCH_PATHS variable and any path specified on
-the command line using an \fI -I\fP option.
+will try all the header search paths: these are the paths defined in the
+XCode's HEADER_SEARCH_PATHS variable and any path specified on the
+command line using an \fI -I\fP option.
 .IP * 4
-In the second form, where the file name is enclosed in angle brackets,
+in the second form, where the file name is enclosed in angle brackets,
 only the header search paths are searched.
 .RE
  
@@ -820,9 +798,16 @@ if the filename contains space characters):
 .fi
 .RE
 .sp
-\fBNote:\fP the second form of the \fI #include\fP directive is a code
-contribution by Franz Detro <mailto:franz.detro@native-instruments.de> (thanks) and
-has been introduced in version 0.2 of \fBPList Compiler\fP.
+It is also possible to specify a path using a substitutable variable. Here
+is an example:
+.RS
+.nf
+.sp
+    #define CURRENT_LOCALE "EN"
+    #include "Strings_" CURRENT_LOCALE ".ploc"
+.fi
+.RE
+.sp
 .SH\s-1 Conditional macros\s+1
 .PP
 \fBPList Compiler\fP supports the following six conditional directives:
@@ -1464,9 +1449,9 @@ underscores (Bug 1413845). Implements new -prefix option (RFE 1461559) and new
 .IP * 4
 2006-11-12 - 0.5.1 - Improved generation of Pkginfo file.
 .IP * 4
-2007-08-30 - 0.6 - New -D opiton to define macros on the command 
-line. Support for line continuator. Sym links resolution. Simplified 
-variable substitution. Minor fixes.
+2007-09-07 - 0.6 - New -D option to define macros on the command line.
+New -I option to add include paths. Support for line continuator. Sym links
+resolution. Simplified and improved variable substitution. Minor fixes.
 .RE
 .SH License and disclaimer
 .PP
