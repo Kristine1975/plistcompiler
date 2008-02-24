@@ -5,11 +5,11 @@ exec tclsh "$0" "$@"
 # ===========================================================================
 # File: "PlistComp.tcl"
 #                        Created: 2005-10-01 21:46:19
-#              Last modification: 2007-09-10 18:48:54
+#              Last modification: 2008-02-24 08:58:56
 # Author: Bernard Desgraupes
 # e-mail: <bdesgraupes@users.sourceforge.net>
 # www: <http://sourceforge.net/projects/plistcompiler>
-# (c) Copyright: Bernard Desgraupes 2005-2007
+# (c) Copyright: Bernard Desgraupes 2005-2007, 2008
 # All rights reserved.
 # ===========================================================================
 
@@ -19,10 +19,10 @@ namespace eval plc {}
 unset -nocomplain plc_def plc_int plc
 
 # Current version number
-set plc(version) "0.6"
+set plc(version) "0.7b1"
 
 # Retrieving the values of the shell variables: the env array contains the
-# values for all the environment variables defined by XCode.
+# values for all the environment variables defined by Xcode.
 array set plc_def [array get env]
 
 # Legacy: predefined variables of the CodeWarrior property list compiler 
@@ -146,7 +146,7 @@ proc plc::execute {args} {
 	} 
 	set plc(input_file) $srcfile
 	# Define a default output folder in case nothing was inherited 
-	# from the XCode settings (for instance, if the script is used directly 
+	# from the Xcode settings (for instance, if the script is used directly 
 	# from Terminal). This can be overridden by a -dest option below.
 	if {![info exists plc(output_folder)]} {
 		set plc(output_folder) [file dir $srcfile]
@@ -913,8 +913,9 @@ proc plc::writePreamble {} {
 		set enc "UTF-16"
 	} 
 	puts $plc(outid) "<?xml version=\"1.0\" encoding=\"$enc\"?>"
-	# <!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-	puts $plc(outid) "<!DOCTYPE plist SYSTEM \"file://localhost/System/Library/DTDs/PropertyList.dtd\">"
+	# "<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">"
+	# "<!DOCTYPE plist SYSTEM \"file://localhost/System/Library/DTDs/PropertyList.dtd\">"
+	puts $plc(outid) "<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">"
 }
 
 proc plc::indent {} {
@@ -1020,7 +1021,7 @@ proc plc::encodeBase64 {hexstring} {
 proc plc::generatePkgInfo {} {
 	global plc env
 	if {[info exists env(GENERATE_PKGINFO_FILE)] && [plc::boolValue $env(GENERATE_PKGINFO_FILE)] == 1} {
-		error "you must turn off the 'Force Package Info Generation' setting in XCode to use the -pkginfo option"
+		error "you must turn off the 'Force Package Info Generation' setting in Xcode to use the -pkginfo option"
 	} 	
 	# Get signature and type
 	plc::getInfoForPkg "signature" "MACOS_CREATOR"
@@ -1042,7 +1043,7 @@ proc plc::getInfoForPkg {kind macro} {
 	# * otherwise, if the CFBundleSignature and CFBundleType keys have
 	#   been specified, use their value (captured in parseString)
 	# * otherwise, if the MACOS_CREATOR and MACOS_TYPE variables have
-	#   been defined in XCode, use their value
+	#   been defined in Xcode, use their value
 	# * as last resort, use "????"
 	if {[info exists plc_def(PKGINFO_[string toupper $kind])]} {
 		set plc(bundle_$kind) [set plc_def(PKGINFO_[string toupper $kind])]
