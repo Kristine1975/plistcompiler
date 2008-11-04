@@ -62,7 +62,7 @@ set plc_int(__SECONDS__) [clock format $t -format "%S"]
 # Initializations
 # ---------------
 set plc(context) ""
-set plc(contextlevel) 0
+set plc(contextlevel) -1
 set plc(parsing) 0
 set plc(localizing) 0
 set plc(pkginfo) 0
