@@ -1,15 +1,15 @@
-#!/bin/bash
+#!/bin/sh
 # the next line restarts using tclsh \
 exec tclsh "$0" "$@"
 
 # ===========================================================================
 # File: "PlistComp.tcl"
 #                        Created: 2005-10-01 21:46:19
-#              Last modification: 2008-02-24 08:58:56
+#              Last modification: 2008-11-04 17:25:24
 # Author: Bernard Desgraupes
 # e-mail: <bdesgraupes@users.sourceforge.net>
 # www: <http://sourceforge.net/projects/plistcompiler>
-# (c) Copyright: Bernard Desgraupes 2005-2007, 2008
+# (c) Copyright: Bernard Desgraupes 2005-2008
 # All rights reserved.
 # ===========================================================================
 
@@ -19,7 +19,7 @@ namespace eval plc {}
 unset -nocomplain plc_def plc_int plc
 
 # Current version number
-set plc(version) "0.7b1"
+set plc(version) "0.7b2"
 
 # Retrieving the values of the shell variables: the env array contains the
 # values for all the environment variables defined by Xcode.
@@ -46,17 +46,18 @@ if {[info exists env(PRODUCT_NAME)]} {
 # --------------------
 # Enclose them between double underscores to invoke 
 # them in the plc file. For instance __DATE__ or __YEAR__
-set plc_int(__DATE__) [clock format [clock seconds] -format "%Y-%m-%dT%H:%M:%SZ"]
-set plc_int(__SHORTDATE__) [clock format [clock seconds] -format "%Y-%m-%d"]
-set plc_int(__YEAR__) [clock format [clock seconds] -format "%Y"]
-set plc_int(__MONTH__) [clock format [clock seconds] -format "%m"]
-set plc_int(__MONTHNAME__) [clock format [clock seconds] -format "%B"]
-set plc_int(__DAY__) [clock format [clock seconds] -format "%d"]
-set plc_int(__DAYNAME__) [clock format [clock seconds] -format "%A"]
-set plc_int(__TIME__) [clock format [clock seconds] -format "%H:%M:%S"]
-set plc_int(__HOURS__) [clock format [clock seconds] -format "%H"]
-set plc_int(__MINUTES__) [clock format [clock seconds] -format "%M"]
-set plc_int(__SECONDS__) [clock format [clock seconds] -format "%S"]
+set t [clock seconds]
+set plc_int(__DATE__) [clock format $t -format "%Y-%m-%dT%H:%M:%SZ"]
+set plc_int(__SHORTDATE__) [clock format $t -format "%Y-%m-%d"]
+set plc_int(__YEAR__) [clock format $t -format "%Y"]
+set plc_int(__MONTH__) [clock format $t -format "%m"]
+set plc_int(__MONTHNAME__) [clock format $t -format "%B"]
+set plc_int(__DAY__) [clock format $t -format "%d"]
+set plc_int(__DAYNAME__) [clock format $t -format "%A"]
+set plc_int(__TIME__) [clock format $t -format "%H:%M:%S"]
+set plc_int(__HOURS__) [clock format $t -format "%H"]
+set plc_int(__MINUTES__) [clock format $t -format "%M"]
+set plc_int(__SECONDS__) [clock format $t -format "%S"]
 
 # Initializations
 # ---------------
@@ -286,9 +287,10 @@ proc plc::normalize {txt} {
 	# Strip comments: if a line starts with // it is deleted
 	# unconditionnally. If the // is not at the beginning of the line, it
 	# is considered as a comment only if there is no double quote after it
-	# otherwise it might be a double slash inside a quoted string.
-	regsub  -line -all {^//.*$} $txt {} txt
-	regsub  -line -all {//[^"]*$} $txt {} txt
+	# otherwise it might be a double slash inside a quoted string 
+	# (regexp improved by TheDoktor - thanks!)
+	regsub  -line -all {^\s*//.*$} $txt {} txt
+	regsub  -line -all {//([^"]|"[^"]*")*$} $txt {} txt
 
 	# Regexp to capture C-like comments (works with the (?w) directive or
 	# -lineanchor option):
@@ -305,7 +307,7 @@ proc plc::normalize {txt} {
 
 	# Remove empty lines
 	regsub -line -all "^\[\r\n\]" $txt "" txt
-	return $txt	
+	return $txt
 }
 
 proc plc::processFile {file} {
@@ -425,7 +427,7 @@ proc plc::parseMacro {line} {
 					foreach a $definition {
 						append value [plc::substitute $a]
 					} 
-					processInclude $value
+					plc::processInclude $value
 				}
 				"define" {
 					if {[regexp {(\w+)[ \t]*([^\r\n]*)$} $definition -> value arg]} {
@@ -460,7 +462,7 @@ proc plc::parseMacro {line} {
 						foreach a $arg {
 							append value [plc::substitute $a]
 						} 
-						parsePragma $name $value
+						plc::parsePragma $name $value
 					}
 				}
 			}
@@ -583,8 +585,8 @@ proc plc::parsePragma {name value} {
 			# Silently ignored
 		}
 		"once" - "notonce" {
-			# Not supported
-			puts "Warning: ignoring unsupported pragma $name"
+			# Not supported. Ignore.
+			## puts "Warning: ignoring unsupported pragma $name"
 		}
 		default {
 			# Ignore other pragmas
@@ -888,7 +890,7 @@ proc plc::writeTag {tag {which "open"} {indent 0}} {
 	switch -- $which {
 		"open" {
 			if {[string match "plist*" $tag] || $tag eq "dict" || $tag eq "array"} {
-				puts $plc(outid) "[plc::indent]<$tag>"				
+				puts $plc(outid) "[plc::indent]<$tag>"
 			} else {
 				puts -nonewline $plc(outid) "[plc::indent]<$tag>"
 			}	
@@ -1030,7 +1032,7 @@ proc plc::generatePkgInfo {} {
 	set outfolder [file normalize [file join $plc(output_folder) $plc(in_package_directory)]]
 	plc::contextStart "pkginfo"
 	plc::openOutFile [file join $outfolder "PkgInfo"]
-	puts $plc(outid) "$plc(bundle_type)$plc(bundle_signature)"
+	puts -nonewline $plc(outid) "$plc(bundle_type)$plc(bundle_signature)"
 	plc::contextEnd "pkginfo"
 }
 
