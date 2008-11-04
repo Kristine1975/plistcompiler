@@ -1,0 +1,52 @@
+// ===========================================================================
+// Test_define_with_comment.plc
+//                       Created: 2008-11-04 16:03:09
+//             Last modification: 2008-11-04 16:03:19
+// Author: Bernard Desgraupes
+// e-mail: <bdesgraupes@users.sourceforge.net>
+// www: <http://sourceforge.net/projects/plistcompiler>
+// (c) Copyright: Bernard Desgraupes 2005-2008
+// All rights reserved.
+// ===========================================================================
+
+#define kIdentifier "net.sourceforge.plistcompiler"
+
+#define kAppName 'PLC '
+
+#define kAppProp 'great'
+
+#define kShortInfo kAppName "is " kAppProp
+
+#define kLongInfo kShortInfo ", all rights reserved for " __YEAR__
+
+#define __bla__ "ablacadabla"
+
+#define bla_bla "abla_ca_dabla"
+
+#define bla_bla_bla bla_bla "_" bla_bla
+
+#define MACRO1 "VALUE"  // "..."		<- quotes in comment
+#define MACRO2 "VALUE"  // <key-word> "..."	<- key-word & quotes in comment
+
+// Intentional double slash in URL to see if confusion with comment
+#define URL_STRING  "http://sourceforge.net/plistcompiler"
+
+
+plist
+{
+	dictionary
+	{
+		key "Identifier" value string kIdentifier
+		key "ShortInfo" value string kShortInfo
+		key "LongInfo" value string kLongInfo
+		key "Name" value string kAppName
+		key "SingleQuoted" value string ' App Name '
+		key "Magic" value string __bla__
+		key "Underscored" value string bla_bla
+		key "LongMagic" value string bla_bla_bla
+		key "Macro1" value string MACRO1
+		key "Macro2" value string MACRO2
+		key "Homepage" value string URL_STRING
+	}
+}
+
