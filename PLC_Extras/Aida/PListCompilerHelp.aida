@@ -26,7 +26,7 @@
 !! !! ===================================
 
 ((/
-((b PList Compiler b)) is a property list compiler for XCode. 
+((b PList Compiler b)) is a property list compiler for Xcode. 
 It is developed as an ((i Open Source i)) project coming with a BSD
 License. The source code is currently hosted and developed on the 
 ((lk http://sourceforge.net/projects/plistcompiler ))SourceForge site. lk))
@@ -41,7 +41,7 @@ if))
 ((s1 Introduction
 
 
-((b PList Compiler b)) is a property list compiler for XCode. It lets you
+((b PList Compiler b)) is a property list compiler for Xcode. It lets you
 build localized and non-localized plist files from plc and ploc source
 files. These are the property list files found in packages applications,
 bundles, frameworks, plugins, etc.
@@ -54,17 +54,17 @@ lets you have the compiler build the property list files for you
 automatically, substituting the right values during the building process,
 instead of having to manage manually hard-coded XML files. CodeWarrior Pro 
 8 introduced a first draft of the plc language together with a dedicated 
-compiler written by Josef W. Wankerl. Unfortunately XCode does not offer 
+compiler written by Josef W. Wankerl. Unfortunately Xcode does not offer 
 such a handy tool. Here comes ((b PList Compiler b))!
 
 It is a shell script, named ((b plcompile b)), which is meant to be executed during a Shell Script
-Build Phase within an XCode project. It can also be run directly as a
+Build Phase within an Xcode project. It can also be run directly as a
 command line tool if you need to work only with plc files independently 
 from the rest of your project.
 
 ((b PList Compiler b)) uses the same syntax as the original CodeWarrior 
 compiler it supports most of its functionalities and adds many more to take 
-advantage of all the XCode settings.
+advantage of all the Xcode settings.
 
 ((b PList Compiler b)) is written in fact in ((b Tcl b)) 
 (the ((lk http://wiki.tcl.tk/ )) Tool Command Language lk))): 
@@ -119,7 +119,7 @@ Unicode utf-8 form.
 
 The default destination folder depends on how you execute the compiler:
 ((lu
-((li if you run the script from XCode as a ((i Shell Script phase i)) (this
+((li if you run the script from Xcode as a ((i Shell Script phase i)) (this
 is the recommended way), the destination folder depends on the kind of
 product you are building: it is the ((i Contents i)) folder inside the
 application bundle when you are building a packaged application; in the
@@ -196,9 +196,10 @@ can be as many ((i -D i)) options as necessary.
 
 ((li the ((i -I i)) option lets you define additional search paths to
 resolve ((i #include i)) directives. ((b PList Compiler b)) builds a list
-of search paths by first reading the ((v HEADER_SEARCH_PATHS v)) XCode
-variable and then appending any path specified by an ((i -I i)) option.
-There can be as many ((i -I i)) options as necessary.
+of search paths by first reading the ((v HEADER_SEARCH_PATHS v)) and
+((v USER_HEADER_SEARCH_PATHS v)) Xcode variables and then appending any
+path specified by an ((i -I i)) option. There can be as many ((i -I i))
+options as necessary.
 
 lu))
 
@@ -229,25 +230,25 @@ if))
 
 ((s1 Howto
 
-((s2 Using PList Compiler in an XCode project
+((s2 Using PList Compiler in an Xcode project
 
 The idea is to generate the various plist files and localized strings
-files during a ((i Shell Script Build Phase i)) within your XCode project. 
-XCode lets you define ((i Shell Script Build Phases i)): they are shell
+files during a ((i Shell Script Build Phase i)) within your Xcode project. 
+Xcode lets you define ((i Shell Script Build Phases i)): they are shell
 scripts which can be executed at any stage of the building process. 
 
-So, in order to use ((b PList Compiler b)) from XCode, you would normally create, in
+So, in order to use ((b PList Compiler b)) from Xcode, you would normally create, in
 all the targets for which you want plist files to be generated, a build phase
 which could take place at the end of the build process. To create a 
 ((i Shell Script Build Phase i)), select the target you want in the ((i Groups
 and Files i)) panel of your main project window and select the ((i Shell
 Script Build Phase i)) command in the ((i New Build Phase i)) submenu of
 the ((i Project i)) menu. If you open the disclosure triangle located in 
-front of the target's name, you will see your new shell phase (in XCode 2.1, 
+front of the target's name, you will see your new shell phase (in Xcode 2.1, 
 it is called ((i Run Script i))). Select it and click on the ((i Info i)) button 
 in the toolbar (or select ((i Get Info i)) in the ((i File i)) menu).
 
-XCode displays a window in which you can enter shell commands to execute. 
+Xcode displays a window in which you can enter shell commands to execute. 
 If your plc file is named MyApp.plc, you should just have to enter a 
 command like
 ((|
@@ -281,9 +282,9 @@ The ((i plcompile i)) script can be used directly from the command line (in
 a Terminal window). There is only one caveat with this approach: only the
 environment variables defined in the current shell window are available.
 This means that you must make sure, if ever your plc file makes use of
-environment variables defined by XCode, that they are available in the
+environment variables defined by Xcode, that they are available in the
 shell. You could have to define them manually. If your plc file does not
-need any of the values set by XCode, then you should normally be able to
+need any of the values set by Xcode, then you should normally be able to
 compile your plc files directly. You will probably want, in that case, to
 specify a destination folder using the ((i -dest i)) command line option.
 
@@ -332,7 +333,7 @@ of all the available encodings:
 |))
 
 If the script is not found by the shell, read the informations in the 
-section above about executing shell phases in XCode and setting the access 
+section above about executing shell phases in Xcode and setting the access 
 paths correctly.
 
 
@@ -603,7 +604,7 @@ For example:
     key "kZero_Link" value string __ZERO_LINK__
 |))
 
-The last example is correct because XCode defines a ZERO_LINK variable 
+The last example is correct because Xcode defines a ZERO_LINK variable 
 whose value can be either "YES" or "NO" (see below).
 
 The ((i boolean i)) command corresponds to the <boolean> XML tag.
@@ -709,9 +710,9 @@ directory. In the case of a packaged application, the default destination
 directory is the ((i Contents i)) folder inside the bundle. More generally,
 the path of this destination folder is built by ((b PList Compiler b))
 using the values of the ((v TARGET_BUILD_DIR v)) and ((v INFOPLIST_PATH v))
-XCode variables.
+Xcode variables.
 
-For instance, with XCode 2.1, if your target is in the ((i Release i))
+For instance, with Xcode 2.1, if your target is in the ((i Release i))
 configuration and your application is MyApp, the destination folder would
 be (unless you have non standard settings):
 ((|
@@ -812,7 +813,7 @@ relatively to various folders:
 the path relatively to the folder containing the parent source file (i-e,
 the file which invokes the ((i #include i)) directive). If this fails, it
 will try all the header search paths: these are the paths defined in the
-XCode's ((v HEADER_SEARCH_PATHS v)) variable and any path specified on the
+Xcode's ((v HEADER_SEARCH_PATHS v)) variable and any path specified on the
 command line using an ((i -I i)) option.
 
 ((li in the second form, where the file name is enclosed in angle brackets,
@@ -910,7 +911,7 @@ equal sign (==). A single equal sign would provoke an error.
 
 When testing a condition involving a string value, one must take care of
 properly quoting the strings. Here is an example 
-(where ((i DEBUGGING_SYMBOLS i)) is an XCode variable whose value 
+(where ((i DEBUGGING_SYMBOLS i)) is an Xcode variable whose value 
 is ((i YES i)) or ((i NO i))):
 !! !! ===================================
 ((if $aida_target eq "Html" || $aida_target eq "SplitHtml"
@@ -1216,7 +1217,7 @@ you can then have a key in the ((i plist i)) dictionary declared like this
 
 ((b Note: b))
 ((nl In versions older than 0.6, in order to invoke a variable defined in
-the shell environment or inherited from XCode, one had to surround it with
+the shell environment or inherited from Xcode, one had to surround it with
 double underscores (like __USER__ instead of USER). It is not the case
 anymore since version 0.6. For backward compatibility, ((b PList Compiler
 b)) will still check if a variable surrounded by double underscores is an
@@ -1242,16 +1243,16 @@ the file being processed.
 lt))
 ((lt __OUTPUT_CREATOR__
 This variable contains the creator
-type of the built product. It corresponds to the MACOS_CREATOR XCode variable.
+type of the built product. It corresponds to the MACOS_CREATOR Xcode variable.
 lt))
 ((lt __OUTPUT_TYPE__
 This variable contains the file
-type of the built product. It corresponds to the MACOS_TYPE XCode variable.
+type of the built product. It corresponds to the MACOS_TYPE Xcode variable.
 lt))
 ((lt __OUTPUT_FILENAME__
 This variable contains the name of the built product. It is equivalent to 
 the concatenation of the PRODUCT_NAME and
-WRAPPER_EXTENSION XCode variables.
+WRAPPER_EXTENSION Xcode variables.
 lt))
 ((lt __DATE__
 This is the complete date at the moment where the script is executed. It is
@@ -1260,14 +1261,14 @@ YY-MM-DDTHH:MM:SSZ. For instance ((i "2005-10-04T17:12:23Z" i)).
 lt))
 ld))
 ((nl ((b Caveat: b)) one must be aware that the values of the ((v OUTPUT_CREATOR v)) 
-and ((v OUTPUT_TYPE v)) predefined variables are taken from the XCode
+and ((v OUTPUT_TYPE v)) predefined variables are taken from the Xcode
 variables called ((v MACOS_CREATOR v)) and ((v MACOS_TYPE v)), but that, in
 certain circumstances, these variables are not displayed in the ((i Target
-Settings i)) panels in ((i XCode i)). The variables do exist but simply
+Settings i)) panels in ((i Xcode i)). The variables do exist but simply
 are not displayed by default.  As a consequence, their value in that case
-is empty. This is a problem with ((i XCode i)), not with ((i PList
+is empty. This is a problem with ((i Xcode i)), not with ((i PList
 Compiler i)). The remedy, should this situation occur, is to add these
-variables manually in the ((i Target Settings i)) panel in XCode using the ((i Plus i))
+variables manually in the ((i Target Settings i)) panel in Xcode using the ((i Plus i))
 button and to give them the desired values corresponding to your project.
 
 Furthermore ((b PList Compiler b)) introduces other useful predefined variables: 
@@ -1321,18 +1322,18 @@ For instance:
 
 
 
-((s2 XCode environment variables
+((s2 Xcode environment variables
 
-All the environment variables set by an XCode project are accessible with
-((b PList Compiler b)). See the XCode documentation for a complete list. For instance
+All the environment variables set by an Xcode project are accessible with
+((b PList Compiler b)). See the Xcode documentation for a complete list. For instance
 ((|
     key "InfoPlistPath" value string INFOPLIST_PATH
 |))
 
-Some of these variables are set by XCode itself (they are generally meant
+Some of these variables are set by Xcode itself (they are generally meant
 to be read-only variables) while the others can be set in the info window
 of a particular target. Tip: the name of a variable corresponding to a
-particular setting is always indicated by XCode between parentheses in the
+particular setting is always indicated by Xcode between parentheses in the
 help text displayed when you select this setting in a Target Info window.
 
 ((nl ((b Remark: b)) 
@@ -1365,7 +1366,7 @@ lo))
 
 A few predefined variables available in the CodeWarrior property list 
 compiler are not supported by ((b PList Compiler b)). This is mainly because they 
-are specific to the CodeWarrior IDE and have no meaning with XCode. Here 
+are specific to the CodeWarrior IDE and have no meaning with Xcode. Here 
 is the list of these variables:
 ((|
     __APPLEMACHLINKER__, __MACH__, __MERGELINKER__, 
@@ -1444,7 +1445,7 @@ macros let you override any other setting.
 keys have been specified in the ((i plc i)) file, use their value
 
 ((li otherwise, if the ((v MACOS_CREATOR v)) and ((v MACOS_TYPE v))
-variables have been defined in XCode and are not empty, use their value
+variables have been defined in Xcode and are not empty, use their value
 
 ((li as last resort, if the previous failed, use ((i "????" i))
 lu))
@@ -1455,7 +1456,7 @@ characters, it is trimmed.
 
 ((b Caveat: b))
 in order to use the ((i -pkginfo i)) option, the ((i Force Package Info
-Generation i)) setting in XCode must be off. If it is on, ((i PList
+Generation i)) setting in Xcode must be off. If it is on, ((i PList
 Compiler i)) will raise an error and will not generate the ((i PkgInfo i))
 file.
 
@@ -1559,7 +1560,7 @@ directives. Command line option to generate the PkgInfo file.
 bracket on the same line.
 ((li 2006-03-29 - 0.4 - Use TARGET_BUILD_DIR for output dir. Convert some 
 symbols to correct XML entities. Fixed bug when HEADER_SEARCH_PATHS not 
-defined in XCode.
+defined in Xcode.
 ((li 2006-11-04 - 0.5 - Fixed issues with square brackets and double 
 slashes in strings. Fixed bug with user defined macros enclosed in double 
 underscores (Bug 1413845). Implements new -prefix option (RFE 1461559) and new 
