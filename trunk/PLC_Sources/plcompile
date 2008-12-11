@@ -297,10 +297,10 @@ proc plc::normalize {txt} {
 	regsub -all -lineanchor {/\*([^*]|\*+[^*/])*\*+/} $txt {} txt
 
 	# Cut all the instructions
-	regsub -all {\s+value\s+(dictionary|array)\s*} $txt "\r\\1\r" txt
-	regsub -all {\s+value\s+(boolean|number|date|data|string)} $txt "\r\\1" txt
-	regsub -line -all {^\s*(plist|dictionary|array)\s*} $txt "\\1\r" txt
-	regsub -all {^({|\[)\s*(}|\])} $txt "\\1\r\\2" txt
+	regsub -all {\s+value\s+(dictionary|array)\s*} $txt "\n\\1\n" txt
+	regsub -all {\s+value\s+(boolean|number|date|data|string)} $txt "\n\\1" txt
+	regsub -line -all {^\s*(plist|dictionary|array)\s*} $txt "\\1\n" txt
+	regsub -line -all {^({|\[)\s*(}|\])} $txt "\\1\n\\2" txt
 
 	# Align them on the left margin
 	regsub -line -all "^\[ \t\]+" $txt "" txt
