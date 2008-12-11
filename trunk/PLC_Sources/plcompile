@@ -5,7 +5,7 @@ exec tclsh "$0" "$@"
 # ===========================================================================
 # File: "PlistComp.tcl"
 #                        Created: 2005-10-01 21:46:19
-#              Last modification: 2008-11-04 17:25:24
+#              Last modification: 2008-12-11 11:39:20
 # Author: Bernard Desgraupes
 # e-mail: <bdesgraupes@users.sourceforge.net>
 # www: <http://sourceforge.net/projects/plistcompiler>
@@ -19,7 +19,7 @@ namespace eval plc {}
 unset -nocomplain plc_def plc_int plc
 
 # Current version number
-set plc(version) "0.7b2"
+set plc(version) "0.7b3"
 
 # Retrieving the values of the shell variables: the env array contains the
 # values for all the environment variables defined by Xcode.
@@ -78,12 +78,15 @@ if {[info exists env(TARGET_BUILD_DIR)] && [info exists env(INFOPLIST_PATH)]} {
 } 
 set plc(in_package_directory) ""
 set plc(localize_directory) "Resources"
+set plc(search_path) [list]
 
-if {[info exists env(HEADER_SEARCH_PATHS)]} {
-	set plc(search_path) $env(HEADER_SEARCH_PATHS)
-}  else {
-	set plc(search_path) ""
-}
+# vs 0.7b3: also search the USER_HEADER_SEARCH_PATHS
+# (contributed by TheDoctor - thanks!)
+foreach kind {USER_HEADER_SEARCH_PATHS HEADER_SEARCH_PATHS} {
+	if {[info exists env($kind)]} {
+		set plc(search_path) [concat $plc(search_path) $env($kind)]
+	}
+} 
 
 set plc(input_encoding) "macRoman"
 set plc(output_encoding) "utf-8"
@@ -288,9 +291,9 @@ proc plc::normalize {txt} {
 	# unconditionnally. If the // is not at the beginning of the line, it
 	# is considered as a comment only if there is no double quote after it
 	# otherwise it might be a double slash inside a quoted string 
-	# (regexp improved by TheDoktor - thanks!)
-	regsub  -line -all {^\s*//.*$} $txt {} txt
-	regsub  -line -all {//([^"]|"[^"]*")*$} $txt {} txt
+	# (regexp improved by TheDoctor - thanks!)
+	regsub -line -all {^\s*//.*$} $txt {} txt
+	regsub -line -all {//([^"]|"[^"]*")*$} $txt {} txt
 
 	# Regexp to capture C-like comments (works with the (?w) directive or
 	# -lineanchor option):
