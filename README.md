@@ -1,3 +1,5 @@
+Copied and cleaned up from [Bernard Desgraupes' archived web page](https://web.archive.org/web/20231002021014/https://bdesgraupes.pagesperso-orange.fr/DocHTML/PListCompilerHelp.html):
+
 <hr />
 <blockquote>
 <p><em> <strong>PList Compiler</strong> is a property list compiler for XCode. It is developed as an <em>Open Source</em> project coming with a BSD License. The source code is currently hosted and developed on the <a href="http://sourceforge.net/projects/plistcompiler">SourceForge site.</a></em></p>
